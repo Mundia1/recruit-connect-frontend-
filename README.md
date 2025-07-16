@@ -1,4 +1,4 @@
-# CareerConnect
+# RecruitConnect
 
 A modern and intuitive platform for connecting talented professionals with their dream jobs. This project provides a comprehensive user interface for both job seekers and employers, featuring a rich set of components for a seamless user experience.
 
@@ -42,11 +42,11 @@ A modern and intuitive platform for connecting talented professionals with their
 
 1.  Clone the repository:
     ```bash
-    git clone https://github.com/your-username/career-connect.git
+    git clone https://github.com/Mundia1/recruit-connect-frontend-.git
     ```
 2.  Navigate to the project directory:
     ```bash
-    cd career-connect
+    cd recruit-connect-frontend
     ```
 3.  Install the dependencies:
     ```bash
