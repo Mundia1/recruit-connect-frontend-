@@ -16,11 +16,20 @@ export default function Navbar() {
         
         <div className="hidden md:flex items-center gap-8">
           
-          <ul className="flex items-center gap-6 text-gray-700 font-medium">
-            <li><a href="#" className="hover:text-[#177245]">Home</a></li>
-            <li><a href="#" className="hover:text-[#177245]">Jobs</a></li>
-            <li><a href="#" className="hover:text-[#177245]">Contact</a></li>
-          </ul>
+<ul className="flex items-center gap-6 text-gray-700 font-medium">
+  {["Home", "Jobs", "Contact"].map((item) => (
+    <li key={item} className="relative group">
+      <a
+        href="#"
+        className="hover:text-[#177245] transition-colors duration-300"
+      >
+        {item}
+      </a>
+      <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-[#177245] transition-all duration-300 group-hover:w-full"></span>
+    </li>
+  ))}
+</ul>
+
 
          
           <div className="flex items-center gap-4">
