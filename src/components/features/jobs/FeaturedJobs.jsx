@@ -1,71 +1,14 @@
 import React from "react";
-
-const jobs = [
-  {
-    id: 1,
-    title: "Frontend Developer",
-    company: "Safaricom PLC",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 2,
-    title: "Backend Engineer",
-    company: "M-Pesa Africa",
-    location: "Dar es Salaam, Tanzania",
-  },
-  {
-    id: 3,
-    title: "UI/UX Designer",
-    company: "BRCK",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 4,
-    title: "Data Scientist",
-    company: "Twiga Foods",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 5,
-    title: "Full Stack Developer",
-    company: "Cellulant",
-    location: "Lagos, Nigeria (Remote)",
-  },
-  {
-    id: 6,
-    title: "Mobile App Developer",
-    company: "iHub",
-    location: "Kigali, Rwanda",
-  },
-  {
-    id: 7,
-    title: "Digital Marketing Specialist",
-    company: "Andela",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 8,
-    title: "Cloud Engineer",
-    company: "Equity Bank",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 9,
-    title: "DevOps Engineer",
-    company: "KCB Bank Group",
-    location: "Nairobi, Kenya",
-  },
-];
+import { Link } from "react-router-dom";
+import { jobs } from "../../../api/jobs";
 
 export default function FeaturedJobs() {
   return (
     <section className="max-w-7xl mx-auto px-4 py-12">
-      {/* Section Title */}
       <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
         Featured Jobs
       </h2>
 
-      {/* Scrollable Job Cards Grid */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-h-[600px] overflow-y-auto pr-2">
         {jobs.map((job) => (
           <div
@@ -82,11 +25,13 @@ export default function FeaturedJobs() {
         ))}
       </div>
 
-      {/* View All Jobs Button */}
       <div className="mt-8 text-center">
-        <button className="bg-gray-800 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition">
+        <Link
+          to="/jobs"
+          className="bg-[#177245] text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition"
+        >
           View All Jobs
-        </button>
+        </Link>
       </div>
     </section>
   );
