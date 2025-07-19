@@ -1,9 +1,11 @@
 import React from "react";
-import heroImage from "../../assets/hero-image.png"; // Replace with your logo asset
+import heroImage from "../../assets/hero-image.png";
+// FontAwesome imports
+import { FaFacebookF, FaTwitter, FaLinkedinIn } from "react-icons/fa";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300 pt-12 pb-6 mt-12">
+    <footer className="bg-white text-gray-900 pt-12 pb-6 mt-12 border-t border-gray-200">
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-12">
         {/* Logo + Description */}
         <div className="flex flex-col items-start">
@@ -18,8 +20,8 @@ export default function Footer() {
         </div>
         {/* Quick Links */}
         <div>
-          <h3 className="text-lg font-semibold text-white mb-4">Quick Links</h3>
-          <ul className="space-y-2 text-sm">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Links</h3>
+          <ul className="flex gap-6 text-sm">
             <li>
               <a
                 href="/"
@@ -54,32 +56,37 @@ export default function Footer() {
             </li>
           </ul>
         </div>
-
         {/* Social + Newsletter */}
         <div className="flex flex-col gap-6">
           <div>
-            <h4 className="text-lg font-semibold text-white mb-3">Follow Us</h4>
+            <h4 className="text-lg font-semibold text-gray-900 mb-3">Follow Us</h4>
             <div className="flex gap-4">
-              <a href="#" aria-label="Facebook">
-                <img
-                  src="/icons/facebook.svg"
-                  alt="Facebook"
-                  className="w-6 h-6 grayscale hover:grayscale-0 transition"
-                />
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className="text-gray-400 hover:text-[#177245] transition"
+              >
+                <FaFacebookF className="w-6 h-6" />
               </a>
-              <a href="#" aria-label="Twitter">
-                <img
-                  src="/icons/twitter.svg"
-                  alt="Twitter"
-                  className="w-6 h-6 grayscale hover:grayscale-0 transition"
-                />
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Twitter"
+                className="text-gray-400 hover:text-[#177245] transition"
+              >
+                <FaTwitter className="w-6 h-6" />
               </a>
-              <a href="#" aria-label="LinkedIn">
-                <img
-                  src="/icons/linkedin.svg"
-                  alt="LinkedIn"
-                  className="w-6 h-6 grayscale hover:grayscale-0 transition"
-                />
+              <a
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="text-gray-400 hover:text-[#177245] transition"
+              >
+                <FaLinkedinIn className="w-6 h-6" />
               </a>
             </div>
           </div>
@@ -96,7 +103,7 @@ export default function Footer() {
                 id="newsletter-email"
                 placeholder="Enter your email"
                 required
-                className="rounded-l-md px-3 py-2 w-full bg-gray-800 border border-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#177245]"
+                className="rounded-l-md px-3 py-2 w-full bg-gray-100 border border-gray-300 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#177245]"
               />
               <button
                 type="submit"
