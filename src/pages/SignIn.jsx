@@ -36,4 +36,22 @@ export default function SignIn() {
             className={`w-full px-4 py-3 rounded-md bg-[var(--green-light-alt)] text-gray-700 focus:outline-none ${errors.email ? 'border border-red-500' : ''}`}
           />
           {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
-         
+          <input
+            type="password"
+            {...register('password')}
+            placeholder="Password"
+            className={`w-full px-4 py-3 rounded-md bg-[var(--green-light-alt)] text-gray-700 focus:outline-none ${errors.password ? 'border border-red-500' : ''}`}
+          />
+          {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+          <Link to="#" className="block text-sm text-right text-gray-600">Forgot password?</Link>
+          <button type="submit" className="w-full py-3 text-white font-semibold bg-[var(--green-primary)] rounded-md hover:bg-[var(--green-dark)]">
+            Sign In
+          </button>
+        </form>
+        <p className="mt-6 text-sm text-center text-gray-600">
+          Don't have an account? <Link to="/signup" className="text-[var(--green-primary)] font-semibold">Sign Up</Link>
+        </p>
+      </div>
+    </div>
+  );
+}
