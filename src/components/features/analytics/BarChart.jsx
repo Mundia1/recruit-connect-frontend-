@@ -1,29 +1,22 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { BarChart as RechartsBarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const BarChart = ({ 
-  title = "Job Applications Over Time", 
-  data = [
-    { name: 'Jan', applications: 65 },
-    { name: 'Feb', applications: 78 },
-    { name: 'Mar', applications: 92 },
-    { name: 'Apr', applications: 88 },
-    { name: 'May', applications: 105 },
-    { name: 'Jun', applications: 120 },
-  ],
-  trend = "+15%"
+  title = "", 
+  data = [],
+  dataKey = 'value',
+  fill = '#3b82f6',
+  showTitle = true,
+  className = '',
+  height = 300
 }) => {
   return (
-    <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-sm">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
-        <div className="flex items-center space-x-2">
-          <span className="text-sm text-slate-500">This month</span>
-          <span className="text-sm font-medium text-green-600">{trend}</span>
-        </div>
-      </div>
-      
-      <div className="h-80">
+    <div className={`bg-white rounded-lg border border-slate-200 p-6 shadow-sm ${className}`}>
+      {showTitle && title && (
+        <h3 className="text-lg font-semibold text-slate-900 mb-6">{title}</h3>
+      )}
+      <div style={{ height: `${height}px` }}>
         <ResponsiveContainer width="100%" height="100%">
           <RechartsBarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
@@ -47,15 +40,13 @@ const BarChart = ({
               }}
             />
             <Bar 
-              dataKey="applications" 
-              fill="#10b981" 
+              dataKey={dataKey}
+              fill={fill}
               radius={[4, 4, 0, 0]}
-              name="Applications"
             />
           </RechartsBarChart>
         </ResponsiveContainer>
       </div>
-      
       <div className="mt-4 pt-4 border-t border-slate-100">
         <div className="flex items-center justify-between text-sm">
           <span className="text-slate-500">Total Applications</span>
@@ -66,6 +57,19 @@ const BarChart = ({
       </div>
     </div>
   );
+};
+
+BarChart.propTypes = {
+  title: PropTypes.string,
+  data: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    [PropTypes.string]: PropTypes.number
+  })),
+  dataKey: PropTypes.string,
+  fill: PropTypes.string,
+  showTitle: PropTypes.bool,
+  className: PropTypes.string,
+  height: PropTypes.number
 };
 
 export default BarChart;
