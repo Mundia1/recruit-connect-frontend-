@@ -1,9 +1,12 @@
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 import LandingPage from "./pages/LandingPage";
 import JobBoard from "./pages/JobBoard";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
-import PrivateRoute from "./components/auth/PrivateRoute";
+import AdminDashboard from './pages/AdminDashboard';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
 function App() {
   return (
@@ -16,6 +19,7 @@ function App() {
         <Route
           path="/dashboard"
           element={
+
             <PrivateRoute>
               {/* Replace with your dashboard component */}
               <div>Protected Dashboard</div>
