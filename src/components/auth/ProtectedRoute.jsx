@@ -6,6 +6,11 @@ const ProtectedRoute = () => {
   const user = getCurrentUser();
 
   if (!user) {
+
     return <Navigate to="/signin" replace />;
   }
 
+  return <Outlet />;
+};
+
+export default ProtectedRoute;
