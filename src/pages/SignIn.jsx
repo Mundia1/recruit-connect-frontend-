@@ -1,66 +1,60 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { Link, useNavigate } from 'react-router-dom';
-import { signup } from '../api/auth';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Navbar from "../components/layout/Navbar";
 
-const schema = yup.object().shape({
-  name: yup.string().required('Name is required'),
-  email: yup.string().email('Invalid email format').required('Email is required'),
-  password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
-});
-
-const SignUp = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    resolver: yupResolver(schema),
-  });
+export default function SignIn() {
   const navigate = useNavigate();
 
-  const onSubmit = async (data) => {
-    try {
-      await signup(data);
-      navigate('/signin');
-    } catch (error) {
-      console.error('Failed to sign up', error);
-      
-    }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // TODO: Add login logic and redirect
+    navigate("/admin-dashboard"); // Temporary redirect
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-white">
-      <div className="w-full max-w-sm">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">Create an account</h2>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <input
-            {...register('name')}
-            placeholder="Name"
-            className={`w-full px-4 py-3 rounded-md bg-[var(--green-light-alt)] text-gray-700 focus:outline-none ${errors.name ? 'border border-red-500' : ''}`}
-          />
-          {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
-          <input
-            {...register('email')}
-            placeholder="Email"
-            className={`w-full px-4 py-3 rounded-md bg-[var(--green-light-alt)] text-gray-700 focus:outline-none ${errors.email ? 'border border-red-500' : ''}`}
-          />
-          {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
-          <input
-            type="password"
-            {...register('password')}
-            placeholder="Password"
-            className={`w-full px-4 py-3 rounded-md bg-[var(--green-light-alt)] text-gray-700 focus:outline-none ${errors.password ? 'border border-red-500' : ''}`}
-          />
-          {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
-          <button type="submit" className="w-full py-3 text-white font-semibold bg-[var(--green-primary)] rounded-md hover:bg-[var(--green-dark)]">
-            Sign Up
-          </button>
-        </form>
-        <p className="mt-6 text-sm text-center text-gray-600">
-          Already have an account? <Link to="/signin" className="text-[var(--green-primary)] font-semibold">Sign In</Link>
-        </p>
-      </div>
-    </div>
-  );
-};
+    <>
+      {/* Navbar */}
+      <Navbar />
 
-export default SignUp;
+      {/* Main Content */}
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+        <div className="bg-white shadow-lg rounded-lg w-full max-w-md p-8 mt-10">
+          <h2 className="text-3xl font-bold text-center text-[#177245] mb-6">
+            Sign In
+          </h2>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">Email</label>
+              <input
+                type="email"
+                required
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#177245]"
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700 font-medium mb-1">Password</label>
+              <input
+                type="password"
+                required
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#177245]"
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-[#177245] text-white py-2 rounded-lg font-semibold hover:bg-green-700 transition"
+            >
+              Sign In
+            </button>
+          </form>
+
+          <p className="text-center text-gray-600 mt-4">
+            Don't have an account?{" "}
+            <Link to="/signup" className="text-[#177245] font-semibold hover:underline">
+              Sign Up
+            </Link>
+          </p>
+        </div>
+      </div>
+    </>
+  );
+}

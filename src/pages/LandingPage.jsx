@@ -1,20 +1,20 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 import HeroImage from "../assets/hero-image.png";
 import Navbar from "../components/layout/Navbar";
 import FeaturedJobs from "../components/features/jobs/FeaturedJobs";
 import Footer from "../components/layout/Footer";
-import { useNavigate } from "react-router-dom";
 
 // --- Testimonials Data ---
 const testimonials = [
   {
-    name: "Jane Doe",
+    name: "Jane Mutisya",
     role: "Frontend Developer",
     text: "Recruit Connect helped me land my dream job in Nairobi. The process was smooth and the platform is easy to use!",
     avatar: "https://randomuser.me/api/portraits/women/44.jpg",
   },
   {
-    name: "John Smith",
+    name: "John Onyango",
     role: "Backend Engineer",
     text: "I found multiple opportunities and the application feedback was super helpful. Highly recommend!",
     avatar: "https://randomuser.me/api/portraits/men/32.jpg",
@@ -47,11 +47,9 @@ const steps = [
 ];
 
 export default function LandingPage() {
-  const navigate = useNavigate();
-
   return (
     <div>
-      {/* Navbar above hero */}
+      {/* Navbar */}
       <Navbar />
 
       {/* Hero Section */}
@@ -60,26 +58,24 @@ export default function LandingPage() {
         style={{ backgroundImage: `url(${HeroImage})` }}
       >
         {/* Overlay */}
-        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-        <div className="relative z-10 flex flex-col items-center justify-center h-full w-full px-4">
-          <div className="text-center text-white max-w-2xl mx-auto">
-            <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-6 leading-tight">
-              Find Jobs, Manage Jobs. All in One Place.
-            </h1>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <button
-                className="bg-[#177245] text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-green-700 transition"
-                onClick={() => navigate("/signup")}
-              >
-                I'm a Job Seeker
-              </button>
-              <button
-                className="bg-gray-200 text-gray-900 px-6 py-3 rounded-lg text-lg font-semibold hover:bg-gray-300 transition"
-                onClick={() => navigate("/signin")}
-              >
-                I'm an Admin
-              </button>
-            </div>
+        <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div className="relative z-10 flex flex-col items-center justify-center h-full w-full px-4 text-center">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+            Find Jobs, Manage Jobs. All in One Place.
+          </h1>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <NavLink
+              to="/jobs"
+              className="bg-[#177245] text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-green-700 transition"
+            >
+              I'm a Job Seeker
+            </NavLink>
+            <NavLink
+              to="/signin"
+              className="bg-white text-[#177245] border border-[#177245] px-6 py-3 rounded-lg text-lg font-semibold hover:bg-gray-100 transition"
+            >
+              I'm an Admin
+            </NavLink>
           </div>
         </div>
       </section>
@@ -130,6 +126,7 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Footer */}
       <Footer />
     </div>
   );
