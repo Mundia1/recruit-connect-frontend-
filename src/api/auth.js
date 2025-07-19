@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://your-backend-api-url/api/auth';
+const API_URL = `${import.meta.env.VITE_API_URL}/api/auth`;
 
 
 export const login = async (credentials) => {
@@ -14,4 +14,18 @@ export const login = async (credentials) => {
     console.error('Login failed:', error.response ? error.response.data : error.message);
     throw error;
   }
+};
+
+export const signup = async (userData) => {
+  try {
+    const response = await axios.post(`${API_URL}/signup`, userData);
+    return response.data;
+  } catch (error) {
+    console.error('Signup failed:', error.response ? error.response.data : error.message);
+    throw error;
+  }
+};
+
+export const logout = () => {
+  localStorage.removeItem('user');
 };
