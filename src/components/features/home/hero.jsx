@@ -14,15 +14,15 @@ const Hero = () => {
       <div className="hero-button-group">
         <button 
           className="hero-button primary"
-          onClick={() => navigate('/register?role=seeker')}
+          onClick={() => navigate('/signup')}
         >
           I'm a Job Seeker
         </button>
         <button 
           className="hero-button secondary"
-          onClick={() => navigate('/register?role=employer')}
+          onClick={() => navigate('/signin')}
         >
-          I'm an Employer
+          I'm an Admin
         </button>
       </div>
     </section>
