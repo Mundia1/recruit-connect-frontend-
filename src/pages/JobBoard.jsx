@@ -1,11 +1,30 @@
-import React, { useState } from "react";
-import { jobs } from "../api/jobs";
+import React, { useState, useEffect } from "react";
+import { getJobs } from "../api/jobs";
 import { Search } from "lucide-react";
 
 export default function JobBoard() {
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
   const [jobTypeFilter, setJobTypeFilter] = useState("");
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await getJobs();
+        setJobs(data);
+      } catch (err) {
+        setError("Failed to load jobs.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchJobs();
+  }, []);
 
   const filteredJobs = jobs.filter((job) => {
     return (
@@ -62,8 +81,12 @@ export default function JobBoard() {
         </select>
       </div>
 
-      {/* Jobs Grid */}
-      {filteredJobs.length > 0 ? (
+      {/* Jobs Grid with loading and error states */}
+      {loading ? (
+        <p className="text-gray-600 mt-6 text-center">Loading jobs...</p>
+      ) : error ? (
+        <p className="text-red-600 mt-6 text-center">{error}</p>
+      ) : filteredJobs.length > 0 ? (
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {filteredJobs.map((job) => (
             <div

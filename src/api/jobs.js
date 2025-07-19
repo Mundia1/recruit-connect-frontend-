@@ -1,92 +1,11 @@
-export const jobs = [
-  {
-    id: 1,
-    title: "Frontend Developer",
-    company: "Safaricom PLC",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 2,
-    title: "Backend Engineer",
-    company: "M-Pesa Africa",
-    location: "Dar es Salaam, Tanzania",
-  },
-  {
-    id: 3,
-    title: "UI/UX Designer",
-    company: "BRCK",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 4,
-    title: "Data Scientist",
-    company: "Twiga Foods",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 5,
-    title: "Full Stack Developer",
-    company: "Cellulant",
-    location: "Lagos, Nigeria (Remote)",
-  },
-  {
-    id: 6,
-    title: "Mobile App Developer",
-    company: "iHub",
-    location: "Kigali, Rwanda",
-  },
-  {
-    id: 7,
-    title: "Digital Marketing Specialist",
-    company: "Andela",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 8,
-    title: "Cloud Engineer",
-    company: "Equity Bank",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 9,
-    title: "DevOps Engineer",
-    company: "KCB Bank Group",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 10,
-    title: "IT Support Specialist",
-    company: "Kenya Airways",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 11,
-    title: "Business Analyst",
-    company: "Co-operative Bank",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 12,
-    title: "Product Manager",
-    company: "M-KOPA",
-    location: "Kampala, Uganda",
-  },
-  {
-    id: 13,
-    title: "Software QA Engineer",
-    company: "Sendy",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 14,
-    title: "Data Engineer",
-    company: "PesaPal",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 15,
-    title: "Cybersecurity Analyst",
-    company: "Safaricom PLC",
-    location: "Nairobi, Kenya",
-  },
-];
+import api from './axios';
+
+export const getJobs = async () => {
+  const response = await api.get('/jobs');
+  return response.data;
+};
+
+export const getJobById = async (id) => {
+  const response = await api.get(`/jobs/${id}`);
+  return response.data;
+};
