@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { jobs } from "../api/jobs"; 
-import Navbar from "../components/layout/Navbar"; 
+import { jobs } from "../api/jobs";
+import Navbar from "../components/layout/Navbar";
 
 export default function ApplyRedirect() {
   const navigate = useNavigate();
@@ -11,10 +11,17 @@ export default function ApplyRedirect() {
 
   return (
     <>
-      {/*Navbar */}
       <Navbar />
+      <div className="min-h-screen bg-gray-50 px-4 pt-20 flex flex-col items-center">
+        <div className="w-full max-w-lg mb-4">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-[#177245] hover:text-green-700 font-semibold"
+          >
+            ← Back
+          </button>
+        </div>
 
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4 pt-20">
         <div className="bg-white shadow-lg rounded-2xl p-10 max-w-lg w-full text-center">
           <h1 className="text-3xl font-bold text-gray-800 mb-4">
             {job
