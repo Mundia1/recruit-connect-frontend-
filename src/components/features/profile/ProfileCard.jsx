@@ -1,166 +1,243 @@
-export function ProfileCard({
-    name = "Sophia Bennett",
-    title = "Software Engineer",
-    joinedYear = "2025",
-    avatarUrl = "https://api.builder.io/api/v1/image/assets/TEMP/5ef27a5a2f7ba565fe57ebd1322818524f7c9d39?width=256",
-    applicationHistory = [
-      {
-        jobTitle: "Senior Software Engineer",
-        company: "Tech Innovations Inc.",
-        status: "Interviewing",
-        dateApplied: "2023-08-15",
-      },
-      {
-        jobTitle: "Software Engineer",
-        company: "Global Solutions Ltd.",
-        status: "Rejected",
-        dateApplied: "2023-07-20",
-      },
-      {
-        jobTitle: "Junior Developer",
-        company: "Creative Apps Co.",
-        status: "Accepted",
-        dateApplied: "2023-06-05",
-      },
-    ],
-  }) {
-    const getStatusBadgeColor = (status) => {
-      switch (status) {
-        case "Interviewing":
-          return "bg-dashboard-accent text-dashboard-text";
-        case "Rejected":
-          return "bg-dashboard-accent text-dashboard-text";
-        case "Accepted":
-          return "bg-dashboard-accent text-dashboard-text";
-        default:
-          return "bg-dashboard-accent text-dashboard-text";
-      }
-    };
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getCurrentUser, getUserApplications, updateUserProfile } from '../../../api/profile';
+import { toast } from 'react-toastify';
+// Removed date-fns import - using native Date methods instead
+import { Avatar } from '../../ui/Avatar';
+import { Button } from '../../ui/Button';
+import { Input } from '../../ui/Input';
+import { Badge } from '../../ui/Badge';
+import { Card } from '../../ui/Card';
+
+export function ProfileCard() {
+  const queryClient = useQueryClient();
   
-    return (
-      <div className="flex max-w-[960px] flex-col items-start flex-1">
-        {/* Header */}
-        <div className="flex p-4 justify-between items-start content-start gap-3 self-stretch flex-wrap">
-          <div className="flex min-w-72 flex-col items-start gap-3">
-            <div className="flex w-[301px] flex-col items-start">
-              <h1 className="self-stretch text-dashboard-text font-inter text-[32px] font-bold leading-10">
-                Profile
-              </h1>
-            </div>
-            <div className="flex flex-col items-start">
-              <span className="self-stretch text-dashboard-muted font-inter text-sm font-normal leading-5">
-                Manage your profile information and settings.
-              </span>
-            </div>
-          </div>
-        </div>
-  
-        {/* Profile Info */}
-        <div className="flex p-4 items-start self-stretch">
-          <div className="flex justify-between items-center flex-1">
-            <div className="flex items-start gap-4">
-              <img
-                className="w-32 h-32 min-h-32 rounded-full"
-                src={avatarUrl}
-                alt={`${name} profile`}
-              />
-              <div className="flex h-32 flex-col justify-center items-start">
-                <div className="flex flex-col items-start">
-                  <span className="self-stretch text-dashboard-text font-inter text-[22px] font-bold leading-7">
-                    {name}
-                  </span>
-                </div>
-                <div className="flex w-40 flex-col items-start">
-                  <span className="self-stretch text-dashboard-muted font-inter text-base font-normal leading-6">
-                    {title}
-                  </span>
-                </div>
-                <div className="flex w-40 flex-col items-start">
-                  <span className="self-stretch text-dashboard-muted font-inter text-base font-normal leading-6">
-                    Joined in {joinedYear}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-  
-        {/* Application History */}
-        <div className="flex py-5 px-4 pb-3 flex-col items-start self-stretch">
-          <h2 className="self-stretch text-dashboard-text font-inter text-[22px] font-bold leading-7">
-            Application History
-          </h2>
-        </div>
-  
-        <div className="flex p-3 px-4 flex-col items-start self-stretch">
-          <div className="flex items-start self-stretch rounded-xl border border-dashboard-border bg-dashboard-bg">
-            <div className="flex flex-col items-start flex-1">
-              {/* Table Header */}
-              <div className="flex flex-col items-start self-stretch">
-                <div className="flex items-start flex-1 self-stretch bg-dashboard-bg">
-                  <div className="flex w-[230px] p-3 px-4 flex-col items-start self-stretch">
-                    <span className="self-stretch text-dashboard-text font-inter text-sm font-medium leading-5">
-                      Job Title
-                    </span>
-                  </div>
-                  <div className="flex w-[235px] p-3 px-4 flex-col items-start self-stretch">
-                    <span className="self-stretch text-dashboard-text font-inter text-sm font-medium leading-5">
-                      Company
-                    </span>
-                  </div>
-                  <div className="flex w-[187px] p-3 px-4 flex-col items-start self-stretch">
-                    <span className="self-stretch text-dashboard-text font-inter text-sm font-medium leading-5">
-                      Status
-                    </span>
-                  </div>
-                  <div className="flex w-[221px] p-3 px-4 flex-col items-start self-stretch">
-                    <span className="self-stretch text-dashboard-text font-inter text-sm font-medium leading-5">
-                      Date Applied
-                    </span>
-                  </div>
-                </div>
-              </div>
-  
-              {/* Table Rows */}
-              <div className="flex flex-col items-start self-stretch">
-                {applicationHistory.map((item, index) => (
-                  <div
-                    key={index}
-                    className="flex h-18 items-start self-stretch border-t border-gray-200"
-                  >
-                    <div className="flex w-[230px] h-18 p-2 px-4 flex-col justify-center items-center">
-                      <span className="self-stretch text-dashboard-text font-inter text-sm font-normal leading-5">
-                        {item.jobTitle}
-                      </span>
-                    </div>
-                    <div className="flex w-[235px] h-18 p-2 px-4 flex-col justify-center items-center">
-                      <span className="self-stretch text-dashboard-muted font-inter text-sm font-normal leading-5">
-                        {item.company}
-                      </span>
-                    </div>
-                    <div className="flex w-[187px] h-18 p-2 px-4 flex-col justify-center items-center">
-                      <div
-                        className={`flex h-8 min-w-21 max-w-120 px-4 justify-center items-center flex-shrink-0 self-stretch rounded-2xl ${getStatusBadgeColor(item.status)}`}
-                      >
-                        <div className="flex flex-col items-center">
-                          <span className="self-stretch overflow-hidden text-center font-inter text-sm font-medium leading-5 text-ellipsis line-clamp-1">
-                            {item.status}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex w-[221px] h-18 p-2 px-4 flex-col justify-center items-center">
-                      <span className="self-stretch text-dashboard-muted font-inter text-sm font-normal leading-5">
-                        {item.dateApplied}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+  // Fetch current user data
+  const { data: user, isLoading: isLoadingUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: getCurrentUser,
+    onError: (error) => {
+      toast.error('Failed to load profile data');
+      console.error('Error fetching user:', error);
+    }
+  });
+
+  // Fetch user's applications
+  const { data: applications = [], isLoading: isLoadingApplications } = useQuery({
+    queryKey: ['userApplications'],
+    queryFn: () => getUserApplications(user?.id),
+    enabled: !!user?.id,
+    onError: (error) => {
+      toast.error('Failed to load application history');
+      console.error('Error fetching applications:', error);
+    }
+  });
+
+  // Update profile mutation
+  const updateProfileMutation = useMutation({
+    mutationFn: updateUserProfile,
+    onSuccess: () => {
+      toast.success('Profile updated successfully');
+      queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.message || 'Failed to update profile');
+    }
+  });
+
+  const getStatusBadgeVariant = (status) => {
+    switch ((status || '').toLowerCase()) {
+      case 'interviewing':
+        return 'blue';
+      case 'rejected':
+        return 'red';
+      case 'accepted':
+        return 'green';
+      case 'applied':
+        return 'yellow';
+      default:
+        return 'gray';
+    }
+  };
+
+  const formatDate = (dateString) => {
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+      });
+    } catch (error) {
+      return dateString;
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const updates = Object.fromEntries(formData.entries());
+    updateProfileMutation.mutate(updates);
+  };
+
+  if (isLoadingUser) {
+    return <div>Loading profile...</div>;
+  }
+
+  if (!user) {
+    return <div>Failed to load profile data</div>;
+  }
+
+  return (
+    <div className="w-full max-w-5xl mx-auto p-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+            {user.name}'s Profile
+          </h1>
+          <p className="text-sm text-gray-500 mt-1">
+            Manage your profile information and application history.
+          </p>
         </div>
       </div>
-    );
-  }
   
+      {/* Profile Info Card */}
+      <Card className="mb-6">
+        <form onSubmit={handleSubmit}>
+          <div className="flex flex-col md:flex-row gap-6">
+            {/* Avatar Section */}
+            <div className="flex-shrink-0">
+              <Avatar
+                src={user.avatar_url}
+                name={user.name}
+                size="large"
+                className="w-32 h-32 border-4 border-white shadow-sm"
+              />
+            </div>
+
+            {/* Profile Details */}
+            <div className="flex-1 space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Full Name
+                  </label>
+                  <Input
+                    type="text"
+                    name="name"
+                    defaultValue={user.name || ''}
+                    placeholder="Your full name"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Job Title
+                  </label>
+                  <Input
+                    type="text"
+                    name="title"
+                    defaultValue={user.title || ''}
+                    placeholder="Your job title"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Email
+                  </label>
+                  <Input
+                    type="email"
+                    name="email"
+                    defaultValue={user.email || ''}
+                    placeholder="your.email@example.com"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Phone
+                  </label>
+                  <Input
+                    type="tel"
+                    name="phone"
+                    defaultValue={user.phone || ''}
+                    placeholder="+254 712 345 678"
+                  />
+                </div>
+              </div>
+              
+              <div className="flex items-center text-sm text-gray-500">
+                <span>Member since {new Date(user.created_at).getFullYear()}</span>
+              </div>
+              
+              <div className="flex justify-end pt-4">
+                <Button
+                  type="submit"
+                  disabled={updateProfileMutation.isPending}
+                  variant="primary"
+                >
+                  {updateProfileMutation.isPending ? 'Saving...' : 'Save Changes'}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </Card>
+  
+      {/* Application History Card */}
+      <Card>
+        <h2 className="text-xl font-semibold text-gray-900 mb-6">
+          Application History
+        </h2>
+        
+        {isLoadingApplications ? (
+          <div className="flex justify-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
+        ) : applications.length === 0 ? (
+          <div className="text-center py-8 text-gray-500">
+            <p>No applications found.</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Job Title
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Company
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Date Applied
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {applications.map((application) => (
+                  <tr key={application.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {application.job_title}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {application.company_name}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <Badge variant={getStatusBadgeVariant(application.status)}>
+                        {application.status}
+                      </Badge>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {formatDate(application.created_at)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Card>
+    </div>
+  );
+}
