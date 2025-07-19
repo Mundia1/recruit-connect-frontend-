@@ -12,20 +12,16 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/jobs" element={<JobBoard />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route
-          path="/dashboard"
-          element={
 
-            <PrivateRoute>
-              {/* Replace with your dashboard component */}
-              <div>Protected Dashboard</div>
-            </PrivateRoute>
-          }
-        />
+        {/* Protected Routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        </Route>
       </Routes>
     </Router>
   );
