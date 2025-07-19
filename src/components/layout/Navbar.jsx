@@ -15,7 +15,7 @@ export default function Navbar() {
     <header className="bg-white shadow-md sticky top-0 z-30">
       <nav className="max-w-7xl mx-auto flex items-center justify-between px-4 py-4">
         {/* Logo */}
-        <div className="flex items-center gap-2 text-[#177245] font-bold text-xl">
+        <div className="flex items-center gap-2 text-[#000000] font-bold text-xl">
           <StarIcon className="h-6 w-6 text-[#177245]" />
           <span>Recruit Connect</span>
         </div>
