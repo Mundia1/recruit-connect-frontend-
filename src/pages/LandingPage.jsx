@@ -3,6 +3,7 @@ import HeroImage from "../assets/hero-image.png";
 import Navbar from "../components/layout/Navbar";
 import FeaturedJobs from "../components/features/jobs/FeaturedJobs";
 import Footer from "../components/layout/Footer";
+import { useNavigate } from "react-router-dom";
 
 // --- Testimonials Data ---
 const testimonials = [
@@ -46,6 +47,8 @@ const steps = [
 ];
 
 export default function LandingPage() {
+  const navigate = useNavigate();
+
   return (
     <div>
       {/* Navbar above hero */}
@@ -64,10 +67,16 @@ export default function LandingPage() {
               Find Jobs, Manage Jobs. All in One Place.
             </h1>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <button className="bg-[#177245] text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-green-700 transition">
+              <button
+                className="bg-[#177245] text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-green-700 transition"
+                onClick={() => navigate("/signup")}
+              >
                 I'm a Job Seeker
               </button>
-              <button className="bg-gray-200 text-gray-900 px-6 py-3 rounded-lg text-lg font-semibold hover:bg-gray-300 transition">
+              <button
+                className="bg-gray-200 text-gray-900 px-6 py-3 rounded-lg text-lg font-semibold hover:bg-gray-300 transition"
+                onClick={() => navigate("/signin")}
+              >
                 I'm an Admin
               </button>
             </div>
