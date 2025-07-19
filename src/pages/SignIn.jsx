@@ -38,4 +38,29 @@ const SignUp = () => {
             className={`w-full px-4 py-3 rounded-md bg-[var(--green-light-alt)] text-gray-700 focus:outline-none ${errors.name ? 'border border-red-500' : ''}`}
           />
           {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
-         
+          <input
+            {...register('email')}
+            placeholder="Email"
+            className={`w-full px-4 py-3 rounded-md bg-[var(--green-light-alt)] text-gray-700 focus:outline-none ${errors.email ? 'border border-red-500' : ''}`}
+          />
+          {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+          <input
+            type="password"
+            {...register('password')}
+            placeholder="Password"
+            className={`w-full px-4 py-3 rounded-md bg-[var(--green-light-alt)] text-gray-700 focus:outline-none ${errors.password ? 'border border-red-500' : ''}`}
+          />
+          {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+          <button type="submit" className="w-full py-3 text-white font-semibold bg-[var(--green-primary)] rounded-md hover:bg-[var(--green-dark)]">
+            Sign Up
+          </button>
+        </form>
+        <p className="mt-6 text-sm text-center text-gray-600">
+          Already have an account? <Link to="/signin" className="text-[var(--green-primary)] font-semibold">Sign In</Link>
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default SignUp;
