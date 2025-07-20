@@ -112,7 +112,8 @@ export default function JobBoard() {
             value={jobTypeFilter}
             onChange={(e) => setJobTypeFilter(e.target.value)}
             className="border border-gray-300 rounded-full px-4 py-2 w-full sm:w-1/3 font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#177245] transition dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-            aria-label="Filter by job type" >
+            aria-label="Filter by job type" 
+          >
             <option value="">Job Type</option>
             <option value="frontend">Frontend</option>
             <option value="backend">Backend</option>
@@ -127,8 +128,15 @@ export default function JobBoard() {
         {jobsToShow.length > 0 ? (
           <>
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {jobsToShow.map((job) => (
-                <JobCard key={job.id} job={job} />
+              {jobsToShow.map((job, index) => (
+              <motion.div
+                  key={job.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                  <JobCard job={job} />
+                </motion.div>
               ))}
             </div>
             {visibleCount < filteredJobs.length && (
