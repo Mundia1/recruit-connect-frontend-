@@ -91,7 +91,7 @@ export default function JobBoard() {
       {/* Filters Section */}
       <section className="max-w-7xl mx-auto px-4">
          <div className="bg-white shadow-md rounded-xl p-4 mb-8 flex flex-col sm:flex-row gap-4 items-center sticky top-16 z-10 dark:bg-gray-800">
-
+          
           {/* Location Filter */}
           <select
             value={locationFilter}
