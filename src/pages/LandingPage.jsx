@@ -60,7 +60,7 @@ export default function LandingPage() {
         {/* Overlay */}
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
         <div className="relative z-10 flex flex-col items-center justify-center h-full w-full px-4 text-center">
-          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
             Find Jobs, Manage Jobs. All in One Place.
           </h1>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
