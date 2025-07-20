@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import Input from '../components/ui/Input';
+import Button from '../components/ui/Button';
+import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
 
 export default function SignUp() {
   const [form, setForm] = useState({ email: "", password: "", first_name: "", last_name: "" });
@@ -49,52 +52,54 @@ export default function SignUp() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-16 p-8 bg-white rounded-xl shadow-lg">
-      <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          name="first_name"
-          placeholder="First Name"
-          value={form.first_name}
-          onChange={handleChange}
-          className="w-full border border-gray-300 rounded-lg px-4 py-2"
-        />
-        <input
-          type="text"
-          name="last_name"
-          placeholder="Last Name"
-          value={form.last_name}
-          onChange={handleChange}
-          className="w-full border border-gray-300 rounded-lg px-4 py-2"
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-          className="w-full border border-gray-300 rounded-lg px-4 py-2"
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-          className="w-full border border-gray-300 rounded-lg px-4 py-2"
-        />
-        {error && <div className="text-red-500 text-sm">{error}</div>}
-        <button
-          type="submit"
-          className="w-full bg-[#177245] text-white py-2 rounded-lg font-semibold hover:bg-green-700 transition"
-        >
-          Sign Up
-        </button>
-      </form>
-      <div className="mt-4 text-center text-sm">
-        Already have an account? <a href="/signin" className="text-[#177245] font-semibold">Sign In</a>
-      </div>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[var(--bg-secondary)] p-[var(--spacing-lg)]">
+      <Card className="w-full max-w-md p-[var(--spacing-xl)]">
+        <CardHeader>
+          <CardTitle className="text-center">Sign Up</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-[var(--spacing-md)]">
+            <Input
+              type="text"
+              name="first_name"
+              placeholder="First Name"
+              value={form.first_name}
+              onChange={handleChange}
+            />
+            <Input
+              type="text"
+              name="last_name"
+              placeholder="Last Name"
+              value={form.last_name}
+              onChange={handleChange}
+            />
+            <Input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={form.email}
+              onChange={handleChange}
+            />
+            <Input
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={form.password}
+              onChange={handleChange}
+            />
+            {error && <div className="text-red-500 text-[var(--text-sm)]">{error}</div>}
+            <Button
+              type="submit"
+              className="w-full"
+            >
+              Sign Up
+            </Button>
+          </form>
+          <div className="mt-[var(--spacing-md)] text-center text-[var(--text-sm)]">
+            Already have an account? <Link to="/signin" className="text-[var(--green-primary)] font-semibold">Sign In</Link>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -1,11 +1,6 @@
 import axios from 'axios';
 
-// Ensure the VITE_API_URL is set in your .env file
 const API_URL = import.meta.env.VITE_API_URL;
-
-if (!API_URL) {
-  console.error('VITE_API_URL is not defined. Please set it in your .env file');
-}
 
 const api = axios.create({
   baseURL: API_URL,
@@ -55,17 +50,4 @@ api.interceptors.response.use(
   }
 );
 
-export const getCurrentUser = async () => {
-  const response = await api.get('/auth/me');
-  return response.data;
-};
-
-export const updateUserProfile = async (updates) => {
-  const response = await api.patch('/users/me', updates);
-  return response.data;
-};
-
-export const getUserApplications = async (userId) => {
-  const response = await api.get(`/applications?user_id=${userId}`);
-  return response.data;
-};
+export default api;

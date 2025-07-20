@@ -6,11 +6,11 @@ import DashboardLayout from '../../layout/DashboardLayout';
 import StatisticsCard from './StatisticsCard';
 import BarChart from './BarChart';
 import LineChart from './LineChart';
-import { Button } from '../../ui/Button';
-import { Card } from '../../ui/Card';
-import { Badge } from '../../ui/Badge';
-import { Tabs } from '../../ui/Tabs';
-import { api } from '../../../api/profile';
+import Button from '../../ui/Button';
+import { Card, CardContent, CardHeader, CardTitle } from '../../ui/Card';
+import Badge from '../../ui/Badge';
+import Tabs from '../../ui/Tabs';
+import api from '../../../api/profile';
 
 // API functions
 const fetchJobs = async () => {
@@ -105,7 +105,7 @@ const AnalyticsDashboard = ({ isAdmin = false }) => {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center h-96">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-[var(--green-primary)]" />
           <span className="ml-2">Loading dashboard...</span>
         </div>
       </DashboardLayout>
@@ -149,8 +149,8 @@ const AnalyticsDashboard = ({ isAdmin = false }) => {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Analytics Dashboard</h1>
-            <p className="mt-1 text-sm text-gray-500">
+            <h1 className="text-2xl font-bold text-[var(--text-primary)]">Analytics Dashboard</h1>
+            <p className="mt-1 text-sm text-[var(--text-muted)]">
               Overview of your recruitment metrics and performance
             </p>
           </div>
@@ -174,169 +174,154 @@ const AnalyticsDashboard = ({ isAdmin = false }) => {
         </div>
 
         {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <Tabs.List className="flex space-x-2 border-b">
-            <Tabs.Trigger value="overview">Overview</Tabs.Trigger>
-            <Tabs.Trigger value="applications">
-              Applications
-              {!isLoadingJobs && !isLoadingApplications && stats.totalApplications > 0 && (
-                <Badge variant="outline" className="ml-2">
-                  {stats.totalApplications}
-                </Badge>
-              )}
-            </Tabs.Trigger>
-            <Tabs.Trigger value="jobs">
-              Jobs
-              {!isLoadingJobs && stats.activeJobs > 0 && (
-                <Badge variant="outline" className="ml-2">
-                  {stats.activeJobs} Active
-                </Badge>
-              )}
-            </Tabs.Trigger>
-          </Tabs.List>
-
-          <Tabs.Content value="overview" className="space-y-6">
-            {/* Statistics Cards */}
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
-              <StatisticsCard
-                title="Total Jobs"
-                value={stats.totalJobs?.toLocaleString() || '0'}
-                icon={Briefcase}
-                iconBgColor="bg-blue-50"
-                iconColor="text-blue-600"
-              />
-              <StatisticsCard
-                title="Active Jobs"
-                value={stats.activeJobs?.toLocaleString() || '0'}
-                icon={TrendingUp}
-                trend={stats.activeJobs > 0 ? 5 : 0}
-                iconBgColor="bg-green-50"
-                iconColor="text-green-600"
-              />
-              <StatisticsCard
-                title="Applications"
-                value={stats.totalApplications?.toLocaleString() || '0'}
-                icon={Users}
-                trend={10}
-                iconBgColor="bg-purple-50"
-                iconColor="text-purple-600"
-              />
-              <StatisticsCard
-                title="Pending Reviews"
-                value={stats.pendingApplications?.toLocaleString() || '0'}
-                icon={AlertCircle}
-                iconBgColor="bg-yellow-50"
-                iconColor="text-yellow-600"
-              />
-              <StatisticsCard
-                title="Total Views"
-                value={stats.totalViews?.toLocaleString() || '0'}
-                icon={Eye}
-                trend={15}
-                iconBgColor="bg-indigo-50"
-                iconColor="text-indigo-600"
-              />
-            </div>
-
-            {/* Application Status Badges */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium">Application Status</h3>
-              <div className="flex flex-wrap gap-2">
-                {stats.applicationStatusCounts ? (
-                  Object.entries(stats.applicationStatusCounts).map(([status, count]) => (
-                    <Badge 
-                      key={status}
-                      variant="outline"
-                      className={`capitalize ${
-                        status === 'pending' ? 'bg-yellow-50 text-yellow-800 border-yellow-200' :
-                        status === 'accepted' ? 'bg-green-50 text-green-800 border-green-200' :
-                        status === 'rejected' ? 'bg-red-50 text-red-800 border-red-200' :
-                        'bg-gray-50 text-gray-800 border-gray-200'
-                      }`}
-                    >
-                      {status}: {count}
-                    </Badge>
-                  ))
-                ) : (
-                  <div className="h-8 w-full animate-pulse bg-gray-100 rounded-md"></div>
-                )}
-              </div>
-            </div>
-          </Tabs.Content>
-
-          <Tabs.Content value="applications">
-            <Card>
-              <div className="p-4">
-                <h3 className="text-lg font-medium mb-4">Recent Applications</h3>
-                {isLoadingApplications ? (
-                  <div className="flex items-center justify-center p-8">
-                    <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
+        <Tabs
+          tabs={[
+            {
+              label: 'Overview',
+              content: (
+                <div className="space-y-6">
+                  {/* Statistics Cards */}
+                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
+                    <StatisticsCard
+                      title="Total Jobs"
+                      value={stats.totalJobs?.toLocaleString() || '0'}
+                      icon={Briefcase}
+                      iconBgColor="bg-[var(--green-light)]"
+                      iconColor="text-[var(--green-darker)]"
+                    />
+                    <StatisticsCard
+                      title="Active Jobs"
+                      value={stats.activeJobs?.toLocaleString() || '0'}
+                      icon={TrendingUp}
+                      trend={stats.activeJobs > 0 ? 5 : 0}
+                      iconBgColor="bg-[var(--green-light)]"
+                      iconColor="text-[var(--green-darker)]"
+                    />
+                    <StatisticsCard
+                      title="Applications"
+                      value={stats.totalApplications?.toLocaleString() || '0'}
+                      icon={Users}
+                      trend={10}
+                      iconBgColor="bg-[var(--green-light)]"
+                      iconColor="text-[var(--green-darker)]"
+                    />
+                    <StatisticsCard
+                      title="Pending Reviews"
+                      value={stats.pendingApplications?.toLocaleString() || '0'}
+                      icon={AlertCircle}
+                      iconBgColor="bg-yellow-100"
+                      iconColor="text-yellow-600"
+                    />
+                    <StatisticsCard
+                      title="Total Views"
+                      value={stats.totalViews?.toLocaleString() || '0'}
+                      icon={Eye}
+                      trend={15}
+                      iconBgColor="bg-[var(--green-light)]"
+                      iconColor="text-[var(--green-darker)]"
+                    />
                   </div>
-                ) : applications.length > 0 ? (
+
+                  {/* Application Status Badges */}
                   <div className="space-y-4">
-                    {applications.slice(0, 5).map((app) => (
-                      <div key={app.id} className="border-b pb-4 last:border-b-0 last:pb-0">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <p className="font-medium">{app.jobTitle || 'Job Title'}</p>
-                            <p className="text-sm text-gray-500">{app.company || 'Company'}</p>
-                          </div>
-                          <Badge 
-                            variant="outline"
-                            className={`capitalize ${
-                              app.status === 'pending' ? 'bg-yellow-50 text-yellow-800 border-yellow-200' :
-                              app.status === 'accepted' ? 'bg-green-50 text-green-800 border-green-200' :
-                              app.status === 'rejected' ? 'bg-red-50 text-red-800 border-red-200' :
-                              'bg-gray-50 text-gray-800 border-gray-200'
-                            }`}
+                    <h3 className="text-lg font-medium">Application Status</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {stats.applicationStatusCounts ? (
+                        Object.entries(stats.applicationStatusCounts).map(([status, count]) => (
+                          <Badge
+                            key={status}
+                            variant={status === 'pending' ? 'secondary' : 'primary'}
+                            className={`capitalize`}
                           >
-                            {app.status || 'Unknown'}
+                            {status}: {count}
                           </Badge>
-                        </div>
+                        ))
+                      ) : (
+                        <div className="h-8 w-full animate-pulse bg-gray-100 rounded-md"></div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ),
+            },
+            {
+              label: 'Applications',
+              content: (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Recent Applications</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {isLoadingApplications ? (
+                      <div className="flex items-center justify-center p-8">
+                        <Loader2 className="h-6 w-6 animate-spin text-[var(--green-primary)]" />
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-gray-500 text-center py-8">No applications found</p>
-                )}
-              </div>
-            </Card>
-          </Tabs.Content>
-
-          <Tabs.Content value="jobs">
-            <Card>
-              <div className="p-4">
-                <h3 className="text-lg font-medium mb-4">Active Jobs</h3>
-                {isLoadingJobs ? (
-                  <div className="flex items-center justify-center p-8">
-                    <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
-                  </div>
-                ) : jobs.length > 0 ? (
-                  <div className="space-y-4">
-                    {jobs
-                      .filter(job => job.status === 'active')
-                      .slice(0, 5)
-                      .map((job) => (
-                        <div key={job.id} className="border-b pb-4 last:border-b-0 last:pb-0">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <p className="font-medium">{job.title || 'Job Title'}</p>
-                              <p className="text-sm text-gray-500">{job.company || 'Company'}</p>
+                    ) : applications.length > 0 ? (
+                      <div className="space-y-4">
+                        {applications.slice(0, 5).map((app) => (
+                          <div key={app.id} className="border-b pb-4 last:border-b-0 last:pb-0">
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <p className="font-medium">{app.jobTitle || 'Job Title'}</p>
+                                <p className="text-sm text-[var(--text-muted)]">{app.company || 'Company'}</p>
+                              </div>
+                              <Badge
+                                variant={app.status === 'pending' ? 'secondary' : 'primary'}
+                                className={`capitalize`}
+                              >
+                                {app.status || 'Unknown'}
+                              </Badge>
                             </div>
-                            <Badge variant="outline" className="bg-green-50 text-green-800 border-green-200">
-                              Active
-                            </Badge>
                           </div>
-                        </div>
-                      ))}
-                  </div>
-                ) : (
-                  <p className="text-gray-500 text-center py-8">No active jobs found</p>
-                )}
-              </div>
-            </Card>
-          </Tabs.Content>
-        </Tabs>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-[var(--text-muted)] text-center py-8">No applications found</p>
+                    )}
+                  </CardContent>
+                </Card>
+              ),
+            },
+            {
+              label: 'Jobs',
+              content: (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Active Jobs</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {isLoadingJobs ? (
+                      <div className="flex items-center justify-center p-8">
+                        <Loader2 className="h-6 w-6 animate-spin text-[var(--green-primary)]" />
+                      </div>
+                    ) : jobs.length > 0 ? (
+                      <div className="space-y-4">
+                        {jobs
+                          .filter(job => job.status === 'active')
+                          .slice(0, 5)
+                          .map((job) => (
+                            <div key={job.id} className="border-b pb-4 last:border-b-0 last:pb-0">
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <p className="font-medium">{job.title || 'Job Title'}</p>
+                                  <p className="text-sm text-[var(--text-muted)]">{job.company || 'Company'}</p>
+                                </div>
+                                <Badge variant="primary" className="capitalize">
+                                  Active
+                                </Badge>
+                              </div>
+                            </div>
+                          ))}
+                      </div>
+                    ) : (
+                      <p className="text-[var(--text-muted)] text-center py-8">No active jobs found</p>
+                    )}
+                  </CardContent>
+                </Card>
+              ),
+            },
+          ]}
+        />
 
         {/* Charts */}
         <div className="grid grid-cols-1 gap-5">
@@ -344,42 +329,46 @@ const AnalyticsDashboard = ({ isAdmin = false }) => {
             title="Monthly Page Views"
             data={viewsData.monthly || []}
             dataKey="value"
-            fill="#3b82f6"
+            fill="var(--green-primary)"
             height={400}
-            loading={isLoading}
+            loading={isLoadingViews}
           />
 
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Application Status</h3>
-              <div className="h-80">
-                {isLoading ? (
-                  <div className="flex items-center justify-center h-full">
-                    <div className="animate-pulse text-gray-400">Loading data...</div>
-                  </div>
-                ) : chartData.applicationStatus?.length > 0 ? (
-                  <LineChart
-                    data={chartData.applicationStatus}
-                    dataKey="value"
-                    height={300}
-                    stroke="#8b5cf6"
-                    showTitle={false}
-                  />
-                ) : (
-                  <div className="flex items-center justify-center h-full text-gray-400">
-                    No application data available
-                  </div>
-                )}
-              </div>
-            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Application Status</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="h-80">
+                  {isLoadingApplications ? (
+                    <div className="flex items-center justify-center h-full">
+                      <div className="animate-pulse text-[var(--text-muted)]">Loading data...</div>
+                    </div>
+                  ) : stats.applicationStatusCounts ? (
+                    <LineChart
+                      data={Object.entries(stats.applicationStatusCounts).map(([name, value]) => ({ name, value }))}
+                      dataKey="value"
+                      height={300}
+                      stroke="var(--green-primary)"
+                      showTitle={false}
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center h-full text-[var(--text-muted)]">
+                      No application data available
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
 
             <LineChart
               title="Views Trend"
-              data={chartData.monthlyViews}
+              data={viewsData.monthly || []}
               dataKey="value"
               height={300}
-              stroke="#3b82f6"
-              loading={isLoading}
+              stroke="var(--green-primary)"
+              loading={isLoadingViews}
             />
           </div>
         </div>

@@ -1,19 +1,21 @@
 import React from "react";
+import Button from '../../ui/Button';
+import { Card } from '../../ui/Card';
 
 export default function JobCard({ job }) {
   return (
-    <article className="bg-white border border-gray-100 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col justify-between p-6">
+    <Card className="rounded-[var(--radius-lg)] shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between p-[var(--spacing-xl)]">
       <div>
-        <h3 className="text-xl font-semibold text-gray-800">{job.title}</h3>
-        <p className="text-gray-600 mt-1">{job.company}</p>
-        <p className="text-gray-500 text-sm mt-1">{job.location}</p>
+        <h3 className="text-[var(--text-xl)] font-semibold text-[var(--text-primary)]">{job.title}</h3>
+        <p className="text-[var(--text-base)] text-[var(--text-secondary)] mt-[var(--spacing-xs)]">{job.company}</p>
+        <p className="text-[var(--text-sm)] text-[var(--text-muted)] mt-[var(--spacing-xs)]">{job.location}</p>
       </div>
-      <button
-        className="mt-6 bg-[#177245] text-white px-5 py-2 rounded-full hover:bg-green-700 transition w-full focus:outline-none focus:ring-2 focus:ring-[#177245]"
+      <Button
+        className="mt-[var(--spacing-xl)] w-full"
         aria-label={`Apply for ${job.title} at ${job.company}`}
       >
         Apply Now
-      </button>
-    </article>
+      </Button>
+    </Card>
   );
 }

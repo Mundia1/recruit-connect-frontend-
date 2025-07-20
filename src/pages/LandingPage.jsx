@@ -4,6 +4,9 @@ import Navbar from "../components/layout/Navbar";
 import FeaturedJobs from "../components/features/jobs/FeaturedJobs";
 import Footer from "../components/layout/Footer";
 import { useNavigate } from "react-router-dom";
+import Button from '../components/ui/Button';
+import { Card } from '../components/ui/Card';
+import Avatar from '../components/ui/Avatar';
 
 // --- Testimonials Data ---
 const testimonials = [
@@ -60,45 +63,44 @@ export default function LandingPage() {
         style={{ backgroundImage: `url(${HeroImage})` }}
       >
         {/* Overlay */}
-        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-        <div className="relative z-10 flex flex-col items-center justify-center h-full w-full px-4">
+        <div className="absolute inset-0 bg-[var(--text-primary)] opacity-40"></div>
+        <div className="relative z-10 flex flex-col items-center justify-center h-full w-full px-[var(--spacing-lg)]">
           <div className="text-center text-white max-w-2xl mx-auto">
-            <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-6 leading-tight">
+            <h1 className="text-[var(--text-2xl)] sm:text-[var(--text-3xl)] md:text-[var(--text-3xl)] font-bold mb-[var(--spacing-xl)] leading-[var(--leading-tight)]">
               Find Jobs, Manage Jobs. All in One Place.
             </h1>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <button
-                className="bg-[#177245] text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-green-700 transition"
+            <div className="flex flex-col sm:flex-row justify-center gap-[var(--spacing-md)]">
+              <Button
                 onClick={() => navigate("/signup")}
               >
                 I'm a Job Seeker
-              </button>
-              <button
-                className="bg-gray-200 text-gray-900 px-6 py-3 rounded-lg text-lg font-semibold hover:bg-gray-300 transition"
+              </Button>
+              <Button
+                variant="secondary"
                 onClick={() => navigate("/signin")}
               >
                 I'm an Admin
-              </button>
+              </Button>
             </div>
           </div>
         </div>
       </section>
 
       {/* How It Works Section */}
-      <section className="max-w-7xl mx-auto px-4 py-12">
-        <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+      <section className="max-w-7xl mx-auto px-[var(--spacing-lg)] py-[var(--spacing-3xl)]">
+        <h2 className="text-[var(--text-3xl)] font-bold text-[var(--text-primary)] mb-[var(--spacing-2xl)] text-center">
           How It Works
         </h2>
-        <div className="flex flex-col md:flex-row gap-8 justify-center items-center">
+        <div className="flex flex-col md:flex-row gap-[var(--spacing-2xl)] justify-center items-center">
           {steps.map((step) => (
-            <div
+            <Card
               key={step.title}
-              className="bg-white shadow-lg rounded-xl p-6 flex flex-col items-center text-center w-full md:w-1/3"
+              className="p-[var(--spacing-xl)] flex flex-col items-center text-center w-full md:w-1/3"
             >
-              <div className="text-4xl mb-4">{step.icon}</div>
-              <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
-              <p className="text-gray-600">{step.desc}</p>
-            </div>
+              <div className="text-[var(--text-3xl)] mb-[var(--spacing-md)]">{step.icon}</div>
+              <h3 className="text-[var(--text-xl)] font-semibold mb-[var(--spacing-xs)]">{step.title}</h3>
+              <p className="text-[var(--text-base)] text-[var(--text-muted)]">{step.desc}</p>
+            </Card>
           ))}
         </div>
       </section>
@@ -107,25 +109,26 @@ export default function LandingPage() {
       <FeaturedJobs />
 
       {/* Testimonials Section */}
-      <section className="max-w-7xl mx-auto px-4 py-12">
-        <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+      <section className="max-w-7xl mx-auto px-[var(--spacing-lg)] py-[var(--spacing-3xl)]">
+        <h2 className="text-[var(--text-3xl)] font-bold text-[var(--text-primary)] mb-[var(--spacing-2xl)] text-center">
           Testimonials
         </h2>
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-[var(--spacing-2xl)] sm:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((t) => (
-            <div
+            <Card
               key={t.name}
-              className="bg-white shadow-lg rounded-xl p-6 flex flex-col items-center text-center border border-gray-100"
+              className="p-[var(--spacing-xl)] flex flex-col items-center text-center"
             >
-              <img
+              <Avatar
                 src={t.avatar}
                 alt={t.name}
-                className="w-16 h-16 rounded-full mb-4 object-cover"
+                size="md"
+                className="mb-[var(--spacing-md)]"
               />
-              <p className="text-gray-700 italic mb-3">&quot;{t.text}&quot;</p>
-              <div className="font-semibold text-[#177245]">{t.name}</div>
-              <div className="text-gray-500 text-sm">{t.role}</div>
-            </div>
+              <p className="text-[var(--text-base)] text-[var(--text-primary)] italic mb-[var(--spacing-md)]">&quot;{t.text}&quot;</p>
+              <div className="font-semibold text-[var(--green-primary)]">{t.name}</div>
+              <div className="text-[var(--text-sm)] text-[var(--text-muted)]">{t.role}</div>
+            </Card>
           ))}
         </div>
       </section>

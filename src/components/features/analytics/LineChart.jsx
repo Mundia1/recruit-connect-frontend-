@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { LineChart as RechartsLineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Card, CardContent, CardHeader, CardTitle } from '../../ui/Card';
 
 const LineChart = ({ 
   title = "", 
   data = [],
   dataKey = 'value',
-  stroke = '#3b82f6',
+  stroke = 'var(--green-primary)',
   showTitle = true,
   className = '',
   height = 300,
@@ -14,35 +15,37 @@ const LineChart = ({
   showGrid = true
 }) => {
   return (
-    <div className={`bg-white rounded-lg border border-slate-200 p-6 shadow-sm ${className}`}>
+    <Card className={className}>
       {showTitle && title && (
-        <h3 className="text-lg font-semibold text-slate-900 mb-6">{title}</h3>
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+        </CardHeader>
       )}
-      <div style={{ height: `${height}px` }}>
+      <CardContent style={{ height: `${height}px` }}>
         <ResponsiveContainer width="100%" height="100%">
           <RechartsLineChart 
             data={data} 
             margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
           >
-            {showGrid && <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />}
+            {showGrid && <CartesianGrid strokeDasharray="3 3" stroke="var(--border-light)" />}
             <XAxis 
               dataKey="name" 
               tick={{ fontSize: 12 }}
-              axisLine={{ stroke: '#e2e8f0' }}
-              tickLine={{ stroke: '#e2e8f0' }}
+              axisLine={{ stroke: 'var(--border-medium)' }}
+              tickLine={{ stroke: 'var(--border-medium)' }}
             />
             <YAxis 
               tick={{ fontSize: 12 }}
-              axisLine={{ stroke: '#e2e8f0' }}
-              tickLine={{ stroke: '#e2e8f0' }}
+              axisLine={{ stroke: 'var(--border-medium)' }}
+              tickLine={{ stroke: 'var(--border-medium)' }}
             />
             {showTooltip && (
               <Tooltip 
                 contentStyle={{ 
-                  backgroundColor: '#ffffff', 
-                  border: '1px solid #e2e8f0',
-                  borderRadius: '8px',
-                  fontSize: '14px'
+                  backgroundColor: 'var(--bg-primary)', 
+                  border: '1px solid var(--border-light)',
+                  borderRadius: 'var(--radius-md)',
+                  fontSize: 'var(--text-sm)'
                 }}
               />
             )}
@@ -56,16 +59,8 @@ const LineChart = ({
             />
           </RechartsLineChart>
         </ResponsiveContainer>
-      </div>
-      <div className="mt-4 pt-4 border-t border-slate-100">
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-slate-500">Total Views</span>
-          <span className="font-medium text-slate-900">
-            {data.reduce((sum, item) => sum + item.views, 0).toLocaleString()}
-          </span>
-        </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

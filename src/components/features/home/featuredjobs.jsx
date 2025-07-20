@@ -1,5 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Button from '../../ui/Button';
+import { Card } from '../../ui/Card';
+import Avatar from '../../ui/Avatar';
 
 const FeaturedJobs = () => {
   const navigate = useNavigate();
@@ -41,50 +44,51 @@ const FeaturedJobs = () => {
   ];
 
   return (
-    <section className="featured-jobs-section">
-      <div className="section-header">
-        <h2 className="section-title">Featured Jobs</h2>
-        <button 
-          className="view-all-button"
+    <section className="max-w-7xl mx-auto px-[var(--spacing-lg)] py-[var(--spacing-3xl)]">
+      <div className="flex justify-between items-center mb-[var(--spacing-2xl)]">
+        <h2 className="text-[var(--text-3xl)] font-bold text-[var(--text-primary)]">Featured Jobs</h2>
+        <Button 
+          variant="outline"
           onClick={() => navigate('/jobs')}
         >
           View All Jobs
-        </button>
+        </Button>
       </div>
-      <div className="jobs-grid">
+      <div className="grid gap-[var(--spacing-xl)] sm:grid-cols-2 lg:grid-cols-3">
         {featuredJobs.map((job) => (
-          <div 
-            className="job-card"
+          <Card 
+            className="p-[var(--spacing-xl)] hover:shadow-xl transition-shadow duration-300 cursor-pointer"
             key={job.id}
             onClick={() => navigate(`/jobs/${job.id}`)}
           >
-            <div className="job-header">
-              <img 
+            <div className="flex items-center mb-[var(--spacing-md)]">
+              <Avatar 
                 src={job.logo} 
                 alt={job.company} 
-                className="company-logo"
+                size="sm"
+                className="mr-[var(--spacing-md)]"
               />
-              <div className="job-info">
-                <h3 className="job-title">{job.title}</h3>
-                <p className="company-name">{job.company}</p>
-                <div className="job-meta">
-                  <span className="meta-item">{job.location}</span>
-                  <span className="meta-item">{job.type}</span>
-                  <span className="meta-item">{job.salary}</span>
-                </div>
+              <div className="flex flex-col">
+                <h3 className="text-[var(--text-xl)] font-semibold text-[var(--text-primary)]">{job.title}</h3>
+                <p className="text-[var(--text-base)] text-[var(--text-secondary)]">{job.company}</p>
               </div>
             </div>
-            <p className="job-description">{job.description}</p>
-            <button 
-              className="apply-button"
+            <div className="flex flex-wrap gap-x-[var(--spacing-md)] gap-y-[var(--spacing-xs)] text-[var(--text-sm)] text-[var(--text-muted)] mb-[var(--spacing-md)]">
+              <span>{job.location}</span>
+              <span>{job.type}</span>
+              <span>{job.salary}</span>
+            </div>
+            <p className="text-[var(--text-base)] text-[var(--text-primary)] mb-[var(--spacing-xl)]">{job.description}</p>
+            <Button 
               onClick={(e) => {
                 e.stopPropagation();
                 navigate(`/jobs/${job.id}/apply`);
               }}
+              className="w-full"
             >
               Apply Now
-            </button>
-          </div>
+            </Button>
+          </Card>
         ))}
       </div>
     </section>

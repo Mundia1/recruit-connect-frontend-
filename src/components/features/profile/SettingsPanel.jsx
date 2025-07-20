@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import { api } from '../../../api/profile';
-import { Button } from '../../ui/Button';
-import { Input } from '../../ui/Input';
-import { Modal } from '../../ui/Modal';
-import { Card } from '../../ui/Card';
-import { Switch } from '../../ui/Switch';
+import api from '../../../api/profile';
+import Button from '../../ui/Button';
+import Input from '../../ui/Input';
+import Modal from '../../ui/Modal';
+import { Card, CardHeader, CardTitle, CardContent } from '../../ui/Card';
+import Switch from '../../ui/Switch';
+import React from 'react';
 
 export function SettingsPanel({ onLogout }) {
   const [activeModal, setActiveModal] = useState(null);
@@ -110,7 +111,7 @@ export function SettingsPanel({ onLogout }) {
       title: 'Email',
       description: 'Update your email address',
       modalContent: (
-        <form onSubmit={(e) => handleSubmit(e, 'email')} className="space-y-4">
+        <form onSubmit={(e) => handleSubmit(e, 'email')} className="space-y-[var(--spacing-md)]">
           <Input
             label="New Email Address"
             type="email"
@@ -119,7 +120,7 @@ export function SettingsPanel({ onLogout }) {
             onChange={handleChange}
             required
           />
-          <div className="flex justify-end space-x-3 pt-4">
+          <div className="flex justify-end space-x-[var(--spacing-md)] pt-[var(--spacing-lg)]">
             <Button
               type="button"
               variant="outline"
@@ -142,7 +143,7 @@ export function SettingsPanel({ onLogout }) {
       title: 'Password',
       description: 'Change your password',
       modalContent: (
-        <form onSubmit={(e) => handleSubmit(e, 'password')} className="space-y-4">
+        <form onSubmit={(e) => handleSubmit(e, 'password')} className="space-y-[var(--spacing-md)]">
           <Input
             label="Current Password"
             type="password"
@@ -168,7 +169,7 @@ export function SettingsPanel({ onLogout }) {
             onChange={handleChange}
             required
           />
-          <div className="flex justify-end space-x-3 pt-4">
+          <div className="flex justify-end space-x-[var(--spacing-md)] pt-[var(--spacing-lg)]">
             <Button
               type="button"
               variant="outline"
@@ -191,10 +192,10 @@ export function SettingsPanel({ onLogout }) {
       title: 'Notifications',
       description: 'Manage your notification preferences',
       modalContent: (
-        <form onSubmit={(e) => handleSubmit(e, 'notifications')} className="space-y-6">
-          <div className="space-y-4">
+        <form onSubmit={(e) => handleSubmit(e, 'notifications')} className="space-y-[var(--spacing-xl)]">
+          <div className="space-y-[var(--spacing-md)]">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-gray-700">
+              <label className="text-[var(--text-sm)] font-medium text-[var(--text-secondary)]">
                 Email Notifications
               </label>
               <Switch
@@ -209,7 +210,7 @@ export function SettingsPanel({ onLogout }) {
               />
             </div>
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-gray-700">
+              <label className="text-[var(--text-sm)] font-medium text-[var(--text-secondary)]">
                 Push Notifications
               </label>
               <Switch
@@ -224,7 +225,7 @@ export function SettingsPanel({ onLogout }) {
               />
             </div>
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-gray-700">
+              <label className="text-[var(--text-sm)] font-medium text-[var(--text-secondary)]">
                 Job Alerts
               </label>
               <Switch
@@ -239,7 +240,7 @@ export function SettingsPanel({ onLogout }) {
               />
             </div>
           </div>
-          <div className="flex justify-end space-x-3 pt-4">
+          <div className="flex justify-end space-x-[var(--spacing-md)] pt-[var(--spacing-lg)]">
             <Button
               type="button"
               variant="outline"
@@ -260,26 +261,26 @@ export function SettingsPanel({ onLogout }) {
   ];
 
   return (
-    <Card className="w-full max-w-4xl mx-auto p-6">
-      <div className="space-y-6">
+    <Card className="w-full max-w-4xl mx-auto p-[var(--spacing-xl)]">
+      <div className="space-y-[var(--spacing-xl)]">
         {/* Header */}
-        <div className="border-b border-gray-200 pb-4">
-          <h2 className="text-2xl font-bold text-gray-900">Account Settings</h2>
-          <p className="text-sm text-gray-500 mt-1">
+        <div className="border-b border-[var(--border-light)] pb-[var(--spacing-lg)]">
+          <h2 className="text-[var(--text-2xl)] font-bold text-[var(--text-primary)]">Account Settings</h2>
+          <p className="text-[var(--text-sm)] text-[var(--text-muted)] mt-[var(--spacing-xs)]">
             Manage your account settings and preferences
           </p>
         </div>
 
         {/* Settings List */}
-        <div className="space-y-4">
+        <div className="space-y-[var(--spacing-lg)]">
           {settingsItems.map((item) => (
             <div
               key={item.id}
-              className="flex justify-between items-center p-4 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex justify-between items-center p-[var(--spacing-lg)] rounded-[var(--radius-md)] hover:bg-[var(--bg-secondary)] transition-colors"
             >
               <div>
-                <h3 className="font-medium text-gray-900">{item.title}</h3>
-                <p className="text-sm text-gray-500">{item.description}</p>
+                <h3 className="font-medium text-[var(--text-primary)]">{item.title}</h3>
+                <p className="text-[var(--text-sm)] text-[var(--text-muted)]">{item.description}</p>
               </div>
               <Button
                 variant="outline"
@@ -293,7 +294,7 @@ export function SettingsPanel({ onLogout }) {
         </div>
 
         {/* Log Out Button */}
-        <div className="pt-4 border-t border-gray-200">
+        <div className="pt-[var(--spacing-lg)] border-t border-[var(--border-light)]">
           <Button
             variant="outline"
             className="w-full text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"

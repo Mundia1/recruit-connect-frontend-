@@ -1,4 +1,6 @@
 import React from 'react';
+import { Card } from '../../ui/Card';
+import Avatar from '../../ui/Avatar';
 
 const Testimonials = () => {
   const testimonials = [
@@ -26,24 +28,27 @@ const Testimonials = () => {
   ];
 
   return (
-    <section className="testimonials-section">
-      <h2 className="section-title">What Our Users Say</h2>
-      <div className="testimonials-grid">
+    <section className="max-w-7xl mx-auto px-[var(--spacing-lg)] py-[var(--spacing-3xl)]">
+      <h2 className="text-[var(--text-3xl)] font-bold text-[var(--text-primary)] mb-[var(--spacing-2xl)] text-center">
+        What Our Users Say
+      </h2>
+      <div className="grid gap-[var(--spacing-2xl)] sm:grid-cols-2 lg:grid-cols-3">
         {testimonials.map((testimonial) => (
-          <div className="testimonial-card" key={testimonial.id}>
-            <p className="testimonial-text">"{testimonial.text}"</p>
-            <div className="testimonial-author">
-              <img 
+          <Card key={testimonial.id} className="p-[var(--spacing-xl)] flex flex-col items-center text-center">
+            <p className="text-[var(--text-base)] text-[var(--text-primary)] italic mb-[var(--spacing-md)]">"{testimonial.text}"</p>
+            <div className="flex items-center mt-[var(--spacing-md)]">
+              <Avatar 
                 src={testimonial.image} 
                 alt={testimonial.name} 
-                className="author-image"
+                size="sm"
+                className="mr-[var(--spacing-md)]"
               />
-              <div className="author-info">
-                <span className="author-name">{testimonial.name}</span>
-                <span className="author-role">{testimonial.role}</span>
+              <div className="flex flex-col items-start">
+                <span className="font-semibold text-[var(--green-primary)]">{testimonial.name}</span>
+                <span className="text-[var(--text-sm)] text-[var(--text-muted)]">{testimonial.role}</span>
               </div>
             </div>
-          </div>
+          </Card>
         ))}
       </div>
     </section>

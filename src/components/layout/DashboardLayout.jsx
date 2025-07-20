@@ -15,10 +15,10 @@ import {
   FileText,
   MessageSquare,
 } from 'lucide-react';
-import { Button } from '../ui/Button';
-import { Input } from '../ui/Input';
-import { Avatar } from '../ui/Avatar';
-import { Badge } from '../ui/Badge';
+import Button from '../ui/Button';
+import Input from '../ui/Input';
+import Avatar from '../ui/Avatar';
+import Badge from '../ui/Badge';
 
 const DashboardLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -80,7 +80,7 @@ const DashboardLayout = ({ children }) => {
 
   // Check if a nav item is active
   const isActive = (path) => {
-    return location.pathname === path ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-100';
+    return location.pathname === path ? 'bg-[var(--green-light)] text-[var(--green-darker)]' : 'text-[var(--text-primary)] hover:bg-[var(--bg-secondary)]';
   };
 
   // Handle logout
@@ -100,7 +100,7 @@ const DashboardLayout = ({ children }) => {
         <Link
           key={item.path}
           to={item.path}
-          className={`group flex items-center rounded-md px-3 py-2 text-sm font-medium lg:px-4 ${isActive(item.path)}`}
+          className={`group flex items-center rounded-[var(--radius-md)] px-3 py-2 text-[var(--text-sm)] font-medium lg:px-4 ${isActive(item.path)}`}
           onClick={onItemClick}
         >
           <span className="mr-3">{item.icon}</span>
@@ -133,7 +133,7 @@ const DashboardLayout = ({ children }) => {
         </span>
       </Avatar>
       <div className="ml-3">
-        <p className="text-sm font-medium text-gray-900">
+        <p className="text-[var(--text-sm)] font-medium text-[var(--text-primary)]">
           {currentUser?.name || 'User'}
         </p>
         {showLogout ? (
@@ -141,12 +141,12 @@ const DashboardLayout = ({ children }) => {
             variant="ghost"
             size="sm"
             onClick={handleLogout}
-            className="text-xs text-gray-500 hover:text-gray-700 p-0 h-auto"
+            className="text-[var(--text-xs)] text-[var(--text-muted)] hover:text-[var(--text-primary)] p-0 h-auto"
           >
             Sign out
           </Button>
         ) : (
-          <Badge variant="secondary" className="text-xs">
+          <Badge variant="secondary" className="text-[var(--text-xs)]">
             {isAdmin ? 'Administrator' : 'User'}
           </Badge>
         )}
@@ -155,16 +155,16 @@ const DashboardLayout = ({ children }) => {
   );
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-[var(--bg-secondary)]">
       {/* Mobile sidebar */}
       <div className={`lg:hidden ${sidebarOpen ? 'fixed inset-0 z-40 flex' : 'hidden'}`}>
         <div 
           className="fixed inset-0 bg-gray-600 bg-opacity-75" 
           onClick={() => setSidebarOpen(false)}
         />
-        <div className="relative flex w-full max-w-xs flex-1 flex-col bg-white">
-          <div className="flex h-16 items-center justify-between border-b border-gray-200 px-4">
-            <h1 className="text-xl font-bold text-blue-600">
+        <div className="relative flex w-full max-w-xs flex-1 flex-col bg-[var(--bg-primary)]">
+          <div className="flex h-16 items-center justify-between border-b border-[var(--border-light)] px-4">
+            <h1 className="text-[var(--text-xl)] font-bold text-[var(--green-primary)]">
               {isAdminRoute ? 'Admin Panel' : 'RecruitConnect'}
             </h1>
             <Button
@@ -180,7 +180,7 @@ const DashboardLayout = ({ children }) => {
               {renderNavItems(() => setSidebarOpen(false))}
             </nav>
           </div>
-          <div className="border-t border-gray-200 p-4">
+          <div className="border-t border-[var(--border-light)] p-4">
             {renderUserProfile()}
           </div>
         </div>
@@ -188,9 +188,9 @@ const DashboardLayout = ({ children }) => {
 
       {/* Desktop sidebar */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
-        <div className="flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-white">
-          <div className="flex h-16 flex-shrink-0 items-center border-b border-gray-200 px-4">
-            <h1 className="text-xl font-bold text-blue-600">
+        <div className="flex min-h-0 flex-1 flex-col border-r border-[var(--border-light)] bg-[var(--bg-primary)]">
+          <div className="flex h-16 flex-shrink-0 items-center border-b border-[var(--border-light)] px-4">
+            <h1 className="text-[var(--text-xl)] font-bold text-[var(--green-primary)]">
               {isAdminRoute ? 'Admin Panel' : 'RecruitConnect'}
             </h1>
           </div>
@@ -199,7 +199,7 @@ const DashboardLayout = ({ children }) => {
               {renderNavItems()}
             </nav>
           </div>
-          <div className="flex flex-shrink-0 border-t border-gray-200 p-4">
+          <div className="flex flex-shrink-0 border-t border-[var(--border-light)] p-4">
             <div className="group block w-full">
               {renderUserProfile(true)}
             </div>
@@ -209,11 +209,11 @@ const DashboardLayout = ({ children }) => {
 
       {/* Main content */}
       <div className="flex flex-1 flex-col lg:pl-64">
-        <header className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow-sm">
+        <header className="sticky top-0 z-10 flex h-16 flex-shrink-0 bg-[var(--bg-primary)] shadow-sm">
           <Button
             variant="ghost"
             size="sm"
-            className="border-r border-gray-200 rounded-none lg:hidden"
+            className="border-r border-[var(--border-light)] rounded-none lg:hidden"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="sr-only">Open sidebar</span>
@@ -228,7 +228,7 @@ const DashboardLayout = ({ children }) => {
                   placeholder="Search jobs, candidates..."
                   type="search"
                   name="search"
-                  icon={<Search className="h-5 w-5 text-gray-400" />}
+                  icon={<Search className="h-5 w-5 text-[var(--text-muted)]" />}
                 />
               </div>
             </div>
@@ -247,7 +247,7 @@ const DashboardLayout = ({ children }) => {
         <main className="flex-1">
           <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-semibold text-gray-900">
+              <h1 className="text-[var(--text-2xl)] font-semibold text-[var(--text-primary)]">
                 {currentPage}
                 {isAdminRoute && (
                   <Badge variant="secondary" className="ml-2">

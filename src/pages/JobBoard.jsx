@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { jobs } from "../api/jobs";
 import { Search } from "lucide-react";
 import JobCard from "../components/features/jobs/JobCard";
+import Input from '../components/ui/Input';
+import Button from '../components/ui/Button';
+import Select from '../components/ui/Select';
+import { Card } from '../components/ui/Card';
 
 const PAGE_SIZE = 6;
 
@@ -37,30 +41,30 @@ export default function JobBoard() {
   const jobsToShow = filteredJobs.slice(0, visibleCount);
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-12">
-      <h1 className="text-4xl font-extrabold text-gray-900 mb-8">
+    <section className="max-w-7xl mx-auto px-[var(--spacing-lg)] py-[var(--spacing-3xl)]">
+      <h1 className="text-[var(--text-3xl)] font-bold text-[var(--text-primary)] mb-[var(--spacing-2xl)]">
         Explore Jobs
       </h1>
 
       {/* Filters */}
-      <div className="bg-white shadow-md rounded-xl p-4 mb-8 flex flex-col sm:flex-row gap-4 items-center sticky top-0 z-10">
+      <Card className="p-[var(--spacing-lg)] mb-[var(--spacing-2xl)] flex flex-col sm:flex-row gap-[var(--spacing-md)] items-center sticky top-0 z-10">
         {/* Search Input */}
         <div className="relative w-full sm:w-1/2">
-          <Search className="absolute left-3 top-3 text-gray-400" size={20} />
-          <input
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" size={20} />
+          <Input
             type="text"
             placeholder="Search jobs..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="border border-gray-300 rounded-full pl-10 pr-4 py-2 w-full font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#177245] transition"
+            className="pl-10 pr-4 py-2 w-full"
           />
         </div>
 
         {/* Location Filter */}
-        <select
+        <Select
           value={locationFilter}
           onChange={(e) => setLocationFilter(e.target.value)}
-          className="border border-gray-300 rounded-full px-4 py-2 w-full sm:w-1/4 font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#177245] transition"
+          className="w-full sm:w-1/4"
         >
           <option value="">All Locations</option>
           <option value="kenya">Kenya</option>
@@ -68,43 +72,42 @@ export default function JobBoard() {
           <option value="rwanda">Rwanda</option>
           <option value="uganda">Uganda</option>
           <option value="nigeria">Nigeria</option>
-        </select>
+        </Select>
 
         {/* Job Type Filter */}
-        <select
+        <Select
           value={jobTypeFilter}
           onChange={(e) => setJobTypeFilter(e.target.value)}
-          className="border border-gray-300 rounded-full px-4 py-2 w-full sm:w-1/4 font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#177245] transition"
+          className="w-full sm:w-1/4"
         >
           <option value="">Job Type</option>
           <option value="frontend">Frontend</option>
           <option value="backend">Backend</option>
           <option value="designer">Designer</option>
           <option value="data">Data</option>
-        </select>
-      </div>
+        </Select>
+      </Card>
 
       {/* Jobs Grid */}
       {jobsToShow.length > 0 ? (
         <>
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-[var(--spacing-xl)] sm:grid-cols-2 lg:grid-cols-3">
             {jobsToShow.map((job) => (
               <JobCard key={job.id} job={job} />
             ))}
           </div>
           {visibleCount < filteredJobs.length && (
-            <div className="flex justify-center mt-8">
-              <button
-                className="bg-[#177245] text-white px-6 py-3 rounded-full font-semibold hover:bg-green-700 transition"
+            <div className="flex justify-center mt-[var(--spacing-2xl)]">
+              <Button
                 onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
               >
                 Load More
-              </button>
+              </Button>
             </div>
           )}
         </>
       ) : (
-        <p className="text-gray-600 mt-6 text-center">No jobs match your search.</p>
+        <p className="text-[var(--text-muted)] mt-[var(--spacing-xl)] text-center">No jobs match your search.</p>
       )}
     </section>
   );

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Card } from '../../ui/Card';
 
 const HowItWorks = () => {
   const steps = [
@@ -25,15 +26,17 @@ const HowItWorks = () => {
   ];
 
   return (
-    <section className="how-it-works-section">
-      <h2 className="section-title">How RecruitConnect Works</h2>
-      <div className="steps-container">
+    <section className="max-w-7xl mx-auto px-[var(--spacing-lg)] py-[var(--spacing-3xl)]">
+      <h2 className="text-[var(--text-3xl)] font-bold text-[var(--text-primary)] mb-[var(--spacing-2xl)] text-center">
+        How RecruitConnect Works
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[var(--spacing-xl)]">
         {steps.map((step) => (
-          <div className="step-card" key={step.number}>
-            <div className="step-number">{step.number}</div>
-            <h3 className="step-title">{step.title}</h3>
-            <p className="step-description">{step.description}</p>
-          </div>
+          <Card key={step.number} className="p-[var(--spacing-xl)] flex flex-col items-center text-center">
+            <div className="text-[var(--text-3xl)] font-bold text-[var(--green-primary)] mb-[var(--spacing-md)]">{step.number}</div>
+            <h3 className="text-[var(--text-xl)] font-semibold text-[var(--text-primary)] mb-[var(--spacing-xs)]">{step.title}</h3>
+            <p className="text-[var(--text-base)] text-[var(--text-muted)]">{step.description}</p>
+          </Card>
         ))}
       </div>
     </section>

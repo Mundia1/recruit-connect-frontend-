@@ -1,3 +1,69 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    /* Primary Green */
+    --green-primary: #21C259;
+    --green-dark: #05823B;
+    --green-darker: #12783D;
+
+    /* Light Green */
+    --green-light: #E8F2EB;
+    --green-light-alt: #E8F5ED;
+    --green-medium: #549469;
+
+    /* Secondary Green */
+    --green-secondary: #088729;
+    --green-muted: #4A9C6B;
+    --green-subtle: #4F946E;
+
+    /* Background */
+    --bg-primary: #F7FAFA;
+    --bg-secondary: #F7FCFA;
+
+    /* Text */
+    --text-primary: #0F1A12;
+    --text-secondary: #0D1C12;
+    --text-tertiary: #0D1C14;
+    --text-quaternary: #0D1C20;
+
+    /* Borders */
+    --border-light: #D1E5D9;
+    --border-medium: #E5E8EB;
+
+    /* Secondary Text */
+    --text-muted: #549469;
+    --text-subtle: #4F946E;
+
+    /* Typography Scale */
+    --text-3xl: 32px;
+    --text-2xl: 28px;
+    --text-xl: 22px;
+    --text-lg: 18px;
+    --text-base: 16px;
+    --text-sm: 14px;
+    --text-xs: 13px;
+
+    /* Line Heights */
+    --leading-normal: 150%;
+    --leading-tight: 125%;
+
+    /* Spacing Scale */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 12px;
+    --spacing-lg: 16px;
+    --spacing-xl: 20px;
+    --spacing-2xl: 24px;
+    --spacing-3xl: 32px;
+    --spacing-4xl: 40px;
+
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-full: 50%;
+  }
+}
