@@ -48,9 +48,10 @@ const steps = [
 
 export default function LandingPage() {
   return (
-    <div>
+    <div className="bg-white dark:bg-black">
       {/* Navbar */}
       <Navbar />
+   
 
       {/* Hero Section */}
       <section
@@ -82,18 +83,19 @@ export default function LandingPage() {
 
       {/* How It Works Section */}
       <section className="max-w-7xl mx-auto px-4 py-12">
-        <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+        <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-8 text-center">
           How It Works
         </h2>
         <div className="flex flex-col md:flex-row gap-8 justify-center items-center">
           {steps.map((step) => (
             <div
               key={step.title}
-              className="bg-white shadow-lg rounded-xl p-6 flex flex-col items-center text-center w-full md:w-1/3"
+              className="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 flex flex-col items-center text-center w-full md:w-1/3"
             >
               <div className="text-4xl mb-4">{step.icon}</div>
-              <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
-              <p className="text-gray-600">{step.desc}</p>
+              
+              <h3 className="text-xl font-semibold mb-2 dark:text-white">{step.title}</h3> 
+              <p className="text-gray-600 dark:text-gray-300">{step.desc}</p>
             </div>
           ))}
         </div>
@@ -104,23 +106,23 @@ export default function LandingPage() {
 
       {/* Testimonials Section */}
       <section className="max-w-7xl mx-auto px-4 py-12">
-        <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+        <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-8 text-center"> 
           Testimonials
         </h2>
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((t) => (
             <div
               key={t.name}
-              className="bg-white shadow-lg rounded-xl p-6 flex flex-col items-center text-center border border-gray-100"
-            >
+              className="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 flex flex-col items-center text-center border border-gray-100 dark:border-gray-700"
+              >
               <img
                 src={t.avatar}
                 alt={t.name}
                 className="w-16 h-16 rounded-full mb-4 object-cover"
               />
-              <p className="text-gray-700 italic mb-3">&quot;{t.text}&quot;</p>
+              <p className="text-gray-700 dark:text-gray-300 italic mb-3">"{t.text}"</p>
               <div className="font-semibold text-[#177245]">{t.name}</div>
-              <div className="text-gray-500 text-sm">{t.role}</div>
+              <div className="text-gray-500 dark:text-gray-400 text-sm">{t.role}</div>
             </div>
           ))}
         </div>
