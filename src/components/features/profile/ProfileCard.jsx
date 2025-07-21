@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getCurrentUser, getUserApplications, updateUserProfile } from '../../../api/profile';
+import api from '../../../api';
 import { toast } from 'react-toastify';
 import Avatar from '../../ui/Avatar';
 import Button from '../../ui/Button';
@@ -14,7 +14,7 @@ export function ProfileCard() {
   // Fetch current user data
   const { data: user, isLoading: isLoadingUser } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: getCurrentUser,
+    queryFn: api.auth.getCurrentUser,
     onError: (error) => {
       toast.error('Failed to load profile data');
       console.error('Error fetching user:', error);
@@ -23,8 +23,8 @@ export function ProfileCard() {
 
   // Fetch user's applications
   const { data: applications = [], isLoading: isLoadingApplications } = useQuery({
-    queryKey: ['userApplications'],
-    queryFn: () => getUserApplications(user?.id),
+    queryKey: ['userApplications', user?.id],
+    queryFn: () => api.applications.getAll({ userId: user.id }),
     enabled: !!user?.id,
     onError: (error) => {
       toast.error('Failed to load application history');
@@ -34,7 +34,7 @@ export function ProfileCard() {
 
   // Update profile mutation
   const updateProfileMutation = useMutation({
-    mutationFn: updateUserProfile,
+    mutationFn: api.auth.updateUserProfile,
     onSuccess: () => {
       toast.success('Profile updated successfully');
       queryClient.invalidateQueries({ queryKey: ['currentUser'] });

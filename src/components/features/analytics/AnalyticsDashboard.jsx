@@ -10,23 +10,7 @@ import Button from '../../ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../ui/Card';
 import Badge from '../../ui/Badge';
 import Tabs from '../../ui/Tabs';
-import api from '../../../api/profile';
-
-// API functions
-const fetchJobs = async () => {
-  const { data } = await api.get('/jobs');
-  return data || [];
-};
-
-const fetchApplications = async () => {
-  const { data } = await api.get('/applications');
-  return data || [];
-};
-
-const fetchViews = async () => {
-  const { data } = await api.get('/analytics/views');
-  return data || [];
-};
+import api from '../../../api';
 
 const AnalyticsDashboard = ({ isAdmin = false }) => {
   const queryClient = useQueryClient();
@@ -39,7 +23,7 @@ const AnalyticsDashboard = ({ isAdmin = false }) => {
     error: jobsError,
   } = useQuery({
     queryKey: ['jobs'],
-    queryFn: fetchJobs,
+    queryFn: async () => (await api.jobs.getAll()).data,
   });
 
   const {
@@ -48,7 +32,7 @@ const AnalyticsDashboard = ({ isAdmin = false }) => {
     error: applicationsError,
   } = useQuery({
     queryKey: ['applications'],
-    queryFn: fetchApplications,
+    queryFn: async () => (await api.applications.getAll()).data,
     enabled: isAdmin,
   });
 
@@ -58,7 +42,12 @@ const AnalyticsDashboard = ({ isAdmin = false }) => {
     error: viewsError,
   } = useQuery({
     queryKey: ['views'],
-    queryFn: fetchViews,
+    queryFn: async () => {
+      const currentYear = new Date().getFullYear();
+      const currentMonth = new Date().getMonth() + 1; // Month is 0-indexed
+      return (await api.jobViews.getMonthlyViews(currentYear, currentMonth)).data;
+    },
+    enabled: isAdmin && api.isAuthenticated(),
   });
 
   // Handle refresh
@@ -114,6 +103,10 @@ const AnalyticsDashboard = ({ isAdmin = false }) => {
 
   // Error state
   if (jobsError || applicationsError || viewsError) {
+    let errorMessage = 'Please try refreshing the page or contact support if the problem persists.';
+    if (viewsError && viewsError.status === 403) {
+      errorMessage = 'You do not have permission to view job analytics. Please ensure you are logged in as an administrator.';
+    }
     return (
       <DashboardLayout>
         <Card className="border-red-200 bg-red-50">
@@ -126,7 +119,7 @@ const AnalyticsDashboard = ({ isAdmin = false }) => {
                 Error loading dashboard data
               </h3>
               <div className="mt-2 text-sm text-red-700">
-                <p>Please try refreshing the page or contact support if the problem persists.</p>
+                <p>{errorMessage}</p>
               </div>
               <div className="mt-4">
                 <Button

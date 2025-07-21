@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import api from '../../../api/profile';
+import api from '../../../api';
 import Button from '../../ui/Button';
 import Input from '../../ui/Input';
 import Modal from '../../ui/Modal';
@@ -24,13 +24,7 @@ export function SettingsPanel({ onLogout }) {
   });
 
   const updatePassword = useMutation({
-    mutationFn: async ({ currentPassword, newPassword }) => {
-      const response = await api.patch('/users/me/password', {
-        currentPassword,
-        newPassword,
-      });
-      return response.data;
-    },
+    mutationFn: (data) => api.auth.updateUserProfile(data),
     onSuccess: () => {
       toast.success('Password updated successfully');
       setActiveModal(null);
@@ -42,10 +36,7 @@ export function SettingsPanel({ onLogout }) {
   });
 
   const updateEmail = useMutation({
-    mutationFn: async ({ email }) => {
-      const response = await api.patch('/users/me/email', { email });
-      return response.data;
-    },
+    mutationFn: (data) => api.auth.updateUserProfile(data),
     onSuccess: () => {
       toast.success('Email updated successfully');
       setActiveModal(null);
@@ -56,10 +47,7 @@ export function SettingsPanel({ onLogout }) {
   });
 
   const updateNotifications = useMutation({
-    mutationFn: async (notifications) => {
-      const response = await api.patch('/users/me/notifications', { notifications });
-      return response.data;
-    },
+    mutationFn: (notifications) => api.auth.updateUserProfile({ notifications }),
     onSuccess: () => {
       toast.success('Notification preferences updated');
       setActiveModal(null);

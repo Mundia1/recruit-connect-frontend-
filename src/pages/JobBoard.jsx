@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { jobs } from "../api/jobs";
+import React, { useState, useEffect } from "react";
+import api from "../api";
 import { Search } from "lucide-react";
 import JobCard from "../components/features/jobs/JobCard";
 import Input from '../components/ui/Input';
@@ -10,10 +10,31 @@ import { Card } from '../components/ui/Card';
 const PAGE_SIZE = 6;
 
 export default function JobBoard() {
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
   const [jobTypeFilter, setJobTypeFilter] = useState("");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  useEffect(() => {
+    const fetchJobsData = async () => {
+      try {
+        setLoading(true);
+        const response = await api.jobs.getAll();
+        setJobs(response.data);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJobsData();
+  }, []);
+
+  const featuredJobs = jobs.slice(0, 3);
 
   // Helper to get job type from title
   const getJobType = (title) => {

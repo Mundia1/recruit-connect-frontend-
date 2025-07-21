@@ -90,3 +90,31 @@ export const jobs = [
     location: "Nairobi, Kenya",
   },
 ];
+
+export const fetchJobDetails = async (id) => {
+  // Simulate an API call
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const job = jobs.find((job) => job.id === parseInt(id));
+      if (job) {
+        // Augment the job data to simulate a full API response
+        const fullJobDetails = {
+          ...job,
+          description: `This is a detailed description for the ${job.title} role at ${job.company}. We are looking for a talented individual to join our team.`,
+          requirements: ['B.S. in Computer Science or equivalent', '3+ years of experience', 'Proficiency in relevant technologies'],
+          benefits: ['Competitive salary', 'Health insurance', 'Paid time off'],
+          postedAt: '2025-07-20T12:00:00Z',
+          type: 'Full-time',
+          salary: 'Competitive',
+          company: {
+            name: job.company,
+            logo: 'https://cdn-icons-png.flaticon.com/512/300/300221.png' // A placeholder logo
+          }
+        };
+        resolve(fullJobDetails);
+      } else {
+        reject(new Error('Job not found'));
+      }
+    }, 500);
+  });
+};

@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
-import { signin } from '../api/auth';
+import api from '../api';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 
@@ -20,7 +20,7 @@ const SignIn = () => {
 
   const onSubmit = async (data) => {
     try {
-      await signin(data);
+      await api.auth.login(data);
       navigate('/dashboard');
     } catch (error) {
       console.error('Failed to sign in', error);
@@ -47,6 +47,7 @@ const SignIn = () => {
               {...register('password')}
               placeholder="Password"
               className={errors.password ? 'border-red-500' : ''}
+              autoComplete="current-password"
             />
             {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
           </div>

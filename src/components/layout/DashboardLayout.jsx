@@ -53,7 +53,7 @@ const DashboardLayout = ({ children }) => {
       try {
         const token = localStorage.getItem('token');
         if (!token) {
-          navigate('/login');
+          navigate('/signin');
           return;
         }
         const userData = JSON.parse(localStorage.getItem('user') || '{}');
@@ -87,7 +87,7 @@ const DashboardLayout = ({ children }) => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    navigate('/login');
+    navigate('/signin');
   };
 
   // Get current user from localStorage

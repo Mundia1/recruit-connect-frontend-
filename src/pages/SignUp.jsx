@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
+import api from '../api';
 
 export default function SignUp() {
   const [form, setForm] = useState({ email: "", password: "", first_name: "", last_name: "" });
@@ -35,19 +36,11 @@ export default function SignUp() {
     if (!validate()) return;
     // Connect to backend API
     try {
-      const res = await fetch("/api/v1/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        navigate("/signin");
-      } else {
-        setError(data.message || "Registration failed.");
-      }
-    } catch {
-      setError("Network error.");
+      await api.auth.register(form);
+      navigate("/signin");
+    } catch (err) {
+      console.error("Registration error:", err);
+      setError(err.response?.data?.message || err.message || "Registration failed.");
     }
   };
 

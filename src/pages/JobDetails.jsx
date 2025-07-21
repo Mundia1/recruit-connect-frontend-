@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchJobDetails } from '../../api/jobsApi';
-import { setLoading } from '../../features/jobs/jobsSlice';
+import { useSelector } from 'react-redux';
+import { fetchJobDetails } from '../api/jobs.js';
 import Button from '../components/ui/Button';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
 import Avatar from '../components/ui/Avatar';
@@ -10,7 +9,6 @@ import Avatar from '../components/ui/Avatar';
 const JobDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [job, setJob] = useState(null);
   const [error, setError] = useState(null);
   const { user } = useSelector(state => state.auth);
@@ -19,22 +17,19 @@ const JobDetails = () => {
   useEffect(() => {
     const getJobDetails = async () => {
       try {
-        dispatch(setLoading(true));
         const jobData = await fetchJobDetails(id);
         setJob(jobData);
       } catch (err) {
         setError(err.message);
-      } finally {
-        dispatch(setLoading(false));
       }
     };
 
     getJobDetails();
-  }, [id, dispatch]);
+  }, [id]);
 
   const handleApply = () => {
     if (!user) {
-      navigate('/login', { state: { from: `/jobs/${id}` } });
+      navigate('/signin', { state: { from: `/jobs/${id}` } });
       return;
     }
     setIsApplying(true);

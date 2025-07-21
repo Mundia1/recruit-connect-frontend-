@@ -5,7 +5,7 @@ import DashboardLayout from '../components/layout/DashboardLayout';
 const Messages = () => {
   const [messages, setMessages] = useState([
     { sender: 'John Doe', text: 'Hi there! How are you?', timestamp: '2025-07-19T10:00:00Z' },
-    { sender: 'Me', text: 'I'm good, thanks! How can I help you?', timestamp: '2025-07-19T10:01:00Z' },
+    { sender: 'Me', text: "I'm good, thanks! How can I help you?", timestamp: '2025-07-19T10:01:00Z' },
     { sender: 'John Doe', text: 'I have a question about the job application.', timestamp: '2025-07-19T10:02:00Z' },
   ]);
 

@@ -1,38 +1,37 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { jobs } from "../../../api/jobs";
-import Button from '../../ui/Button';
-import { Card } from '../../ui/Card';
 
 export default function FeaturedJobs() {
   return (
-    <section className="max-w-7xl mx-auto px-[var(--spacing-lg)] py-[var(--spacing-3xl)]">
-      <h2 className="text-[var(--text-3xl)] font-bold text-[var(--text-primary)] mb-[var(--spacing-2xl)] text-center">
+    <section className="max-w-7xl mx-auto px-4 py-12">
+      <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
         Featured Jobs
       </h2>
 
-      <div className="grid gap-[var(--spacing-xl)] sm:grid-cols-2 lg:grid-cols-3 max-h-[600px] overflow-y-auto pr-2">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-h-[600px] overflow-y-auto pr-2">
         {jobs.map((job) => (
-          <Card
+          <div
             key={job.id}
-            className="p-[var(--spacing-xl)] hover:shadow-xl transition-shadow duration-300"
+            className="bg-white shadow-md rounded-lg p-6 hover:shadow-xl transition-shadow duration-300"
           >
-            <h3 className="text-[var(--text-xl)] font-semibold text-[var(--text-primary)]">{job.title}</h3>
-            <p className="text-[var(--text-base)] text-[var(--text-secondary)]">{job.company}</p>
-            <p className="text-[var(--text-sm)] text-[var(--text-muted)]">{job.location}</p>
-            <Button className="mt-[var(--spacing-md)] w-full">
+            <h3 className="text-xl font-semibold text-gray-800">{job.title}</h3>
+            <p className="text-gray-600">{job.company}</p>
+            <p className="text-gray-500 text-sm">{job.location}</p>
+            <button className="mt-4 bg-[#177245] text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition">
               Apply Now
-            </Button>
-          </Card>
+            </button>
+          </div>
         ))}
       </div>
 
-      <div className="mt-[var(--spacing-2xl)] text-center">
-        <Button asChild>
-          <Link to="/jobs">
-            View All Jobs
-          </Link>
-        </Button>
+      <div className="mt-8 text-center">
+        <Link
+          to="/jobs"
+          className="bg-[#177245] text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition"
+        >
+          View All Jobs
+        </Link>
       </div>
     </section>
   );
