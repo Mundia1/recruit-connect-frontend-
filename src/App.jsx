@@ -6,6 +6,7 @@ import JobBoard from "./pages/JobBoard";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import AdminDashboard from './pages/AdminDashboard';
+import JobSeekerDashboard from './pages/JobSeekerDashboard'; // ✅ Added import
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import ApplyRedirect from './pages/ApplyRedirect';
 
@@ -26,7 +27,7 @@ function App() {
 
       {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
-        {/* Add protected routes here if needed */}
+        <Route path="/dashboard" element={<JobSeekerDashboard />} /> {/* ✅ Added this */}
       </Route>
     </Routes>
   );
