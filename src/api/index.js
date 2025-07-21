@@ -60,8 +60,9 @@ const auth = {
   // Login user
   async login(credentials) {
     const response = await apiRequest('/auth/login', 'POST', credentials, false);
-    if (response.data && response.data.access_token) {
+    if (response.data && response.data.access_token && response.data) {
       localStorage.setItem('token', response.data.access_token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
     }
     return response;
   },
@@ -81,7 +82,11 @@ const auth = {
     if (!currentAuthToken) {
       throw new Error("No authentication token found.");
     }
-    return apiRequest('/auth/me');
+    const response = await apiRequest('/auth/me');
+    if (response.data) {
+      localStorage.setItem('user', JSON.stringify(response.data));
+    }
+    return response.data;
   },
 
   // Update user profile
@@ -265,13 +270,6 @@ const admin = {
   },
 };
 
-// Job Views API
-const jobViews = {
-  // Get monthly job views (Admin only)
-  getMonthlyViews(year, month) {
-    return apiRequest(`/job_views/monthly?year=${year}&month=${month}`);
-  },
-};
 
 
 // Export all API methods
