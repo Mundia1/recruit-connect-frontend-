@@ -27,7 +27,6 @@ const testimonials = [
   },
 ];
 
-// --- How It Works Steps ---
 const steps = [
   {
     title: "1. Search Jobs",
@@ -70,12 +69,13 @@ export default function LandingPage() {
             >
               I'm a Job Seeker
             </NavLink>
-            <NavLink
-              to="/admin/dashboard"
-              className="bg-white text-[#177245] border border-[#177245] px-6 py-3 rounded-lg text-lg font-semibold hover:bg-gray-100 transition"
-            >
-              I'm an Admin
-            </NavLink>
+           <NavLink
+  to="/signin?role=admin"
+  className="bg-white text-[#177245] border border-[#177245] px-6 py-3 rounded-lg text-lg font-semibold hover:bg-gray-100 transition"
+>
+  I'm an Admin
+</NavLink>
+
           </div>
         </div>
       </section>
