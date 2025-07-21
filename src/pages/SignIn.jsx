@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
 import { AuthContext } from "../context/AuthContext";
 
@@ -7,6 +7,7 @@ export default function SignIn() {
   const { login } = useContext(AuthContext);
   const [form, setForm] = useState({ email: "", password: "" });
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -15,8 +16,13 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await login(form); // This will redirect based on role
-      navigate("/admin-dashboard"); // Temporary redirect
+      const user = await login(form); // login returns user object: { role, token }
+
+      if (user.role === "admin") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/jobs");
+      }
     } catch (err) {
       alert("Login failed");
     }
@@ -24,10 +30,8 @@ export default function SignIn() {
 
   return (
     <>
-      {/* Navbar */}
       <Navbar />
 
-      {/* Main Content */}
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
         <div className="bg-white shadow-lg rounded-lg w-full max-w-md p-8 mt-10">
           <h2 className="text-3xl font-bold text-center text-[#177245] mb-6">
