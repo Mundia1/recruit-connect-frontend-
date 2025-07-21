@@ -111,17 +111,17 @@ export default function LandingPage() {
             <div
               key={t.name}
               className="bg-white shadow-lg rounded-xl p-6 flex flex-col items-center text-center border border-gray-100
-                        transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:border-[#177245]"
+                        transition-all duration-300 ease-in-out transform hover:scale-[1.02] hover:shadow-xl hover:border-[#0d3b23] hover:w-[102%]"
             >
               <img
                 src={t.avatar}
                 alt={t.name}
-                className="w-16 h-16 rounded-full mb-4 object-cover transition-all duration-300 hover:ring-2 hover:ring-[#177245]"
+                className="w-16 h-16 rounded-full mb-4 object-cover transition-all duration-300 hover:ring-2 hover:ring-[#0d3b23]"
               />
               <p className="text-gray-700 italic mb-3 hover:text-gray-900 transition-colors duration-300">
                 &quot;{t.text}&quot;
               </p>
-              <div className="font-semibold text-[#177245] hover:text-[#125a3a] transition-colors duration-300">
+              <div className="font-semibold text-[#177245] hover:text-[#0d3b23] transition-colors duration-300">
                 {t.name}
               </div>
               <div className="text-gray-500 text-sm hover:text-gray-700 transition-colors duration-300">
