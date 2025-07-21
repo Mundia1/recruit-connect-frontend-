@@ -21,7 +21,8 @@ export default function SignIn() {
       if (user.role === "admin") {
         navigate("/admin/dashboard");
       } else {
-        navigate("/jobs");
+        // Redirect to JobSeekerDashboard
+        navigate("/dashboard");
       }
     } catch (err) {
       alert("Login failed");
