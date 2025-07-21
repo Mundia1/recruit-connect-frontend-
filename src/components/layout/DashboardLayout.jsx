@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
-import { Avatar } from '../ui/Avatar';
+import Avatar from '../ui/Avatar';
 import { Badge } from '../ui/Badge';
 
 const DashboardLayout = ({ children }) => {
@@ -275,5 +275,6 @@ const DashboardLayout = ({ children }) => {
     </div>
   );
 };
+
 
 export default DashboardLayout;

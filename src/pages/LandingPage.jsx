@@ -71,7 +71,7 @@ export default function LandingPage() {
               I'm a Job Seeker
             </NavLink>
             <NavLink
-              to="/signin"
+              to="/admin/dashboard"
               className="bg-white text-[#177245] border border-[#177245] px-6 py-3 rounded-lg text-lg font-semibold hover:bg-gray-100 transition"
             >
               I'm an Admin
