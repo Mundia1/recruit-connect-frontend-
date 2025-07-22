@@ -43,3 +43,10 @@ const faces = [
 const Feedback = () => {
   const [rating, setRating] = useState(null);
   const [comment, setComment] = useState("");
+    const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log({ rating, comment });
+
+    setRating(null);
+    setComment("");
+  };
