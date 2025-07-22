@@ -9,6 +9,7 @@ export default function FeaturedJobs() {
         Featured Jobs
       </h2>
 
+      {/* Job Cards */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-h-[600px] overflow-y-auto pr-2">
         {jobs.map((job) => (
           <div
@@ -18,13 +19,20 @@ export default function FeaturedJobs() {
             <h3 className="text-xl font-semibold text-gray-800">{job.title}</h3>
             <p className="text-gray-600">{job.company}</p>
             <p className="text-gray-500 text-sm">{job.location}</p>
-            <button className="mt-4 bg-[#177245] text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition">
+
+            {/* Apply Now Button with Dynamic Job ID */}
+            <Link
+              to={`/apply/${job.id}`}
+              aria-label={`Apply for ${job.title}`}
+              className="mt-4 inline-block bg-[#177245] text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition"
+            >
               Apply Now
-            </button>
+            </Link>
           </div>
         ))}
       </div>
 
+      {/* View All Jobs */}
       <div className="mt-8 text-center">
         <Link
           to="/jobs"
