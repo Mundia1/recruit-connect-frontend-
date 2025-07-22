@@ -3,10 +3,17 @@
 
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import StatisticsCard from "../components/features/analytics/StatisticsCard";
-import BarChart from "../components/features/analytics/BarChart";
-import LineChart from "../components/features/analytics/LineChart";
-import { BriefcaseIcon, UserGroupIcon, EyeIcon, HomeIcon, Cog6ToothIcon, QuestionMarkCircleIcon, ArrowLeftOnRectangleIcon, UserCircleIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon, BellIcon } from "@heroicons/react/24/outline";
+import Feedback from './Feedback';
+
+const sidebarItems = [
+  { name: "Dashboard", path: "/admin/dashboard" },
+  { name: "Job Management", path: "/admin/jobs" },
+  { name: "Applications", path: "/admin/applicants" },
+  { name: "Settings", path: "/admin/settings" },
+  { name: "Help", path: "/admin/help" },
+  { name: "Feedback", path: "/admin/feedback" },
+];
+
 
 export default function AdminDashboard() {
   // Collapsible sidebar state
@@ -216,6 +223,12 @@ export default function AdminDashboard() {
         </div>
       );
     }
+    
+    if (location.pathname === "/admin/feedback") {
+      return <Feedback />;
+    }
+
+
     // Default dashboard content
     return (
       <>
