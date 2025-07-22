@@ -1,5 +1,6 @@
 
 
+
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import StatisticsCard from "../components/features/analytics/StatisticsCard";
@@ -35,6 +36,7 @@ export default function AdminDashboard() {
     // For now, just redirect to sign-in
     navigate("/signin", { replace: true });
   };
+
 
   // Mock applicants data
   const [applicants, setApplicants] = useState([
@@ -91,6 +93,7 @@ export default function AdminDashboard() {
     </div>
   );
 
+
   // Mock analytics data
   const barChartData = [
     { name: 'Mon', applications: 30 },
@@ -110,6 +113,7 @@ export default function AdminDashboard() {
     { name: 'Sat', views: 90 },
     { name: 'Sun', views: 60 },
   ];
+
 
   // Main content switcher
   const renderMainContent = () => {
@@ -216,6 +220,7 @@ export default function AdminDashboard() {
     return (
       <>
         <h1 className="text-2xl font-bold text-gray-800 mb-8">Dashboard</h1>
+
         {/* Statistics Cards */}
         <div className="grid grid-cols-3 gap-6 mb-8">
           <StatisticsCard
@@ -264,12 +269,14 @@ export default function AdminDashboard() {
             showTitle={true}
             height={280}
           />
+
         </div>
       </>
     );
   };
 
   return (
+
     <div className="min-h-screen flex flex-col bg-gray-100">
       {/* Header */}
       <header className="h-16 bg-white border-b flex items-center justify-between px-4 md:px-8 shadow-sm z-10">
@@ -399,6 +406,7 @@ export default function AdminDashboard() {
           <a href="/contact" className="hover:underline">Contact</a>
         </div>
       </footer>
+
     </div>
   );
 }
