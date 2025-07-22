@@ -57,6 +57,7 @@ export default function Navbar() {
           </div>
         </div>
 
+
         {/* Auth Buttons */}
         <div className="flex items-center gap-4">
           <NavLink
@@ -72,6 +73,7 @@ export default function Navbar() {
     Sign Up
   </NavLink>
 </div>
+
 
 
         {/* Mobile Menu Button */}

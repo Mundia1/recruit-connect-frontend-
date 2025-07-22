@@ -1,3 +1,6 @@
+
+
+
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Feedback from './Feedback';
@@ -11,9 +14,36 @@ const sidebarItems = [
   { name: "Feedback", path: "/admin/feedback" },
 ];
 
+
 export default function AdminDashboard() {
+  // Collapsible sidebar state
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const sidebarItems = [
+    { name: "Dashboard", path: "/admin/dashboard", icon: HomeIcon },
+    { name: "Job Management", path: "/admin/jobs", icon: BriefcaseIcon },
+    { name: "Applications", path: "/admin/applicants", icon: UserGroupIcon },
+    { name: "Settings", path: "/admin/settings", icon: Cog6ToothIcon },
+    { name: "Help", path: "/admin/help", icon: QuestionMarkCircleIcon },
+  ];
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Back button handler
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate("/admin/dashboard");
+    }
+  };
+
+  // Logout handler
+  const handleLogout = () => {
+    // Clear any authentication state here if needed
+    // For now, just redirect to sign-in
+    navigate("/signin", { replace: true });
+  };
+
 
   // Mock applicants data
   const [applicants, setApplicants] = useState([
@@ -69,6 +99,28 @@ export default function AdminDashboard() {
       </form>
     </div>
   );
+
+
+  // Mock analytics data
+  const barChartData = [
+    { name: 'Mon', applications: 30 },
+    { name: 'Tue', applications: 45 },
+    { name: 'Wed', applications: 38 },
+    { name: 'Thu', applications: 52 },
+    { name: 'Fri', applications: 41 },
+    { name: 'Sat', applications: 20 },
+    { name: 'Sun', applications: 15 },
+  ];
+  const lineChartData = [
+    { name: 'Mon', views: 120 },
+    { name: 'Tue', views: 200 },
+    { name: 'Wed', views: 150 },
+    { name: 'Thu', views: 180 },
+    { name: 'Fri', views: 220 },
+    { name: 'Sat', views: 90 },
+    { name: 'Sun', views: 60 },
+  ];
+
 
   // Main content switcher
   const renderMainContent = () => {
@@ -181,84 +233,193 @@ export default function AdminDashboard() {
     return (
       <>
         <h1 className="text-2xl font-bold text-gray-800 mb-8">Dashboard</h1>
-        {/* Job Management Cards */}
+
+        {/* Statistics Cards */}
         <div className="grid grid-cols-3 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-lg font-semibold text-gray-700">Total Jobs</h2>
-            <p className="text-3xl font-bold text-blue-600 mt-2">120</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-lg font-semibold text-gray-700">Active Jobs</h2>
-            <p className="text-3xl font-bold text-green-600 mt-2">90</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-lg font-semibold text-gray-700">Inactive Jobs</h2>
-            <p className="text-3xl font-bold text-gray-400 mt-2">30</p>
-          </div>
+          <StatisticsCard
+            title="Active Jobs"
+            value={90}
+            subtitle="Total jobs currently open"
+            trend={"+5%"}
+            icon={BriefcaseIcon}
+            iconBgColor="bg-green-50"
+            iconColor="text-green-600"
+          />
+          <StatisticsCard
+            title="Applications"
+            value={320}
+            subtitle="Total applications received"
+            trend={"+15%"}
+            icon={UserGroupIcon}
+            iconBgColor="bg-blue-50"
+            iconColor="text-blue-600"
+          />
+          <StatisticsCard
+            title="Views"
+            value={1200}
+            subtitle="Profile/job views"
+            trend={"+8%"}
+            icon={EyeIcon}
+            iconBgColor="bg-yellow-50"
+            iconColor="text-yellow-600"
+          />
         </div>
-        {/* Analytics Cards */}
+        {/* Analytics Charts */}
         <div className="grid grid-cols-2 gap-6">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-lg font-semibold text-gray-700 mb-4">Job Applications Over Time</h2>
-            <div className="flex items-end gap-2 h-32">
-              {/* Simple bar chart mockup */}
-              {[40, 60, 80, 50, 70, 90].map((val, i) => (
-                <div
-                  key={i}
-                  className="bg-blue-200 w-8 rounded"
-                  style={{ height: `${val}px` }}
-                ></div>
-              ))}
-            </div>
-            <p className="mt-4 text-green-600 font-bold text-lg">+15%</p>
-            <p className="text-gray-500 text-sm">Last 30 Days = +15%</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-lg font-semibold text-gray-700 mb-4">Job Views Over Time</h2>
-            <svg height="100" width="200" className="mb-2">
-              <polyline
-                fill="none"
-                stroke="#3b82f6"
-                strokeWidth="4"
-                points="0,80 40,60 80,90 120,50 160,70 200,60"
-              />
-            </svg>
-            <p className="mt-4 text-green-600 font-bold text-lg">+8%</p>
-            <p className="text-gray-500 text-sm">Last 30 Days = +8%</p>
-          </div>
+          <BarChart
+            title="Applications per Day"
+            data={barChartData}
+            dataKey="applications"
+            fill="#3b82f6"
+            showTitle={true}
+            height={280}
+          />
+          <LineChart
+            title="Views per Day"
+            data={lineChartData}
+            dataKey="views"
+            stroke="#16a34a"
+            showTitle={true}
+            height={280}
+          />
+
         </div>
       </>
     );
   };
 
   return (
-    <div className="min-h-screen flex bg-gray-100">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white border-r flex flex-col justify-between">
-        <nav className="mt-8">
-          <ul>
-            {sidebarItems.map((item) => (
-              <li
-                key={item.name}
-                className={`px-6 py-3 cursor-pointer hover:bg-blue-50 font-medium text-gray-700 ${
-                  location.pathname === item.path ? "bg-blue-50 text-blue-600 rounded-lg" : ""
-                }`}
-                onClick={() => navigate(item.path)}
-              >
-                {item.name}
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <button className="m-6 bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200">
-          Logout
-        </button>
-      </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 p-10">
-        {renderMainContent()}
-      </main>
+    <div className="min-h-screen flex flex-col bg-gray-100">
+      {/* Header */}
+      <header className="h-16 bg-white border-b flex items-center justify-between px-4 md:px-8 shadow-sm z-10">
+        <div className="flex items-center gap-2 min-w-[56px]">
+          {/* Back button */}
+          {location.pathname !== "/admin/dashboard" && (
+            <button
+              className="mr-2 p-2 rounded hover:bg-gray-100 focus:outline-none"
+              aria-label="Go back"
+              onClick={handleBack}
+            >
+              <ChevronDoubleLeftIcon className="h-6 w-6 text-gray-500" />
+            </button>
+          )}
+          {/* Project Logo */}
+          <img src="/src/assets/hero-image.png" alt="Recruit Connect Logo" className="h-8 w-8 object-contain" onError={e => { e.target.onerror = null; e.target.src = 'https://ui-avatars.com/api/?name=RC&background=177245&color=fff&size=32'; }} />
+          <span className="text-xl font-bold text-[#177245] tracking-tight">Recruit Connect</span>
+        </div>
+        <div className="flex items-center gap-4">
+          <button className="relative focus:outline-none group">
+            <BellIcon className="h-6 w-6 text-gray-400" />
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">3</span>
+            <span className="sr-only">Notifications</span>
+          </button>
+          <div className="relative group">
+            <img src="https://ui-avatars.com/api/?name=Admin&background=177245&color=fff" alt="Admin Avatar" className="w-10 h-10 rounded-full border cursor-pointer" />
+            <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-20">
+              <div className="px-4 py-2 text-gray-700 font-semibold border-b">Admin</div>
+              <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700">Profile</button>
+              <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700">Settings</button>
+            <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600 border-t" onClick={handleLogout}>Logout</button>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div className="flex flex-1 min-h-0">
+        {/* Sidebar */}
+        <aside
+          className={`relative transition-all duration-200 bg-white border-r flex flex-col justify-between py-6 px-0 ${
+            sidebarCollapsed ? 'w-20' : 'w-64'
+          }`}
+        >
+          {/* Collapse/Expand button */}
+          <button
+            className={`absolute -right-3 top-6 z-20 bg-white border border-gray-200 rounded-full shadow p-1 transition-all flex items-center justify-center ${sidebarCollapsed ? '' : 'rotate-180'}`}
+            onClick={() => setSidebarCollapsed((prev) => !prev)}
+            aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            style={{ width: 28, height: 28 }}
+          >
+            {sidebarCollapsed ? (
+              <ChevronDoubleRightIcon className="h-5 w-5 text-gray-500" />
+            ) : (
+              <ChevronDoubleLeftIcon className="h-5 w-5 text-gray-500" />
+            )}
+          </button>
+          {/* Sidebar Title */}
+          <div className={`flex items-center justify-center ${sidebarCollapsed ? 'mb-2' : 'mb-6'} mt-2`}>
+            {!sidebarCollapsed && (
+              <span className="text-lg font-bold text-[#177245] tracking-tight">Admin Panel</span>
+            )}
+          </div>
+          <nav className="flex-1 mt-2">
+            <ul className="space-y-1 mt-8">
+              {sidebarItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <li
+                    key={item.name}
+                    className={`relative flex items-center gap-3 px-3 md:px-6 py-3 cursor-pointer hover:bg-green-50 font-medium text-gray-700 transition-colors ${
+                      location.pathname === item.path ? "bg-green-100 text-[#177245] rounded-lg" : ""
+                    } group`}
+                    onClick={() => navigate(item.path)}
+                    tabIndex={0}
+                    aria-label={item.name}
+                  >
+                    <Icon className="h-5 w-5 flex-shrink-0" />
+                    {!sidebarCollapsed && <span>{item.name}</span>}
+                    {/* Active indicator */}
+                    {location.pathname === item.path && (
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 rounded bg-[#177245]" />
+                    )}
+                    {/* Tooltip on collapse */}
+                    {sidebarCollapsed && (
+                      <span className="absolute left-full ml-2 px-2 py-1 rounded bg-gray-900 text-white text-xs opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-20 whitespace-nowrap">
+                        {item.name}
+                      </span>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+          {/* Profile/Logout section */}
+          <div className={`pb-2 mt-8 ${sidebarCollapsed ? 'px-2' : 'px-6'}`}>
+            <div className={`flex items-center gap-3 mb-2 ${sidebarCollapsed ? 'justify-center' : ''}`}>
+              <UserCircleIcon className="h-8 w-8 text-gray-400" />
+              {!sidebarCollapsed && (
+                <div>
+                  <div className="font-semibold text-gray-800 leading-tight">Admin</div>
+                  <div className="text-xs text-gray-500">admin@email.com</div>
+                </div>
+              )}
+            </div>
+            <button
+              className={`w-full flex items-center gap-2 bg-gray-100 text-gray-700 px-2 md:px-4 py-2 rounded hover:bg-gray-200 font-medium transition justify-center ${sidebarCollapsed ? 'justify-center' : ''}`}
+              onClick={handleLogout}
+              type="button"
+            >
+              <ArrowLeftOnRectangleIcon className="h-5 w-5" />
+              {!sidebarCollapsed && 'Logout'}
+            </button>
+          </div>
+        </aside>
+        {/* Main Content */}
+        <main className="flex-1 p-4 md:p-10 overflow-y-auto">
+          {renderMainContent()}
+        </main>
+      </div>
+      {/* Footer */}
+      <footer className="bg-white border-t text-gray-500 text-sm py-4 px-4 md:px-10 flex flex-col md:flex-row items-center justify-between">
+        <div>
+          &copy; {new Date().getFullYear()} Recruit Connect. All rights reserved.
+        </div>
+        <div className="flex gap-4 mt-2 md:mt-0">
+          <a href="/privacy" className="hover:underline">Privacy Policy</a>
+          <a href="/terms" className="hover:underline">Terms of Service</a>
+          <a href="/contact" className="hover:underline">Contact</a>
+        </div>
+      </footer>
+
     </div>
   );
 }

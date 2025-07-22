@@ -62,8 +62,10 @@ export default function JobBoard() {
             placeholder="Search for jobs"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+
             className="border border-gray-300 rounded-full pl-12 pr-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-[#177245] transition dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             aria-label="Search for jobs"
+
           />
         </div>
       </section>
@@ -90,14 +92,18 @@ export default function JobBoard() {
 
       {/* Filters Section */}
       <section className="max-w-7xl mx-auto px-4">
+
          <div className="bg-white shadow-md rounded-xl p-4 mb-8 flex flex-col sm:flex-row gap-4 items-center sticky top-16 z-10 dark:bg-gray-800">
           
+
           {/* Location Filter */}
           <select
             value={locationFilter}
             onChange={(e) => setLocationFilter(e.target.value)}
+
              className="border border-gray-300 rounded-full px-4 py-2 w-full sm:w-1/3 font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#177245] transition dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             aria-label="Filter by location"
+
           >
             <option value="">All Locations</option>
             <option value="kenya">Kenya</option>
@@ -111,9 +117,10 @@ export default function JobBoard() {
           <select
             value={jobTypeFilter}
             onChange={(e) => setJobTypeFilter(e.target.value)}
+
             className="border border-gray-300 rounded-full px-4 py-2 w-full sm:w-1/3 font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#177245] transition dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             aria-label="Filter by job type" 
-          >
+         >
             <option value="">Job Type</option>
             <option value="frontend">Frontend</option>
             <option value="backend">Backend</option>
@@ -128,6 +135,7 @@ export default function JobBoard() {
         {jobsToShow.length > 0 ? (
           <>
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+
               {jobsToShow.map((job, index) => (
               <motion.div
                   key={job.id}
@@ -137,6 +145,7 @@ export default function JobBoard() {
                 >
                   <JobCard job={job} />
                 </motion.div>
+
               ))}
             </div>
             {visibleCount < filteredJobs.length && (
