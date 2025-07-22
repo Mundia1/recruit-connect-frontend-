@@ -11,23 +11,22 @@ const testimonials = [
     name: "Jane Mutisya",
     role: "Frontend Developer",
     text: "Recruit Connect helped me land my dream job in Nairobi. The process was smooth and the platform is easy to use!",
-    avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+    avatar: "https://imgs.search.brave.com/IQRnrIp9ksjCVPKSI0Q-WL8bW6WS5lYejzV7Don22_Q/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTcv/MjY0LzY5Ny9zbWFs/bC9jb25maWRlbnQt/YmxhY2std29tYW4t/aW4tYS10YWlsb3Jl/ZC1ibGF6ZXItZXh1/ZGluZy1wcm9mZXNz/aW9uYWxpc20tYW5k/LXBvaXNlLXdpdGgt/YXJtcy1jcm9zc2Vk/LWFnYWluc3QtYS1u/ZXV0cmFsLWJhY2tk/cm9wLXBob3RvLkpQ/Rw",
   },
   {
     name: "John Onyango",
     role: "Backend Engineer",
     text: "I found multiple opportunities and the application feedback was super helpful. Highly recommend!",
-    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+    avatar: "https://imgs.search.brave.com/Bys1jjaAsol8CLI-MYwlIsqqL-KZEGXrlSByogICnfw/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTcv/MjYyLzQ1OC9zbWFs/bC9hLXNlcmlvdXMt/eW91bmctYmxhY2st/bWFuLWluLWEtc2hh/cnAtc3VpdC1hbmQt/eWVsbG93LXRpZS1l/eHVkaW5nLWNvbmZp/ZGVuY2UtYW5kLXBy/b2Zlc3Npb25hbGlz/bS1waG90by5KUEc",
   },
   {
     name: "Mary Wanjiku",
     role: "UI/UX Designer",
     text: "The job board is always up-to-date and the filters make searching so much easier.",
-    avatar: "https://randomuser.me/api/portraits/women/65.jpg",
+    avatar: "https://imgs.search.brave.com/u_OhY1bSCDv9GduWc9Z4HQaWFuq5rwrWmYZnWPASjyg/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNTQv/NTgyLzAwNy9zbWFs/bC9jb25maWRlbnQt/ZmVtYWxlLWNlby1s/ZWFkaW5nLW1vZGVy/bi1idXNpbmVzcy1p/bi1ibGFjay1zdWl0/LXByb2Zlc3Npb25h/bC13b21hbi1wb3Np/bmctb3V0ZG9vcnMt/d2l0aC1hdXRob3Jp/dHktbGVhZGVyc2hp/cC1pbi1jb3Jwb3Jh/dGUtZW52aXJvbm1l/bnQtZW1wb3dlcm1l/bnQtYW5kLXN1Y2Nl/c3MtaW4tdXJiYW4t/c2V0dGluZy1waG90/by5qcGVn",
   },
 ];
 
-// --- How It Works Steps ---
 const steps = [
   {
     title: "1. Search Jobs",
@@ -72,7 +71,7 @@ export default function LandingPage() {
               I'm a Job Seeker
             </NavLink>
             <NavLink
-              to="/signin"
+              to="/signin?role=admin"
               className="bg-white text-[#177245] border border-[#177245] px-6 py-3 rounded-lg text-lg font-semibold hover:bg-gray-100 transition"
             >
               I'm an Admin
@@ -113,13 +112,16 @@ export default function LandingPage() {
           {testimonials.map((t) => (
             <div
               key={t.name}
+
               className="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 flex flex-col items-center text-center border border-gray-100 dark:border-gray-700"
               >
+
               <img
                 src={t.avatar}
                 alt={t.name}
-                className="w-16 h-16 rounded-full mb-4 object-cover"
+                className="w-16 h-16 rounded-full mb-4 object-cover transition-all duration-300 hover:ring-2 hover:ring-[#0d3b23]"
               />
+
               <p className="text-gray-700 dark:text-gray-300 italic mb-3">"{t.text}"</p>
               <div className="font-semibold text-[#177245]">{t.name}</div>
               <div className="text-gray-500 dark:text-gray-400 text-sm">{t.role}</div>
