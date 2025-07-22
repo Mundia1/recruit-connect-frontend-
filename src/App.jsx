@@ -7,6 +7,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import AdminDashboard from './pages/AdminDashboard';
 import ApplyRedirect from './pages/ApplyRedirect';
+import JobSeekerDashboard from './pages/JobSeekerDashboard'; // ✅ Added import
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
 function App() {
@@ -18,14 +19,17 @@ function App() {
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/apply/:jobId" element={<ApplyRedirect />} />
+      <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      <Route path="/admin/jobs" element={<AdminDashboard />} />
+      <Route path="/admin/applicants" element={<AdminDashboard />} />
+      <Route path="/admin/settings" element={<AdminDashboard />} />
+      <Route path="/admin/help" element={<AdminDashboard />} />
+      <Route path="/admin/feedback" element={<AdminDashboard />} />
 
-      {/* Protected Admin Routes */}
-      <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/jobs" element={<AdminDashboard />} />
-        <Route path="/admin/applicants" element={<AdminDashboard />} />
-        <Route path="/admin/settings" element={<AdminDashboard />} />
-        <Route path="/admin/help" element={<AdminDashboard />} />
+
+      {/* Protected Routes */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="/dashboard" element={<JobSeekerDashboard />} /> {/* ✅ Added this */}
       </Route>
     </Routes>
   );
