@@ -170,24 +170,11 @@ export default function AdminDashboard() {
           </button>
         </div>
       );
-    } 
+    }
     
-    if (location.pathname === "/admin/help") {
-  return (
-    <div className="bg-white p-8 rounded-lg shadow max-w-lg mx-auto">
-      <h2 className="text-xl font-bold mb-6 text-gray-800">Admin Help & Support</h2>
-      ...
-    </div>
-  );
-}
-
-if (location.pathname === "/admin/feedback") {
-  return <Feedback />;
-}
-
-     
-
-
+    if (location.pathname === "/admin/feedback") {
+      return <Feedback />;
+    }
 
 
     // Default dashboard content
