@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { StarIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
+import ThemeToggle from '../ui/ThemeToggle';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -55,6 +56,23 @@ export default function Navbar() {
             </NavLink>
           </div>
         </div>
+
+        {/* Auth Buttons */}
+        <div className="flex items-center gap-4">
+          <NavLink
+            to="/signin"
+            className="text-gray-700 hover:text-[#177245] font-semibold"
+          >
+    Sign In
+  </NavLink>
+  <NavLink
+    to="/signup"
+    className="bg-[#177245] text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700"
+  >
+    Sign Up
+  </NavLink>
+</div>
+
 
         {/* Mobile Menu Button */}
         <button

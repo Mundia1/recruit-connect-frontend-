@@ -40,25 +40,29 @@ export default function SignIn() {
           </h2>
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Email</label>
+              <label htmlFor="email" className="block text-gray-700 font-medium mb-1">Email</label>
               <input
+                id="email"
                 type="email"
                 name="email"
                 value={form.email}
                 onChange={handleChange}
                 required
                 className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#177245]"
+                aria-label="Email Address"
               />
             </div>
             <div>
-              <label className="block text-gray-700 font-medium mb-1">Password</label>
+              <label htmlFor="password" className="block text-gray-700 font-medium mb-1">Password</label>
               <input
+                id="password"
                 type="password"
                 name="password"
                 value={form.password}
                 onChange={handleChange}
                 required
                 className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#177245]"
+                aria-label="Password"
               />
             </div>
             <button
