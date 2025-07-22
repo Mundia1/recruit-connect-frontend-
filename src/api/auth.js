@@ -1,36 +1,53 @@
-import axios from 'axios';
+// src/api/auth.js
 
-const API_URL = "http://localhost:5000/api/auth"; // Change 5000 to your Flask port if different
+// Simulated user storage for demo purposes
+const USER_KEY = "recruit_connect_user";
 
-
-export const login = async (credentials) => {
-  try {
-    const response = await axios.post(`${API_URL}/login`, credentials);
-    if (response.data.token) {
-      localStorage.setItem('user', JSON.stringify(response.data));
-    }
-    return response.data;
-  } catch (error) {
-    console.error('Login failed:', error.response ? error.response.data : error.message);
-    throw error;
+export const login = async ({ email, password }) => {
+  // Example static logic (replace with API call in production)
+  if (!email || !password) {
+    throw new Error("Email and password are required");
   }
+
+  // Simulate role detection (admin if email contains 'admin')
+  const role = email.includes("admin") ? "admin" : "user";
+
+  const user = {
+    email,
+    role,
+    token: "fake-jwt-token",
+  };
+
+  localStorage.setItem(USER_KEY, JSON.stringify(user));
+  return user;
 };
 
-export const signUp = async (userData) => {
-  try {
-    const response = await axios.post(`${API_URL}/signup`, userData);
-    return response.data;
-  } catch (error) {
-    console.error('Signup failed:', error.response ? error.response.data : error.message);
-    throw error;
+export const signup = async ({ email, password }) => {
+  // Example static logic (replace with API call in production)
+  if (!email || !password) {
+    throw new Error("Email and password are required");
   }
+
+  const user = {
+    email,
+    role: "user",
+    token: "fake-jwt-token",
+  };
+
+  localStorage.setItem(USER_KEY, JSON.stringify(user));
+  return user;
 };
 
 export const logout = () => {
-  localStorage.removeItem('user');
+  localStorage.removeItem(USER_KEY);
 };
 
 export const getCurrentUser = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
-  return user || null;
+  const user = localStorage.getItem(USER_KEY);
+  return user ? JSON.parse(user) : null;
+};
+
+export const isAdmin = () => {
+  const user = getCurrentUser();
+  return user && user.role === "admin";
 };

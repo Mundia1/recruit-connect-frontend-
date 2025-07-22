@@ -6,9 +6,9 @@ import JobBoard from "./pages/JobBoard";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import AdminDashboard from './pages/AdminDashboard';
+import ApplyRedirect from './pages/ApplyRedirect';
 import JobSeekerDashboard from './pages/JobSeekerDashboard'; // ✅ Added import
 import ProtectedRoute from './components/auth/ProtectedRoute';
-import ApplyRedirect from './pages/ApplyRedirect';
 
 function App() {
   return (
