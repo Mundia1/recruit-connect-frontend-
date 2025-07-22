@@ -47,7 +47,9 @@ const steps = [
 
 export default function LandingPage() {
   return (
+
     <div className="bg-white dark:bg-black">
+
       {/* Navbar */}
       <Navbar />
    
@@ -60,7 +62,9 @@ export default function LandingPage() {
         {/* Overlay */}
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
         <div className="relative z-10 flex flex-col items-center justify-center h-full w-full px-4 text-center">
+
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+
             Find Jobs, Manage Jobs. All in One Place.
           </h1>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
@@ -113,8 +117,10 @@ export default function LandingPage() {
             <div
               key={t.name}
 
+
               className="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 flex flex-col items-center text-center border border-gray-100 dark:border-gray-700"
               >
+
 
               <img
                 src={t.avatar}
@@ -122,9 +128,11 @@ export default function LandingPage() {
                 className="w-16 h-16 rounded-full mb-4 object-cover transition-all duration-300 hover:ring-2 hover:ring-[#0d3b23]"
               />
 
+
               <p className="text-gray-700 dark:text-gray-300 italic mb-3">"{t.text}"</p>
               <div className="font-semibold text-[#177245]">{t.name}</div>
               <div className="text-gray-500 dark:text-gray-400 text-sm">{t.role}</div>
+
             </div>
           ))}
         </div>
