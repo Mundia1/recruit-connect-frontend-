@@ -59,7 +59,6 @@ export default function Navbar() {
 
         {/* Auth Buttons */}
         <div className="flex items-center gap-4">
-          <ThemeToggle />
           <NavLink
             to="/signin"
             className="text-gray-700 hover:text-[#177245] font-semibold"
