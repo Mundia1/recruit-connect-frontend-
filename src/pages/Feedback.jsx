@@ -17,7 +17,6 @@ const Feedback = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log({ rating, comment });   
-    // Optional: Submit to backend
     setRating(null);
     setComment("");
   };
@@ -50,3 +49,32 @@ return (
                 ))}
               </div>
             </div>
+
+            <div>
+              <label className="block text-gray-800 font-medium mb-2">
+                What do you like or not like about our platform?
+              </label>
+              <textarea
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                placeholder="Please fill in your answer"
+                rows={4}
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                required
+              />
+            </div>
+
+
+<div className="text-right">
+              <Button type="submit" variant="primary">
+                Submit Feedback
+              </Button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </DashboardLayout>
+  );
+};
+
+export default Feedback;
