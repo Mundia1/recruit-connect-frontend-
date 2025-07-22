@@ -1,22 +1,40 @@
 
+
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import StatisticsCard from "../components/features/analytics/StatisticsCard";
 import BarChart from "../components/features/analytics/BarChart";
 import LineChart from "../components/features/analytics/LineChart";
-import { BriefcaseIcon, UserGroupIcon, EyeIcon, HomeIcon, Cog6ToothIcon, QuestionMarkCircleIcon, ArrowLeftOnRectangleIcon } from "@heroicons/react/24/outline";
-
-const sidebarItems = [
-  { name: "Dashboard", path: "/admin/dashboard", icon: HomeIcon },
-  { name: "Job Management", path: "/admin/jobs", icon: BriefcaseIcon },
-  { name: "Applications", path: "/admin/applicants", icon: UserGroupIcon },
-  { name: "Settings", path: "/admin/settings", icon: Cog6ToothIcon },
-  { name: "Help", path: "/admin/help", icon: QuestionMarkCircleIcon },
-];
+import { BriefcaseIcon, UserGroupIcon, EyeIcon, HomeIcon, Cog6ToothIcon, QuestionMarkCircleIcon, ArrowLeftOnRectangleIcon, UserCircleIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon, BellIcon } from "@heroicons/react/24/outline";
 
 export default function AdminDashboard() {
+  // Collapsible sidebar state
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const sidebarItems = [
+    { name: "Dashboard", path: "/admin/dashboard", icon: HomeIcon },
+    { name: "Job Management", path: "/admin/jobs", icon: BriefcaseIcon },
+    { name: "Applications", path: "/admin/applicants", icon: UserGroupIcon },
+    { name: "Settings", path: "/admin/settings", icon: Cog6ToothIcon },
+    { name: "Help", path: "/admin/help", icon: QuestionMarkCircleIcon },
+  ];
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Back button handler
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate("/admin/dashboard");
+    }
+  };
+
+  // Logout handler
+  const handleLogout = () => {
+    // Clear any authentication state here if needed
+    // For now, just redirect to sign-in
+    navigate("/signin", { replace: true });
+  };
 
   // Mock applicants data
   const [applicants, setApplicants] = useState([
@@ -72,6 +90,26 @@ export default function AdminDashboard() {
       </form>
     </div>
   );
+
+  // Mock analytics data
+  const barChartData = [
+    { name: 'Mon', applications: 30 },
+    { name: 'Tue', applications: 45 },
+    { name: 'Wed', applications: 38 },
+    { name: 'Thu', applications: 52 },
+    { name: 'Fri', applications: 41 },
+    { name: 'Sat', applications: 20 },
+    { name: 'Sun', applications: 15 },
+  ];
+  const lineChartData = [
+    { name: 'Mon', views: 120 },
+    { name: 'Tue', views: 200 },
+    { name: 'Wed', views: 150 },
+    { name: 'Thu', views: 180 },
+    { name: 'Fri', views: 220 },
+    { name: 'Sat', views: 90 },
+    { name: 'Sun', views: 60 },
+  ];
 
   // Main content switcher
   const renderMainContent = () => {
@@ -210,8 +248,22 @@ export default function AdminDashboard() {
         </div>
         {/* Analytics Charts */}
         <div className="grid grid-cols-2 gap-6">
-          <BarChart />
-          <LineChart />
+          <BarChart
+            title="Applications per Day"
+            data={barChartData}
+            dataKey="applications"
+            fill="#3b82f6"
+            showTitle={true}
+            height={280}
+          />
+          <LineChart
+            title="Views per Day"
+            data={lineChartData}
+            dataKey="views"
+            stroke="#16a34a"
+            showTitle={true}
+            height={280}
+          />
         </div>
       </>
     );
@@ -220,43 +272,133 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       {/* Header */}
-      <header className="w-full bg-white shadow flex items-center justify-between px-8 py-4 border-b">
-        <div className="flex items-center gap-3">
-          <span className="text-2xl font-bold text-[#177245] tracking-tight">RecruitConnect</span>
+      <header className="h-16 bg-white border-b flex items-center justify-between px-4 md:px-8 shadow-sm z-10">
+        <div className="flex items-center gap-2 min-w-[56px]">
+          {/* Back button */}
+          {location.pathname !== "/admin/dashboard" && (
+            <button
+              className="mr-2 p-2 rounded hover:bg-gray-100 focus:outline-none"
+              aria-label="Go back"
+              onClick={handleBack}
+            >
+              <ChevronDoubleLeftIcon className="h-6 w-6 text-gray-500" />
+            </button>
+          )}
+          {/* Project Logo */}
+          <img src="/src/assets/hero-image.png" alt="Recruit Connect Logo" className="h-8 w-8 object-contain" onError={e => { e.target.onerror = null; e.target.src = 'https://ui-avatars.com/api/?name=RC&background=177245&color=fff&size=32'; }} />
+          <span className="text-xl font-bold text-[#177245] tracking-tight">Recruit Connect</span>
         </div>
         <div className="flex items-center gap-4">
-          <span className="font-medium text-gray-700">Admin</span>
-          <img src="https://ui-avatars.com/api/?name=Admin&background=177245&color=fff" alt="Admin Avatar" className="w-10 h-10 rounded-full border" />
+          <button className="relative focus:outline-none group">
+            <BellIcon className="h-6 w-6 text-gray-400" />
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">3</span>
+            <span className="sr-only">Notifications</span>
+          </button>
+          <div className="relative group">
+            <img src="https://ui-avatars.com/api/?name=Admin&background=177245&color=fff" alt="Admin Avatar" className="w-10 h-10 rounded-full border cursor-pointer" />
+            <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-20">
+              <div className="px-4 py-2 text-gray-700 font-semibold border-b">Admin</div>
+              <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700">Profile</button>
+              <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700">Settings</button>
+            <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600 border-t" onClick={handleLogout}>Logout</button>
+            </div>
+          </div>
         </div>
       </header>
-      <div className="flex flex-1">
+      <div className="flex flex-1 min-h-0">
         {/* Sidebar */}
-        <aside className="w-64 bg-white border-r flex flex-col justify-between">
-          <nav className="mt-8">
-            <ul>
-              {sidebarItems.map((item) => (
-                <li
-                  key={item.name}
-                  className={`flex items-center gap-3 px-6 py-3 cursor-pointer hover:bg-blue-50 font-medium text-gray-700 ${
-                    location.pathname === item.path ? "bg-blue-50 text-blue-600 rounded-lg" : ""
-                  }`}
-                  onClick={() => navigate(item.path)}
-                >
-                  <item.icon className="w-5 h-5" />
-                  {item.name}
-                </li>
-              ))}
+        <aside
+          className={`relative transition-all duration-200 bg-white border-r flex flex-col justify-between py-6 px-0 ${
+            sidebarCollapsed ? 'w-20' : 'w-64'
+          }`}
+        >
+          {/* Collapse/Expand button */}
+          <button
+            className={`absolute -right-3 top-6 z-20 bg-white border border-gray-200 rounded-full shadow p-1 transition-all flex items-center justify-center ${sidebarCollapsed ? '' : 'rotate-180'}`}
+            onClick={() => setSidebarCollapsed((prev) => !prev)}
+            aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            style={{ width: 28, height: 28 }}
+          >
+            {sidebarCollapsed ? (
+              <ChevronDoubleRightIcon className="h-5 w-5 text-gray-500" />
+            ) : (
+              <ChevronDoubleLeftIcon className="h-5 w-5 text-gray-500" />
+            )}
+          </button>
+          {/* Sidebar Title */}
+          <div className={`flex items-center justify-center ${sidebarCollapsed ? 'mb-2' : 'mb-6'} mt-2`}>
+            {!sidebarCollapsed && (
+              <span className="text-lg font-bold text-[#177245] tracking-tight">Admin Panel</span>
+            )}
+          </div>
+          <nav className="flex-1 mt-2">
+            <ul className="space-y-1 mt-8">
+              {sidebarItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <li
+                    key={item.name}
+                    className={`relative flex items-center gap-3 px-3 md:px-6 py-3 cursor-pointer hover:bg-green-50 font-medium text-gray-700 transition-colors ${
+                      location.pathname === item.path ? "bg-green-100 text-[#177245] rounded-lg" : ""
+                    } group`}
+                    onClick={() => navigate(item.path)}
+                    tabIndex={0}
+                    aria-label={item.name}
+                  >
+                    <Icon className="h-5 w-5 flex-shrink-0" />
+                    {!sidebarCollapsed && <span>{item.name}</span>}
+                    {/* Active indicator */}
+                    {location.pathname === item.path && (
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 rounded bg-[#177245]" />
+                    )}
+                    {/* Tooltip on collapse */}
+                    {sidebarCollapsed && (
+                      <span className="absolute left-full ml-2 px-2 py-1 rounded bg-gray-900 text-white text-xs opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-20 whitespace-nowrap">
+                        {item.name}
+                      </span>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </nav>
-          <button className="m-6 flex items-center gap-2 bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200 font-medium">
-            <ArrowLeftOnRectangleIcon className="w-5 h-5" /> Logout
-          </button>
+          {/* Profile/Logout section */}
+          <div className={`pb-2 mt-8 ${sidebarCollapsed ? 'px-2' : 'px-6'}`}>
+            <div className={`flex items-center gap-3 mb-2 ${sidebarCollapsed ? 'justify-center' : ''}`}>
+              <UserCircleIcon className="h-8 w-8 text-gray-400" />
+              {!sidebarCollapsed && (
+                <div>
+                  <div className="font-semibold text-gray-800 leading-tight">Admin</div>
+                  <div className="text-xs text-gray-500">admin@email.com</div>
+                </div>
+              )}
+            </div>
+            <button
+              className={`w-full flex items-center gap-2 bg-gray-100 text-gray-700 px-2 md:px-4 py-2 rounded hover:bg-gray-200 font-medium transition justify-center ${sidebarCollapsed ? 'justify-center' : ''}`}
+              onClick={handleLogout}
+              type="button"
+            >
+              <ArrowLeftOnRectangleIcon className="h-5 w-5" />
+              {!sidebarCollapsed && 'Logout'}
+            </button>
+          </div>
         </aside>
         {/* Main Content */}
-        <main className="flex-1 p-10">
+        <main className="flex-1 p-4 md:p-10 overflow-y-auto">
           {renderMainContent()}
         </main>
       </div>
+      {/* Footer */}
+      <footer className="bg-white border-t text-gray-500 text-sm py-4 px-4 md:px-10 flex flex-col md:flex-row items-center justify-between">
+        <div>
+          &copy; {new Date().getFullYear()} Recruit Connect. All rights reserved.
+        </div>
+        <div className="flex gap-4 mt-2 md:mt-0">
+          <a href="/privacy" className="hover:underline">Privacy Policy</a>
+          <a href="/terms" className="hover:underline">Terms of Service</a>
+          <a href="/contact" className="hover:underline">Contact</a>
+        </div>
+      </footer>
     </div>
   );
 }
