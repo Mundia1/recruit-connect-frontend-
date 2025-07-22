@@ -1,12 +1,17 @@
+
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import StatisticsCard from "../components/features/analytics/StatisticsCard";
+import BarChart from "../components/features/analytics/BarChart";
+import LineChart from "../components/features/analytics/LineChart";
+import { BriefcaseIcon, UserGroupIcon, EyeIcon, HomeIcon, Cog6ToothIcon, QuestionMarkCircleIcon, ArrowLeftOnRectangleIcon } from "@heroicons/react/24/outline";
 
 const sidebarItems = [
-  { name: "Dashboard", path: "/admin/dashboard" },
-  { name: "Job Management", path: "/admin/jobs" },
-  { name: "Applications", path: "/admin/applicants" },
-  { name: "Settings", path: "/admin/settings" },
-  { name: "Help", path: "/admin/help" },
+  { name: "Dashboard", path: "/admin/dashboard", icon: HomeIcon },
+  { name: "Job Management", path: "/admin/jobs", icon: BriefcaseIcon },
+  { name: "Applications", path: "/admin/applicants", icon: UserGroupIcon },
+  { name: "Settings", path: "/admin/settings", icon: Cog6ToothIcon },
+  { name: "Help", path: "/admin/help", icon: QuestionMarkCircleIcon },
 ];
 
 export default function AdminDashboard() {
@@ -173,84 +178,85 @@ export default function AdminDashboard() {
     return (
       <>
         <h1 className="text-2xl font-bold text-gray-800 mb-8">Dashboard</h1>
-        {/* Job Management Cards */}
+        {/* Statistics Cards */}
         <div className="grid grid-cols-3 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-lg font-semibold text-gray-700">Total Jobs</h2>
-            <p className="text-3xl font-bold text-blue-600 mt-2">120</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-lg font-semibold text-gray-700">Active Jobs</h2>
-            <p className="text-3xl font-bold text-green-600 mt-2">90</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-lg font-semibold text-gray-700">Inactive Jobs</h2>
-            <p className="text-3xl font-bold text-gray-400 mt-2">30</p>
-          </div>
+          <StatisticsCard
+            title="Active Jobs"
+            value={90}
+            subtitle="Total jobs currently open"
+            trend={"+5%"}
+            icon={BriefcaseIcon}
+            iconBgColor="bg-green-50"
+            iconColor="text-green-600"
+          />
+          <StatisticsCard
+            title="Applications"
+            value={320}
+            subtitle="Total applications received"
+            trend={"+15%"}
+            icon={UserGroupIcon}
+            iconBgColor="bg-blue-50"
+            iconColor="text-blue-600"
+          />
+          <StatisticsCard
+            title="Views"
+            value={1200}
+            subtitle="Profile/job views"
+            trend={"+8%"}
+            icon={EyeIcon}
+            iconBgColor="bg-yellow-50"
+            iconColor="text-yellow-600"
+          />
         </div>
-        {/* Analytics Cards */}
+        {/* Analytics Charts */}
         <div className="grid grid-cols-2 gap-6">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-lg font-semibold text-gray-700 mb-4">Job Applications Over Time</h2>
-            <div className="flex items-end gap-2 h-32">
-              {/* Simple bar chart mockup */}
-              {[40, 60, 80, 50, 70, 90].map((val, i) => (
-                <div
-                  key={i}
-                  className="bg-blue-200 w-8 rounded"
-                  style={{ height: `${val}px` }}
-                ></div>
-              ))}
-            </div>
-            <p className="mt-4 text-green-600 font-bold text-lg">+15%</p>
-            <p className="text-gray-500 text-sm">Last 30 Days = +15%</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-lg font-semibold text-gray-700 mb-4">Job Views Over Time</h2>
-            <svg height="100" width="200" className="mb-2">
-              <polyline
-                fill="none"
-                stroke="#3b82f6"
-                strokeWidth="4"
-                points="0,80 40,60 80,90 120,50 160,70 200,60"
-              />
-            </svg>
-            <p className="mt-4 text-green-600 font-bold text-lg">+8%</p>
-            <p className="text-gray-500 text-sm">Last 30 Days = +8%</p>
-          </div>
+          <BarChart />
+          <LineChart />
         </div>
       </>
     );
   };
 
   return (
-    <div className="min-h-screen flex bg-gray-100">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white border-r flex flex-col justify-between">
-        <nav className="mt-8">
-          <ul>
-            {sidebarItems.map((item) => (
-              <li
-                key={item.name}
-                className={`px-6 py-3 cursor-pointer hover:bg-blue-50 font-medium text-gray-700 ${
-                  location.pathname === item.path ? "bg-blue-50 text-blue-600 rounded-lg" : ""
-                }`}
-                onClick={() => navigate(item.path)}
-              >
-                {item.name}
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <button className="m-6 bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200">
-          Logout
-        </button>
-      </aside>
-
-      {/* Main Content */}
-      <main className="flex-1 p-10">
-        {renderMainContent()}
-      </main>
+    <div className="min-h-screen flex flex-col bg-gray-100">
+      {/* Header */}
+      <header className="w-full bg-white shadow flex items-center justify-between px-8 py-4 border-b">
+        <div className="flex items-center gap-3">
+          <span className="text-2xl font-bold text-[#177245] tracking-tight">RecruitConnect</span>
+        </div>
+        <div className="flex items-center gap-4">
+          <span className="font-medium text-gray-700">Admin</span>
+          <img src="https://ui-avatars.com/api/?name=Admin&background=177245&color=fff" alt="Admin Avatar" className="w-10 h-10 rounded-full border" />
+        </div>
+      </header>
+      <div className="flex flex-1">
+        {/* Sidebar */}
+        <aside className="w-64 bg-white border-r flex flex-col justify-between">
+          <nav className="mt-8">
+            <ul>
+              {sidebarItems.map((item) => (
+                <li
+                  key={item.name}
+                  className={`flex items-center gap-3 px-6 py-3 cursor-pointer hover:bg-blue-50 font-medium text-gray-700 ${
+                    location.pathname === item.path ? "bg-blue-50 text-blue-600 rounded-lg" : ""
+                  }`}
+                  onClick={() => navigate(item.path)}
+                >
+                  <item.icon className="w-5 h-5" />
+                  {item.name}
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <button className="m-6 flex items-center gap-2 bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200 font-medium">
+            <ArrowLeftOnRectangleIcon className="w-5 h-5" /> Logout
+          </button>
+        </aside>
+        {/* Main Content */}
+        <main className="flex-1 p-10">
+          {renderMainContent()}
+        </main>
+      </div>
     </div>
   );
 }
