@@ -57,7 +57,7 @@ const LineChart = ({
           </RechartsLineChart>
         </ResponsiveContainer>
       </div>
-      <div className="mt-4 pt-4 border-t border-slate-100">
+src/styles      <div className="mt-4 pt-4 border-t border-slate-100">
         <div className="flex items-center justify-between text-sm">
           <span className="text-slate-500">Total Views</span>
           <span className="font-medium text-slate-900">
