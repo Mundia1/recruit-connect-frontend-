@@ -11,6 +11,8 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import JobSeekerDashboard from './pages/JobSeekerDashboard';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import Feedback from "./pages/Feedback";
+
 
 function App() {
   return (
@@ -28,13 +30,13 @@ function App() {
       <Route path="/admin/applicants" element={<AdminDashboard />} />
       <Route path="/admin/settings" element={<AdminDashboard />} />
       <Route path="/admin/help" element={<AdminDashboard />} />
-      <Route path="/admin/feedback" element={<AdminDashboard />} />
 
 
       {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<JobSeekerDashboard />} />
         <Route path="/profile" element={<JobSeekerDashboard />} />
+        <Route path="/feedback" element={<Feedback />} />
       </Route>
     </Routes>
   );
