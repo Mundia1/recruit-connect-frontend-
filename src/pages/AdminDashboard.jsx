@@ -4,6 +4,22 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Feedback from './Feedback';
+import StatisticsCard from '../components/features/analytics/StatisticsCard';
+import BarChart from '../components/features/analytics/BarChart';
+import LineChart from '../components/features/analytics/LineChart';
+import {
+  HomeIcon,
+  BriefcaseIcon,
+  UserGroupIcon,
+  Cog6ToothIcon,
+  QuestionMarkCircleIcon,
+  BellIcon,
+  ChevronDoubleLeftIcon,
+  ChevronDoubleRightIcon,
+  EyeIcon,
+  UserCircleIcon,
+  ArrowLeftOnRectangleIcon,
+} from "@heroicons/react/24/outline";
 
 const sidebarItems = [
   { name: "Dashboard", path: "/admin/dashboard" },
