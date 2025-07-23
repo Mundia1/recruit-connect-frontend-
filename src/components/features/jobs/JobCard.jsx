@@ -5,7 +5,9 @@ export default function JobCard({ job }) {
   const navigate = useNavigate();
 
   const handleApply = () => {
-    navigate(`/apply/${job.id}`); 
+
+    navigate(`/apply/${job.id}`);
+
   };
 
   return (
@@ -17,8 +19,10 @@ export default function JobCard({ job }) {
       </div>
       <button
         className="mt-6 bg-[#177245] text-white px-5 py-2 rounded-full hover:bg-green-700 transition w-full focus:outline-none focus:ring-2 focus:ring-[#177245]"
-        aria-label={`Apply for ${job.title} at ${job.company}`}
-        onClick={handleApply} 
+
+        onClick={handleApply}
+        aria-label={`Apply for the ${job.title} position`}
+
       >
         Apply Now
       </button>
