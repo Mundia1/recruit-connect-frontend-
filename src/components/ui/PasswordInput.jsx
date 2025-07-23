@@ -28,3 +28,24 @@ export default function PasswordInput({ label = 'Password', ...props }) {
           {...props}
         />
 
+        <button
+          type="button"
+          onClick={() => setVisible(v => !v)}
+          className="absolute inset-y-0 right-0 px-3 py-2 text-sm font-medium text-green-600 hover:text-green-800"
+        >
+          {visible ? 'Hide' : 'Show'}
+        </button>
+      </div>
+      {strength && (
+        <p
+          className={`mt-1 text-sm ${
+            strength === 'Strong' ? 'text-green-600' : 'text-red-600'
+          }`}
+        >
+          {strength} password
+        </p>
+      )}
+    </div>
+  );
+}
+
