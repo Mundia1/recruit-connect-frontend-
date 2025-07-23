@@ -8,19 +8,23 @@ export default function Navbar() {
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Jobs", path: "/jobs" },
-    { name: "Contact", path: "/contact" }, // You can create a Contact page later
+    { name: "Contact", path: "/contact" }, 
   ];
 
   return (
     <header className="bg-white shadow-md sticky top-0 z-30">
       <nav className="max-w-7xl mx-auto flex items-center justify-between px-4 py-4">
-        {/* Logo */}
-        <div className="flex items-center gap-2 text-[#000000] font-bold text-xl">
+        
+        {/* Logo with NavLink to Home */}
+        <NavLink
+          to="/"
+          className="flex items-center gap-2 text-[#000000] font-bold text-xl"
+        >
           <StarIcon className="h-6 w-6 text-[#177245]" />
           <span>Recruit Connect</span>
-        </div>
+        </NavLink>
 
-        {/* Desktop Nav */}
+        {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-8">
           <ul className="flex items-center gap-6 text-gray-700 font-medium">
             {navLinks.map((item) => (
@@ -56,7 +60,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Menu Button */}
+        {/*  Mobile Menu Button */}
         <button
           className="md:hidden text-gray-700"
           onClick={() => setIsOpen(!isOpen)}
