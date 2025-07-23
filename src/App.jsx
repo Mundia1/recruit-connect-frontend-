@@ -9,7 +9,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import ApplyRedirect from './pages/ApplyRedirect';
 import About from './pages/About';
 import Contact from './pages/Contact';
-import JobSeekerDashboard from './pages/JobSeekerDashboard'; // ✅ Added import
+import JobSeekerDashboard from './pages/JobSeekerDashboard';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
 function App() {
@@ -33,7 +33,8 @@ function App() {
 
       {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
-        <Route path="/dashboard" element={<JobSeekerDashboard />} /> {/* ✅ Added this */}
+        <Route path="/dashboard" element={<JobSeekerDashboard />} />
+        <Route path="/profile" element={<JobSeekerDashboard />} />
       </Route>
     </Routes>
   );

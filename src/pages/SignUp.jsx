@@ -5,10 +5,36 @@ import Navbar from "../components/layout/Navbar";
 export default function SignUp() {
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Add registration logic
-    navigate("/signin");
+    const formData = new FormData(e.target);
+    const formValues = Object.fromEntries(formData.entries());
+    
+    console.log('SignUp: Form submitted', { 
+      name: formValues.name,
+      email: formValues.email,
+      // Note: Don't log passwords in production
+      hasPassword: !!formValues.password 
+    });
+    
+    try {
+      // TODO: Add actual registration logic here
+      console.log('SignUp: Registration successful, redirecting to sign in');
+      
+      // In a real app, you would:
+      // 1. Call your registration API
+      // 2. Handle the response
+      // 3. Redirect on success
+      
+      // For now, just redirect to sign in
+      navigate("/signin");
+    } catch (error) {
+      console.error('SignUp: Registration failed', { 
+        email: formValues.email,
+        error: error.message || 'Unknown error' 
+      });
+      alert('Registration failed. Please try again.');
+    }
   };
 
   return (
