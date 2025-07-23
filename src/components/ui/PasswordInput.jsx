@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function PasswordInput({ label = 'Password', ...props }) {
   const [value, setValue] = useState('');
@@ -31,9 +32,12 @@ export default function PasswordInput({ label = 'Password', ...props }) {
         <button
           type="button"
           onClick={() => setVisible(v => !v)}
-          className="absolute inset-y-0 right-0 px-3 py-2 text-sm font-medium text-green-600 hover:text-green-800"
+          className="absolute inset-y-0 right-0 flex items-center justify-center px-3"
         >
-          {visible ? 'Hide' : 'Show'}
+          {visible
+            ? <EyeOff size={20} className="text-gray-600 hover:text-gray-800" />
+            : <Eye    size={20} className="text-gray-600 hover:text-gray-800" />
+          }
         </button>
       </div>
       {strength && (
