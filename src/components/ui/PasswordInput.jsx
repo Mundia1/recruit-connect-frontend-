@@ -15,7 +15,7 @@ export default function PasswordInput({ label = 'Password', ...props }) {
       ? 'Weak'
       : '';
 
-  return (
+      return (
     <div className="flex flex-col">
       <label className="mb-1 text-sm font-medium text-gray-700">{label}</label>
       <div className="relative">
@@ -27,3 +27,4 @@ export default function PasswordInput({ label = 'Password', ...props }) {
           placeholder="Enter password"
           {...props}
         />
+
