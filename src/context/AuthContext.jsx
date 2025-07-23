@@ -4,20 +4,35 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // New loading state
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser) setUser(storedUser);
+    try {
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      if (storedUser && storedUser.role) {
+        setUser(storedUser);
+      } else {
+        localStorage.removeItem("user"); // Clear invalid session
+      }
+    } catch (error) {
+      // Silently handle error
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const login = async ({ email, password }) => {
-    
-    let role = email.includes("admin") ? "admin" : "user";
-    const newUser = { email, role, token: "fake-jwt" };
+    try {
+      let role = email.includes("admin") ? "admin" : "user";
+      const newUser = { email, role, token: "fake-jwt" };
 
-    localStorage.setItem("user", JSON.stringify(newUser));
-    setUser(newUser);
-    return newUser;
+      localStorage.setItem("user", JSON.stringify(newUser));
+      setUser(newUser);
+      
+      return newUser;
+    } catch (error) {
+      throw error;
+    }
   };
 
   const logout = () => {
@@ -26,7 +41,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

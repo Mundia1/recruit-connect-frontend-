@@ -9,12 +9,8 @@ import AdminDashboard from './pages/AdminDashboard';
 import ApplyRedirect from './pages/ApplyRedirect';
 import About from './pages/About';
 import Contact from './pages/Contact';
-import JobSeekerDashboard from './pages/JobSeekerDashboard'; 
+import JobSeekerDashboard from './pages/JobSeekerDashboard';
 import ProtectedRoute from './components/auth/ProtectedRoute';
-import ApplyRedirect from './pages/ApplyRedirect';
-import SavedJobs from './pages/SavedJobs'; 
-import MyApplication from './pages/MyApplication';
-import Settings from './pages/Settings';
 
 function App() {
   return (
@@ -34,12 +30,11 @@ function App() {
       <Route path="/admin/help" element={<AdminDashboard />} />
       <Route path="/admin/feedback" element={<AdminDashboard />} />
 
+
       {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<JobSeekerDashboard />} />
-        <Route path="/saved-jobs" element={<SavedJobs />} />
-        <Route path="/job-applications" element={<MyApplication />} />
-        <Route path="/settings" element={<Settings />} />
+        <Route path="/profile" element={<JobSeekerDashboard />} />
       </Route>
     </Routes>
   );

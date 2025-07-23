@@ -1,13 +1,13 @@
 import React, { useContext, useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
 import { AuthContext } from "../context/AuthContext";
 
 export default function SignIn() {
   const { login } = useContext(AuthContext);
   const [form, setForm] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -15,60 +15,65 @@ export default function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const user = await login(form); // login returns user object: { role, token }
+    setError("");
 
+    try {
+      const user = await login(form);
+
+      // ✅ Redirect based on role
       if (user.role === "admin") {
         navigate("/admin/dashboard");
+      } else if (user.role === "user") {
+        navigate("/profile"); // ✅ User profile page
       } else {
-        // Redirect to JobSeekerDashboard
-        navigate("/dashboard");
+        navigate("/jobs"); // fallback
       }
     } catch (err) {
-      alert("Login failed");
+      setError("Invalid credentials. Please try again.");
     }
   };
 
   return (
     <>
+      {/* Navbar */}
       <Navbar />
 
+      {/* Main Content */}
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
         <div className="bg-white shadow-lg rounded-lg w-full max-w-md p-8 mt-10">
           <h2 className="text-3xl font-bold text-center text-[#177245] mb-6">
             Sign In
           </h2>
+
+          {error && (
+            <p className="text-red-500 text-center mb-4 font-medium">{error}</p>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-
-              <label htmlFor="email" className="block text-gray-700 font-medium mb-1">Email</label>
+              <label className="block text-gray-700 font-medium mb-1">
+                Email
+              </label>
               <input
-                id="email"
-
                 type="email"
                 name="email"
                 value={form.email}
                 onChange={handleChange}
                 required
                 className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#177245]"
-
-                aria-label="Email Address"
               />
             </div>
             <div>
-              <label htmlFor="password" className="block text-gray-700 font-medium mb-1">Password</label>
+              <label className="block text-gray-700 font-medium mb-1">
+                Password
+              </label>
               <input
-                id="password"
-
                 type="password"
                 name="password"
                 value={form.password}
                 onChange={handleChange}
                 required
                 className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#177245]"
-
-                aria-label="Password"
-
               />
             </div>
             <button
@@ -81,7 +86,10 @@ export default function SignIn() {
 
           <p className="text-center text-gray-600 mt-4">
             Don't have an account?{" "}
-            <Link to="/signup" className="text-[#177245] font-semibold hover:underline">
+            <Link
+              to="/signup"
+              className="text-[#177245] font-semibold hover:underline"
+            >
               Sign Up
             </Link>
           </p>
