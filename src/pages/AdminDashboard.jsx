@@ -1,34 +1,16 @@
-
-
-
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import Feedback from './Feedback';
 import StatisticsCard from '../components/features/analytics/StatisticsCard';
 import BarChart from '../components/features/analytics/BarChart';
 import LineChart from '../components/features/analytics/LineChart';
 import {
-  HomeIcon,
-  BriefcaseIcon,
-  UserGroupIcon,
-  Cog6ToothIcon,
-  QuestionMarkCircleIcon,
-  BellIcon,
-  ChevronDoubleLeftIcon,
-  ChevronDoubleRightIcon,
-  EyeIcon,
+  HomeIcon, BriefcaseIcon, UserGroupIcon,
+  Cog6ToothIcon, QuestionMarkCircleIcon,
+  BellIcon, ChevronDoubleLeftIcon,
+  ChevronDoubleRightIcon, EyeIcon,
   UserCircleIcon,
   ArrowLeftOnRectangleIcon,
 } from "@heroicons/react/24/outline";
-
-const sidebarItems = [
-  { name: "Dashboard", path: "/admin/dashboard" },
-  { name: "Job Management", path: "/admin/jobs" },
-  { name: "Applications", path: "/admin/applicants" },
-  { name: "Settings", path: "/admin/settings" },
-  { name: "Help", path: "/admin/help" },
-  { name: "Feedback", path: "/admin/feedback" },
-];
 
 
 export default function AdminDashboard() {
@@ -239,11 +221,6 @@ export default function AdminDashboard() {
         </div>
       );
     }
-    
-    if (location.pathname === "/admin/feedback") {
-      return <Feedback />;
-    }
-
 
     // Default dashboard content
     return (
