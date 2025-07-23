@@ -31,6 +31,7 @@ function App() {
       <Route path="/admin/settings" element={<AdminDashboard />} />
       <Route path="/admin/help" element={<AdminDashboard />} />
       <Route path="/admin/feedback" element={<AdminDashboard />} />
+      <Route path="/admin/feedback" element={<AdminDashboard />} />
 
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<JobSeekerDashboard />} />
