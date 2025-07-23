@@ -6,9 +6,13 @@ import JobBoard from "./pages/JobBoard";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import AdminDashboard from './pages/AdminDashboard';
-import JobSeekerDashboard from './pages/JobSeekerDashboard'; // ✅ Added import
-import ProtectedRoute from './components/auth/ProtectedRoute';
 import ApplyRedirect from './pages/ApplyRedirect';
+import About from './pages/About';
+import Contact from './pages/Contact';
+import JobSeekerDashboard from './pages/JobSeekerDashboard';
+import ProtectedRoute from './components/auth/ProtectedRoute';
+import Feedback from "./pages/Feedback";
+
 
 function App() {
   return (
@@ -19,15 +23,19 @@ function App() {
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/apply/:jobId" element={<ApplyRedirect />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/contact" element={<Contact />} />
       <Route path="/admin/dashboard" element={<AdminDashboard />} />
       <Route path="/admin/jobs" element={<AdminDashboard />} />
       <Route path="/admin/applicants" element={<AdminDashboard />} />
       <Route path="/admin/settings" element={<AdminDashboard />} />
       <Route path="/admin/help" element={<AdminDashboard />} />
+      <Route path="/feedback" element={<Feedback />} />
 
-      {/* Protected Routes */}
+
       <Route element={<ProtectedRoute />}>
-        <Route path="/dashboard" element={<JobSeekerDashboard />} /> {/* ✅ Added this */}
+        <Route path="/dashboard" element={<JobSeekerDashboard />} />
+        <Route path="/profile" element={<JobSeekerDashboard />} />
       </Route>
     </Routes>
   );

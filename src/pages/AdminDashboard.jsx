@@ -1,9 +1,11 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import StatisticsCard from "../components/features/analytics/StatisticsCard";
 import BarChart from "../components/features/analytics/BarChart";
 import LineChart from "../components/features/analytics/LineChart";
 import { BriefcaseIcon, UserGroupIcon, EyeIcon, HomeIcon, Cog6ToothIcon, QuestionMarkCircleIcon, ArrowLeftOnRectangleIcon, UserCircleIcon, BellIcon } from "@heroicons/react/24/outline";
+
 
 export default function AdminDashboard() {
   const [sidebarCollapsed] = useState(true);
@@ -258,6 +260,8 @@ export default function AdminDashboard() {
         </div>
       );
     }
+
+
     return (
       <>
         <h1 className="text-2xl font-bold text-gray-800 mb-8">Dashboard</h1>
