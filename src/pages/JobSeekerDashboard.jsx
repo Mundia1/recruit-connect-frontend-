@@ -93,6 +93,7 @@ const SettingsSection = ({ settings }) => {
     setOpenSetting(null);
   };
 
+  
   const handleLogout = () => {
     navigate("/");
   };
