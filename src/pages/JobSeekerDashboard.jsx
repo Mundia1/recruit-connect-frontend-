@@ -94,6 +94,8 @@ const SettingsSection = ({ settings }) => {
   };
 
 
+
+
   const handleLogout = () => {
     navigate("/");
   };
