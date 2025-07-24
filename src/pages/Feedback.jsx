@@ -39,19 +39,18 @@ return (
 
 
        </div>
-      <div className="flex justify-center items-center h-full py-8 bg-gray-100">
-        <div className="w-full max-w-2xl p-8 bg-white rounded-lg shadow">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Rate your application experience
-          </h1>
-          <p className="text-gray-600 mb-6">
-            Your feedback helps us improve the application process for everyone.
-          </p>
+       <div className="flex flex-col items-center h-full py-8 bg-gray-100">
+         <div className="max-w-2xl text-center mb-6">
+           <h1 className="text-3xl font-bold text-gray-900">
+             Rate your application experience
+           </h1>
+           <p className="text-gray-600 mt-2">
+             Your feedback helps us improve the application process for everyone.
+           </p>
+         </div>
+         <div className="w-full max-w-2xl p-8 bg-white rounded-lg shadow">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-gray-800 font-medium mb-2">
-                How satisfied are you with our platform?
-              </label>
               <div className="flex justify-between">
                 {faces.map((face) => (
                   <button
@@ -71,7 +70,7 @@ return (
 
             <div>
               <textarea
-                className="w-full border-2 border-green-200 rounded-xl p-4 min-h-[200px] focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full border-2 border-black rounded-xl p-4 min-h-[200px] focus:outline-none focus:ring-2 focus:ring-black"
                 placeholder="Please fill in your answer"
                 rows={6}
                 value={comment}
