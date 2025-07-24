@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import DashboardLayout from '../components/layout/DashboardLayout';
 import { Button } from '../components/ui/Button';
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 
 
 const faces = [
@@ -12,6 +14,7 @@ const faces = [
 ];
 
 const Feedback = () => {
+  const navigate = useNavigate();
   const [rating, setRating] = useState(null);
   const [comment, setComment] = useState("");
 
@@ -25,10 +28,25 @@ const Feedback = () => {
 
 return (
     <DashboardLayout>
+      <div className="px-6 py-4 border-b bg-white">
+         <button
+           onClick={() => navigate(-1)}
+           className="flex items-center text-gray-600 hover:text-gray-800"
+         >
+           <ArrowLeft className="h-5 w-5 mr-1" />
+           Back
+         </button>
+
+
+       </div>
       <div className="flex justify-center items-center h-full py-8 bg-gray-100">
-        <div className="w-full max-w-md p-6 bg-white rounded-lg shadow">
-          <h2 className="text-green-600 text-xl font-bold mb-4">We want your opinion!</h2>
-          
+        <div className="w-full max-w-2xl p-8 bg-white rounded-lg shadow">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Rate your application experience
+          </h1>
+          <p className="text-gray-600 mb-6">
+            Your feedback helps us improve the application process for everyone.
+          </p>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-gray-800 font-medium mb-2">
@@ -52,13 +70,10 @@ return (
             </div>
 
             <div>
-              <label className="block text-gray-800 font-medium mb-2">
-                What do you like or not like about our platform?
-              </label>
               <textarea
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full border-2 border-green-200 rounded-xl p-4 min-h-[200px] focus:outline-none focus:ring-2 focus:ring-green-500"
                 placeholder="Please fill in your answer"
-                rows={4}
+                rows={6}
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 required
@@ -66,16 +81,22 @@ return (
             </div>
 
 
-<div className="text-right">
-              <Button type="submit" variant="primary">
+<div className="flex justify-center mt-6">
+           <Button
+                type="submit"
+                variant="primary"
+                size="lg"
+                className="w-1/2 rounded-full"
+              >
                 Submit Feedback
               </Button>
-            </div>
+          </div>
           </form>
         </div>
       </div>
     </DashboardLayout>
   );
 };
+
 
 export default Feedback;
