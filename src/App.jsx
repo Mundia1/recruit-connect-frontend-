@@ -27,7 +27,8 @@ function App() {
       <Route path="/admin/applicants" element={<AdminDashboard />} />
       <Route path="/admin/settings" element={<AdminDashboard />} />
       <Route path="/admin/help" element={<AdminDashboard />} />
-      <Route path="/admin/feedback" element={<AdminDashboard />} />
+      <Route path="/feedback" element={<Feedback />} />
+
 
       {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
