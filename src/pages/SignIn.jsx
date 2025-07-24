@@ -24,7 +24,7 @@ export default function SignIn() {
       if (user.role === "admin") {
         navigate("/admin/dashboard");
       } else if (user.role === "user") {
-        navigate("/profile"); // ✅ User profile page
+        navigate("/dashboard"); // ✅ User profile page
       } else {
         navigate("/jobs"); // fallback
       }
