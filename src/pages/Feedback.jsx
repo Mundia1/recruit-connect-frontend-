@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import DashboardLayout from '../components/layout/DashboardLayout';
 import { Button } from '../components/ui/Button';
 
+
 const faces = [
   { label: "Very Dissatisfied", emoji: "😠", value: 1 },
   { label: "Dissatisfied", emoji: "😞", value: 2 },
@@ -24,8 +25,8 @@ const Feedback = () => {
 
 return (
     <DashboardLayout>
-      <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
-        <div className="bg-white w-full max-w-md p-6 rounded-lg shadow-md">
+      <div className="flex justify-center items-center h-full py-8 bg-gray-100">
+        <div className="w-full max-w-md p-6 bg-white rounded-lg shadow">
           <h2 className="text-green-600 text-xl font-bold mb-4">We want your opinion!</h2>
           
           <form onSubmit={handleSubmit} className="space-y-4">
