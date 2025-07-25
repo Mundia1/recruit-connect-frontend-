@@ -3,8 +3,15 @@ import { useNavigate, useLocation } from "react-router-dom";
 import StatisticsCard from "../components/features/analytics/StatisticsCard";
 import BarChart from "../components/features/analytics/BarChart";
 import LineChart from "../components/features/analytics/LineChart";
-import { BriefcaseIcon, UserGroupIcon, EyeIcon, HomeIcon, Cog6ToothIcon, QuestionMarkCircleIcon, ArrowLeftOnRectangleIcon, UserCircleIcon, BellIcon } from "@heroicons/react/24/outline";
-
+import {
+  BriefcaseIcon,
+  UserGroupIcon,
+  EyeIcon,
+  HomeIcon,
+  Cog6ToothIcon,
+  QuestionMarkCircleIcon,
+  BellIcon,
+} from "@heroicons/react/24/outline";
 
 export default function AdminDashboard() {
   const [sidebarCollapsed] = useState(true);
@@ -16,47 +23,6 @@ export default function AdminDashboard() {
     { id: 2, text: "Job post approved", read: false },
     { id: 3, text: "Password changed successfully", read: false },
   ]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNotifications((prev) => [
-        ...prev,
-        {
-          id: prev.length + 1,
-          text: `Mock notification #${prev.length + 1} at ${new Date().toLocaleTimeString()}`,
-          read: false,
-        },
-      ]);
-    }, 10000);
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const jobEvents = [
-      "New job posted: Frontend Developer",
-      "Job application received for Backend Developer",
-      "Job 'UI Designer' has been closed",
-      "Job 'QA Engineer' has been approved",
-      "Job 'DevOps Specialist' was updated",
-      "Job 'Product Manager' received a new application",
-      "Job 'React Developer' was rejected",
-      "Job 'Full Stack Developer' is now live",
-      "Job 'Data Analyst' has been reviewed",
-      "Job 'Mobile Developer' received feedback",
-    ];
-    const interval = setInterval(() => {
-      const randomEvent = jobEvents[Math.floor(Math.random() * jobEvents.length)];
-      setNotifications((prev) => [
-        ...prev,
-        {
-          id: prev.length + 1,
-          text: randomEvent,
-          read: false,
-        },
-      ]);
-    }, 10000);
-    return () => clearInterval(interval);
-  }, []);
 
   const markAsRead = (id) => {
     setNotifications((prev) =>
@@ -73,16 +39,9 @@ export default function AdminDashboard() {
     { name: "Settings", path: "/admin/settings", icon: Cog6ToothIcon },
     { name: "Help", path: "/admin/help", icon: QuestionMarkCircleIcon },
   ];
+
   const navigate = useNavigate();
   const location = useLocation();
-
-  const handleBack = () => {
-    if (window.history.length > 1) {
-      navigate(-1);
-    } else {
-      navigate("/admin/dashboard");
-    }
-  };
 
   const handleLogout = () => {
     navigate("/signin", { replace: true });
@@ -107,9 +66,7 @@ export default function AdminDashboard() {
 
   const handleStatusChange = (id, newStatus) => {
     setApplicants((prev) =>
-      prev.map((app) =>
-        app.id === id ? { ...app, status: newStatus } : app
-      )
+      prev.map((app) => (app.id === id ? { ...app, status: newStatus } : app))
     );
   };
 
@@ -118,22 +75,49 @@ export default function AdminDashboard() {
       <h2 className="text-xl font-bold mb-6 text-gray-800">Post a New Job</h2>
       <form>
         <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Job Title</label>
-          <input className="w-full border rounded px-3 py-2" type="text" placeholder="Job Title" />
+          <label className="block text-gray-700 font-medium mb-2">
+            Job Title
+          </label>
+          <input
+            className="w-full border rounded px-3 py-2"
+            type="text"
+            placeholder="Job Title"
+          />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Company</label>
-          <input className="w-full border rounded px-3 py-2" type="text" placeholder="Company Name" />
+          <label className="block text-gray-700 font-medium mb-2">
+            Company
+          </label>
+          <input
+            className="w-full border rounded px-3 py-2"
+            type="text"
+            placeholder="Company Name"
+          />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Location</label>
-          <input className="w-full border rounded px-3 py-2" type="text" placeholder="Location" />
+          <label className="block text-gray-700 font-medium mb-2">
+            Location
+          </label>
+          <input
+            className="w-full border rounded px-3 py-2"
+            type="text"
+            placeholder="Location"
+          />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Description</label>
-          <textarea className="w-full border rounded px-3 py-2" rows={4} placeholder="Job Description"></textarea>
+          <label className="block text-gray-700 font-medium mb-2">
+            Description
+          </label>
+          <textarea
+            className="w-full border rounded px-3 py-2"
+            rows={4}
+            placeholder="Job Description"
+          ></textarea>
         </div>
-        <button type="submit" className="bg-[#177245] text-white px-6 py-2 rounded font-semibold hover:bg-green-700 transition">
+        <button
+          type="submit"
+          className="bg-[#177245] text-white px-6 py-2 rounded font-semibold hover:bg-green-700 transition"
+        >
           Post Job
         </button>
       </form>
@@ -141,32 +125,32 @@ export default function AdminDashboard() {
   );
 
   const barChartData = [
-    { name: 'Mon', applications: 30 },
-    { name: 'Tue', applications: 45 },
-    { name: 'Wed', applications: 38 },
-    { name: 'Thu', applications: 52 },
-    { name: 'Fri', applications: 41 },
-    { name: 'Sat', applications: 20 },
-    { name: 'Sun', applications: 15 },
+    { name: "Mon", applications: 30 },
+    { name: "Tue", applications: 45 },
+    { name: "Wed", applications: 38 },
+    { name: "Thu", applications: 52 },
+    { name: "Fri", applications: 41 },
+    { name: "Sat", applications: 20 },
+    { name: "Sun", applications: 15 },
   ];
   const lineChartData = [
-    { name: 'Mon', views: 120 },
-    { name: 'Tue', views: 200 },
-    { name: 'Wed', views: 150 },
-    { name: 'Thu', views: 180 },
-    { name: 'Fri', views: 220 },
-    { name: 'Sat', views: 90 },
-    { name: 'Sun', views: 60 },
+    { name: "Mon", views: 120 },
+    { name: "Tue", views: 200 },
+    { name: "Wed", views: 150 },
+    { name: "Thu", views: 180 },
+    { name: "Fri", views: 220 },
+    { name: "Sat", views: 90 },
+    { name: "Sun", views: 60 },
   ];
 
   const renderMainContent = () => {
-    if (location.pathname === "/admin/jobs") {
-      return <JobPostingForm />;
-    }
-    if (location.pathname === "/admin/applicants") {
+    if (location.pathname === "/admin/jobs") return <JobPostingForm />;
+    if (location.pathname === "/admin/applicants")
       return (
         <div className="bg-white p-8 rounded-lg shadow max-w-4xl mx-auto">
-          <h2 className="text-xl font-bold mb-6 text-gray-800">Job Applications</h2>
+          <h2 className="text-xl font-bold mb-6 text-gray-800">
+            Job Applications
+          </h2>
           <table className="min-w-full border">
             <thead>
               <tr className="bg-gray-100">
@@ -200,41 +184,51 @@ export default function AdminDashboard() {
           </table>
         </div>
       );
-    }
-    if (location.pathname === "/admin/settings") {
+    if (location.pathname === "/admin/settings")
       return (
         <div className="bg-white p-8 rounded-lg shadow max-w-lg mx-auto">
           <h2 className="text-xl font-bold mb-6 text-gray-800">Employer Settings</h2>
           <form>
             <div className="mb-4">
-              <label className="block text-gray-700 font-medium mb-2">Admin Name</label>
-              <input className="w-full border rounded px-3 py-2" type="text" placeholder="Admin Name" />
+              <label className="block text-gray-700 font-medium mb-2">
+                Admin Name
+              </label>
+              <input
+                className="w-full border rounded px-3 py-2"
+                type="text"
+                placeholder="Admin Name"
+              />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 font-medium mb-2">Email</label>
-              <input className="w-full border rounded px-3 py-2" type="email" placeholder="admin@email.com" />
+              <label className="block text-gray-700 font-medium mb-2">
+                Email
+              </label>
+              <input
+                className="w-full border rounded px-3 py-2"
+                type="email"
+                placeholder="admin@email.com"
+              />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 font-medium mb-2">Change Password</label>
-              <input className="w-full border rounded px-3 py-2" type="password" placeholder="New Password" />
+              <label className="block text-gray-700 font-medium mb-2">
+                Change Password
+              </label>
+              <input
+                className="w-full border rounded px-3 py-2"
+                type="password"
+                placeholder="New Password"
+              />
             </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 font-medium mb-2">Notification Preferences</label>
-              <select className="w-full border rounded px-3 py-2">
-                <option value="all">All Notifications</option>
-                <option value="jobs">Only Job Updates</option>
-                <option value="applications">Only Applications</option>
-                <option value="none">None</option>
-              </select>
-            </div>
-            <button type="submit" className="bg-[#177245] text-white px-6 py-2 rounded font-semibold hover:bg-green-700 transition">
+            <button
+              type="submit"
+              className="bg-[#177245] text-white px-6 py-2 rounded font-semibold hover:bg-green-700 transition"
+            >
               Save Settings
             </button>
           </form>
         </div>
       );
-    }
-    if (location.pathname === "/admin/help") {
+    if (location.pathname === "/admin/help")
       return (
         <div className="bg-white p-8 rounded-lg shadow max-w-lg mx-auto">
           <h2 className="text-xl font-bold mb-6 text-gray-800">Employer Help & Support</h2>
@@ -258,8 +252,6 @@ export default function AdminDashboard() {
           </button>
         </div>
       );
-    }
-
 
     return (
       <>
@@ -322,6 +314,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
+      {/* HEADER */}
       <header className="h-16 bg-white border-b flex items-center justify-between px-4 md:px-8 shadow-sm z-10">
         <div className="flex items-center gap-2 min-w-[56px]">
           <svg
@@ -331,7 +324,7 @@ export default function AdminDashboard() {
             viewBox="0 0 24 24"
             stroke="none"
           >
-            <path d="M12 17.75l-6.172 3.245 1.179-6.881-5-4.873 6.9-1.002L12 2.25l3.093 6.989 6.9 1.002-5 4.873 1.179 6.881z"/>
+            <path d="M12 17.75l-6.172 3.245 1.179-6.881-5-4.873 6.9-1.002L12 2.25l3.093 6.989 6.9 1.002-5 4.873 1.179 6.881z" />
           </svg>
           <span className="text-lg font-bold text-[#177245] tracking-tight">Employer Panel</span>
         </div>
@@ -348,7 +341,6 @@ export default function AdminDashboard() {
                   {unreadCount}
                 </span>
               )}
-              <span className="sr-only">Notifications</span>
             </button>
             {showNotifications && (
               <div className="absolute right-0 mt-2 w-64 bg-white border rounded shadow-lg z-30">
@@ -369,11 +361,18 @@ export default function AdminDashboard() {
                 </div>
                 <ul>
                   {notifications.length === 0 && (
-                    <li className="px-4 py-2 text-gray-400">No notifications</li>
+                    <li className="px-4 py-2 text-gray-400">
+                      No notifications
+                    </li>
                   )}
                   {notifications.map((n) => (
-                    <li key={n.id} className="px-4 py-2 text-gray-600 hover:bg-gray-50 flex justify-between items-center">
-                      <span className={n.read ? "text-gray-400" : ""}>{n.text}</span>
+                    <li
+                      key={n.id}
+                      className="px-4 py-2 text-gray-600 hover:bg-gray-50 flex justify-between items-center"
+                    >
+                      <span className={n.read ? "text-gray-400" : ""}>
+                        {n.text}
+                      </span>
                       {!n.read && (
                         <button
                           className="ml-2 text-xs text-blue-600 hover:underline"
@@ -405,17 +404,22 @@ export default function AdminDashboard() {
           </div>
         </div>
       </header>
+
+      {/* MAIN */}
       <div className="flex flex-1 min-h-0">
+        {/* SIDEBAR */}
         <aside
           className={`relative transition-all duration-200 bg-white border-r flex flex-col justify-between py-6 px-0 ${
-            sidebarCollapsed && !sidebarHovered ? 'w-20' : 'w-64'
+            sidebarCollapsed && !sidebarHovered ? "w-20" : "w-64"
           }`}
           onMouseEnter={() => setSidebarHovered(true)}
           onMouseLeave={() => setSidebarHovered(false)}
-          onTouchStart={() => setSidebarHovered(true)}
-          onTouchEnd={() => setSidebarHovered(false)}
         >
-          <div className={`flex items-center justify-center ${sidebarCollapsed && !sidebarHovered ? 'mb-2' : 'mb-6'} mt-2`}>
+          <div
+            className={`flex items-center justify-center ${
+              sidebarCollapsed && !sidebarHovered ? "mb-2" : "mb-6"
+            } mt-2`}
+          >
             {!(sidebarCollapsed && !sidebarHovered) && (
               <span className="text-lg font-bold text-[#177245] tracking-tight">Employer Panel</span>
             )}
@@ -428,21 +432,18 @@ export default function AdminDashboard() {
                   <li
                     key={item.name}
                     className={`relative flex items-center gap-3 px-3 md:px-6 py-3 cursor-pointer hover:bg-green-50 font-medium text-gray-700 transition-colors ${
-                      location.pathname === item.path ? "bg-green-100 text-[#177245] rounded-lg" : ""
+                      location.pathname === item.path
+                        ? "bg-green-100 text-[#177245] rounded-lg"
+                        : ""
                     } group`}
                     onClick={() => navigate(item.path)}
-                    tabIndex={0}
-                    aria-label={item.name}
                   >
                     <Icon className="h-5 w-5 flex-shrink-0" />
-                    {!(sidebarCollapsed && !sidebarHovered) && <span>{item.name}</span>}
+                    {!(sidebarCollapsed && !sidebarHovered) && (
+                      <span>{item.name}</span>
+                    )}
                     {location.pathname === item.path && (
                       <span className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 rounded bg-[#177245]" />
-                    )}
-                    {sidebarCollapsed && !sidebarHovered && (
-                      <span className="absolute left-full ml-2 px-2 py-1 rounded bg-gray-900 text-white text-xs opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-20 whitespace-nowrap">
-                        {item.name}
-                      </span>
                     )}
                   </li>
                 );
@@ -469,20 +470,10 @@ export default function AdminDashboard() {
             </button>
           </div>
         </aside>
-        <main className="flex-1 p-4 md:p-10 overflow-y-auto">
-          {renderMainContent()}
-        </main>
+
+        {/* CONTENT */}
+        <main className="flex-1 p-6 overflow-y-auto">{renderMainContent()}</main>
       </div>
-      <footer className="bg-white border-t text-gray-500 text-sm py-4 px-4 md:px-10 flex flex-col md:flex-row items-center justify-between">
-        <div>
-          &copy; {new Date().getFullYear()} Recruit Connect. All rights reserved.
-        </div>
-        <div className="flex gap-4 mt-2 md:mt-0">
-          <a href="/privacy" className="hover:underline">Privacy Policy</a>
-          <a href="/terms" className="hover:underline">Terms of Service</a>
-          <a href="/contact" className="hover:underline">Contact</a>
-        </div>
-      </footer>
     </div>
   );
 }

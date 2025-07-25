@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { signIn, getCurrentUser } from "../api/auth";
 
 export default function SignIn() {
-  const navigate = useNavigate();
+  const { login } = useAuthContext();
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [selectedRole, setSelectedRole] = useState(null); // "admin" or "jobseeker"
@@ -71,45 +71,36 @@ export default function SignIn() {
             </button>
           </div>
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Email
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                required
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#177245]"
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">
-                Password
-              </label>
-              <input
-                type="password"
-                name="password"
-                value={form.password}
-                onChange={handleChange}
-                required
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#177245]"
-              />
-            </div>
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={form.email}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-300 rounded-lg px-4 py-2"
+            />
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={form.password}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-300 rounded-lg px-4 py-2"
+            />
             <button
               type="submit"
-              className="w-full bg-[#177245] text-white py-2 rounded-lg font-semibold hover:bg-green-700 transition"
+              disabled={loading}
+              className="w-full bg-[#177245] text-white py-2 rounded-lg"
             >
-              Sign In
+              {loading ? "Signing In..." : "Sign In"}
             </button>
           </form>
-          <p className="text-center text-gray-600 mt-4">
+
+          <p className="text-center mt-4">
             Don't have an account?{" "}
-            <Link
-              to="/signup"
-              className="text-[#177245] font-semibold hover:underline"
-            >
+            <Link to="/signup" className="text-[#177245] font-semibold">
               Sign Up
             </Link>
           </p>

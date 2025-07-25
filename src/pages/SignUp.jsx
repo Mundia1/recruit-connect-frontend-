@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
-import PasswordInput from '../components/ui/PasswordInput';
-import { signUp } from "../api/auth"; // <-- Import the real API function
-
+import { registerUser } from "../api/api";
 
 export default function SignUp() {
-  const navigate = useNavigate();
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
   const [selectedRole, setSelectedRole] = useState(null);
 
@@ -27,25 +25,26 @@ export default function SignUp() {
     };
 
     try {
-      await signUp(userData); // <-- Call the API
+      await registerUser(form);
       navigate("/signin");
     } catch (err) {
-      setError("Registration failed. Please try again.");
+      setError(err.response?.data?.message || "Registration failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
-      {/* Navbar */}
       <Navbar />
-
-      {/* Main Content */}
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
         <div className="bg-white shadow-lg rounded-lg w-full max-w-md p-8 mt-10">
           <h2 className="text-3xl font-bold text-center text-[#177245] mb-6">
             Create Account
           </h2>
-          {error && <p className="text-red-500 text-center mb-4 font-medium">{error}</p>}
+
+          {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="block text-gray-700 font-medium mb-1">Full Name</label>
@@ -101,15 +100,16 @@ export default function SignUp() {
 
             <button
               type="submit"
-              className="w-full bg-[#177245] text-white py-2 rounded-lg font-semibold hover:bg-green-700 transition"
+              disabled={loading}
+              className="w-full bg-[#177245] text-white py-2 rounded-lg"
             >
-              Sign Up
+              {loading ? "Registering..." : "Sign Up"}
             </button>
           </form>
 
-          <p className="text-center text-gray-600 mt-4">
+          <p className="text-center mt-4">
             Already have an account?{" "}
-            <Link to="/signin" className="text-[#177245] font-semibold hover:underline">
+            <Link to="/signin" className="text-[#177245] font-semibold">
               Sign In
             </Link>
           </p>
