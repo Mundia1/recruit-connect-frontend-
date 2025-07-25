@@ -24,76 +24,62 @@ const ApplicationFeedback = () => {
     };
 
 return (
-    <DashboardLayout>
-      <div className="px-6 py-4 border-b bg-white">
-         <button
-           onClick={() => navigate(-1)}
-           className="flex items-center text-gray-600 hover:text-gray-800"
-         >
-           <ArrowLeft className="h-5 w-5 mr-1" />
-           Back
-         </button>
-
-
-       </div>
-       <div className="flex flex-col items-center h-full py-8 bg-gray-100">
-         <div className="max-w-2xl text-center mb-6">
-           <h1 className="text-3xl font-bold text-gray-900">
-             Rate your application experience
-           </h1>
-           <p className="text-gray-600 mt-2">
-             Your feedback helps us improve the application process for everyone.
-           </p>
-         </div>
-         <div className="w-full max-w-2xl p-8 bg-white rounded-lg shadow">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <div className="flex justify-between">
-                {faces.map((face) => (
-                  <button
-                    key={face.value}
-                    type="button"
-                    onClick={() => setRating(face.value)}
-                    className={`text-3xl transition-transform ${
-                      rating === face.value ? 'scale-110' : 'opacity-70'
-                    } hover:scale-110`}
-                    aria-label={face.label}
-                  >
-                    {face.emoji}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <textarea
-                className="w-full border-2 border-black rounded-xl p-4 min-h-[200px] focus:outline-none focus:ring-2 focus:ring-black"
-                placeholder="Please fill in your answer"
-                rows={6}
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                required
-              />
-            </div>
-
-
-<div className="flex justify-center mt-6">
-           <Button
-                type="submit"
-                variant="primary"
-                size="lg"
-                className="w-1/2 rounded-full"
-              >
-                Submit Feedback
-              </Button>
-          </div>
-          </form>
+      <div className="bg-[#F7FCFA] min-h-screen">
+      <Navbar />
+      <div className="flex flex-col items-center justify-center pt-20">
+        <div className="max-w-2xl text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">
+            Rate your application experience
+          </h1>
+          <p className="text-gray-600 mt-2">
+            Your feedback helps us improve the application process for everyone.
+          </p>
         </div>
+        <form onSubmit={handleSubmit} className="w-full max-w-lg space-y-6">
+
+          <div className="flex justify-center space-x-3">
+            {ratings.map((num) => (
+              <button
+                key={num}
+                type="button"
+                onClick={() => setRating(num)}
+                className={`
+                  w-12 h-12 flex items-center justify-center rounded-lg text-lg font-medium transition-colors
+                  ${
+                    rating === num
+                      ? 'bg-[#21C259] text-white'
+                      : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-100'
+                  }
+                `}
+              >
+                {num}
+              </button>
+            ))}
+          </div>
+
+          {/* Styled: Text area to match the figma design */}
+          <div>
+            <textarea
+              className="w-full border border-[#D1E5D9] rounded-xl p-4 min-h-[140px] focus:outline-none focus:ring-2 focus:ring-[#21C259] bg-white"
+              placeholder=""
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            />
+          </div>
+
+          {/* Styled: Submit button to match the figma design */}
+          <div className="flex justify-center pt-2">
+            <button
+              type="submit"
+              className="bg-[#12783D] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#05823B] transition-colors"
+            >
+              Submit Feedback
+            </button>
+          </div>
+        </form>
       </div>
-    </DashboardLayout>
+    </div>
   );
 };
 
-
-export default Feedback;
-
+export default ApplicationFeedback;
