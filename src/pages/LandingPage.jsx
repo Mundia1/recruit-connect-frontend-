@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import HeroImage from "../assets/hero-image.png";
 import Navbar from "../components/layout/Navbar";
 import FeaturedJobs from "../components/features/jobs/FeaturedJobs";
-import Footer from "../components/layout/Footer";
+// import Footer from "../components/layout/Footer";
 
 // --- Testimonials Data ---
 const testimonials = [
@@ -52,7 +52,7 @@ export default function LandingPage() {
 
       {/* Navbar */}
       <Navbar />
-   
+
 
       {/* Hero Section */}
       <section
@@ -96,8 +96,8 @@ export default function LandingPage() {
               className="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 flex flex-col items-center text-center w-full md:w-1/3"
             >
               <div className="text-4xl mb-4">{step.icon}</div>
-              
-              <h3 className="text-xl font-semibold mb-2 dark:text-white">{step.title}</h3> 
+
+              <h3 className="text-xl font-semibold mb-2 dark:text-white">{step.title}</h3>
               <p className="text-gray-600 dark:text-gray-300">{step.desc}</p>
             </div>
           ))}
@@ -109,7 +109,7 @@ export default function LandingPage() {
 
       {/* Testimonials Section */}
       <section className="max-w-7xl mx-auto px-4 py-12">
-        <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-8 text-center"> 
+        <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-8 text-center">
           Testimonials
         </h2>
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -139,7 +139,20 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <Footer />
+      <footer className="w-full border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-black mt-10">
+        <div className="max-w-7xl mx-auto py-6 px-4 flex flex-col items-center gap-3">
+          <nav className="flex flex-wrap justify-center gap-6 text-sm text-gray-500 dark:text-gray-400 mb-2">
+            <NavLink to="/about" className="hover:underline">About</NavLink>
+            <NavLink to="/contact" className="hover:underline">Contact</NavLink>
+            <NavLink to="/privacy-policy" className="hover:underline">Privacy Policy</NavLink>
+            <NavLink to="/terms-of-service" className="hover:underline">Terms of Service</NavLink>
+            <NavLink to="/faq" className="hover:underline">FAQ</NavLink>
+          </nav>
+          <div className="text-xs text-gray-400 text-center">
+            © 2025 Recruit Connect. All rights reserved.
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

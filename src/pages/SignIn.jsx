@@ -1,13 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
-import { AuthContext } from "../context/AuthContext";
+import { signIn } from "../api/auth";
 
 export default function SignIn() {
-  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -15,40 +14,27 @@ export default function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-
     try {
-      const user = await login(form);
-
-      // ✅ Redirect based on role
-      if (user.role === "admin") {
-        navigate("/admin/dashboard");
-      } else if (user.role === "user") {
-        navigate("/profile"); // ✅ User profile page
-      } else {
-        navigate("/jobs"); // fallback
-      }
+      const result = await signIn(form.email, form.password);
+      localStorage.setItem("token", result.access_token);
+      localStorage.setItem("user", JSON.stringify(result.user));
+      navigate("/dashboard");
     } catch (err) {
-      setError("Invalid credentials. Please try again.");
+      setError("Invalid credentials.");
     }
   };
 
   return (
     <>
-      {/* Navbar */}
       <Navbar />
-
-      {/* Main Content */}
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
         <div className="bg-white shadow-lg rounded-lg w-full max-w-md p-8 mt-10">
           <h2 className="text-3xl font-bold text-center text-[#177245] mb-6">
             Sign In
           </h2>
-
           {error && (
             <p className="text-red-500 text-center mb-4 font-medium">{error}</p>
           )}
-
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="block text-gray-700 font-medium mb-1">
@@ -83,7 +69,6 @@ export default function SignIn() {
               Sign In
             </button>
           </form>
-
           <p className="text-center text-gray-600 mt-4">
             Don't have an account?{" "}
             <Link

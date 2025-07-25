@@ -3,43 +3,9 @@
 // Simulated user storage for demo purposes
 const USER_KEY = "recruit_connect_user";
 
-export const login = async ({ email, password }) => {
-  // Example static logic (replace with API call in production)
-  if (!email || !password) {
-    throw new Error("Email and password are required");
-  }
-
-  // Simulate role detection (admin if email contains 'admin')
-  const role = email.includes("admin") ? "admin" : "user";
-
-  const user = {
-    email,
-    role,
-    token: "fake-jwt-token",
-  };
-
-  localStorage.setItem(USER_KEY, JSON.stringify(user));
-  return user;
-};
-
-export const signup = async ({ email, password }) => {
-  // Example static logic (replace with API call in production)
-  if (!email || !password) {
-    throw new Error("Email and password are required");
-  }
-
-  const user = {
-    email,
-    role: "user",
-    token: "fake-jwt-token",
-  };
-
-  localStorage.setItem(USER_KEY, JSON.stringify(user));
-  return user;
-};
-
 export const logout = () => {
   localStorage.removeItem(USER_KEY);
+  localStorage.removeItem("token");
 };
 
 export const getCurrentUser = () => {
@@ -51,3 +17,26 @@ export const isAdmin = () => {
   const user = getCurrentUser();
   return user && user.role === "admin";
 };
+
+export async function signUp(userData) {
+  const response = await fetch('http://localhost:5000/api/v1/auth/signup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(userData),
+  });
+  if (!response.ok) throw new Error('Sign up failed');
+  return response.json();
+}
+
+export async function signIn(email, password) {
+  const response = await fetch('http://localhost:5000/api/v1/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
+  if (!response.ok) throw new Error('Sign in failed');
+  const result = await response.json();
+  localStorage.setItem("token", result.access_token);
+  localStorage.setItem(USER_KEY, JSON.stringify(result.user));
+  return result;
+}

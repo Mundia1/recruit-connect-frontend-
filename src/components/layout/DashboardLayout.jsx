@@ -70,7 +70,6 @@ const DashboardLayout = ({ children }) => {
         const token = localStorage.getItem("token");
 
         const needsAuth =
-          isAdminRoute ||
           location.pathname.startsWith("/dashboard") ||
           location.pathname.startsWith("/profile") ||
           location.pathname.startsWith("/applications") ||
@@ -92,7 +91,7 @@ const DashboardLayout = ({ children }) => {
       }
     };
     checkAdmin();
-  }, [navigate, isAdminRoute]);
+  }, [navigate, location.pathname]);
 
   const toggleAdminMode = () => {
     if (isAdmin) {
