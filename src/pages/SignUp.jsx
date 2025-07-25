@@ -13,6 +13,7 @@ export default function SignUp() {
     e.preventDefault();
     setError("");
     const formData = new FormData(e.target);
+
     const userData = {
       name: formData.get("name"),
       email: formData.get("email"),
@@ -21,6 +22,7 @@ export default function SignUp() {
 
     try {
       await signUp(userData); // <-- Call the API
+      
       navigate("/signin");
     } catch (err) {
       setError("Registration failed. Please try again.");

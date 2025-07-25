@@ -1,19 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import {
-  LayoutDashboard,
-  Briefcase,
-  Users,
-  Settings,
-  Bell,
-  Search,
-  Menu,
-  X,
-  User as UserIcon,
-  Shield,
-  PlusCircle,
-  FileText,
-  MessageSquare,
+import { LayoutDashboard, Briefcase, Users, Settings, Bell, Search,
+  Menu, X, User as UserIcon, Shield, PlusCircle, FileText, MessageSquare,
 } from "lucide-react";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
@@ -30,7 +18,6 @@ const DashboardLayout = ({ children }) => {
   const isFeedbackPage = location.pathname === "/feedback";
   const hideTitle = isFeedbackPage;
 
-  // Navigation items for regular users
   const userNavItems = [
     {
       name: "Dashboard",
@@ -77,7 +64,6 @@ const DashboardLayout = ({ children }) => {
     navItems.find((item) => location.pathname === item.path)?.name ||
     "Dashboard";
 
-  // Check if user is admin and handle authentication
   useEffect(() => {
     const checkAdmin = () => {
       try {
@@ -97,7 +83,6 @@ const DashboardLayout = ({ children }) => {
         const isUserAdmin = userData.role === "admin";
         setIsAdmin(isUserAdmin);
 
-        // Redirect to dashboard if non-admin tries to access admin routes
         if (isAdminRoute && !isUserAdmin) {
           navigate("/dashboard");
         }
@@ -108,31 +93,26 @@ const DashboardLayout = ({ children }) => {
     checkAdmin();
   }, [navigate, location.pathname]);
 
-  // Toggle admin mode
   const toggleAdminMode = () => {
     if (isAdmin) {
       navigate(isAdminRoute ? "/dashboard" : "/admin/dashboard");
     }
   };
 
-  // Check if a nav item is active
   const isActive = (path) => {
     return location.pathname === path
       ? "bg-blue-50 text-blue-600"
       : "text-gray-700 hover:bg-gray-100";
   };
 
-  // Handle logout
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     navigate("/signin");
   };
 
-  // Get current user from localStorage
   const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
 
-  // Render navigation items
   const renderNavItems = (onItemClick = () => {}) => (
     <>
       {navItems.map((item) => (
@@ -165,7 +145,6 @@ const DashboardLayout = ({ children }) => {
     </>
   );
 
-  // Render user profile section
   const renderUserProfile = (showLogout = false) => (
     <div className="flex items-center">
       <Avatar>
@@ -262,6 +241,7 @@ const DashboardLayout = ({ children }) => {
           </Button>
           <div className="flex flex-1 justify-between px-4">
             <div className="flex flex-1">
+              {!isFeedbackPage && (
               <div className="flex w-full max-w-lg lg:max-w-xs">
                 <Input
                   id="search"
@@ -272,6 +252,8 @@ const DashboardLayout = ({ children }) => {
                   icon={<Search className="h-5 w-5 text-gray-400" />}
                 />
               </div>
+              )}
+
             </div>
             <div className="ml-4 flex items-center md:ml-6">
               <Button variant="ghost" size="sm" className="rounded-full">
