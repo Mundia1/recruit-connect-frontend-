@@ -10,7 +10,7 @@ const JobApplications = () => {
     setOpenDropdown(openDropdown === id ? null : id);
   };
 
-  // Redirects the user to the dashboard page when the "Back" button is clicked
+
   const handleBack = () => {
     window.location.href = "http://localhost:5173/dashboard";
   };

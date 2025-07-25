@@ -1,60 +1,77 @@
-import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { jobs } from "../api/jobs";
-import Navbar from "../components/layout/Navbar";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import api from "../api/api";
 
 export default function ApplyRedirect() {
+  const { id } = useParams(); 
   const navigate = useNavigate();
-  const { jobId } = useParams();
+  const [job, setJob] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [coverLetter, setCoverLetter] = useState("");
+  const [resume, setResume] = useState(null);
+  const [error, setError] = useState("");
 
-  const job = jobs.find((j) => j.id === parseInt(jobId));
+  useEffect(() => {
+    const fetchJob = async () => {
+      try {
+        const res = await api.get(`/jobs/${id}`);
+        setJob(res.data);
+      } catch (err) {
+        setError("Failed to load job details.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchJob();
+  }, [id]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData();
+      formData.append("coverLetter", coverLetter);
+      if (resume) formData.append("resume", resume);
+
+      await api.post(`/jobs/${id}/apply`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      alert("Application submitted successfully!");
+      navigate("/applications"); 
+    } catch (err) {
+      alert("Failed to submit application.");
+    }
+  };
+
+  if (loading) return <div className="text-center py-10">Loading...</div>;
+  if (error) return <div className="text-center text-red-500 py-10">{error}</div>;
 
   return (
-    <>
-      <Navbar />
-      <div className="min-h-screen bg-gray-50 px-4 pt-20 flex flex-col items-center">
-        <div className="w-full max-w-lg mb-4">
-          <button
-            onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-[#177245] hover:text-green-700 font-semibold"
-          >
-            ← Back
-          </button>
-        </div>
+    <section className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg">
+      <h2 className="text-2xl font-bold mb-4">Apply for {job?.title}</h2>
+      <p className="text-gray-600 mb-6">{job?.company} - {job?.location}</p>
 
-        <div className="bg-white shadow-lg rounded-2xl p-10 max-w-lg w-full text-center">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">
-            {job
-              ? `You're applying for ${job.title}`
-              : "Create an account or sign in to apply"}
-          </h1>
-
-          {job && (
-            <p className="text-lg text-gray-600 mb-6">
-              at <span className="font-semibold">{job.company}</span>
-            </p>
-          )}
-
-          <p className="text-gray-500 mb-8">
-            You need an account to apply for this job.
-          </p>
-
-          <div className="flex flex-col gap-4">
-            <button
-              onClick={() => navigate("/signup")}
-              className="bg-[#177245] text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition"
-            >
-              Create Account
-            </button>
-            <button
-              onClick={() => navigate("/signin")}
-              className="bg-gray-200 text-gray-900 py-3 rounded-lg font-semibold hover:bg-gray-300 transition"
-            >
-              Sign In
-            </button>
-          </div>
-        </div>
-      </div>
-    </>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <textarea
+          className="w-full border p-3 rounded"
+          rows="5"
+          placeholder="Write your cover letter..."
+          value={coverLetter}
+          onChange={(e) => setCoverLetter(e.target.value)}
+          required
+        />
+        <input
+          type="file"
+          accept=".pdf,.doc,.docx"
+          onChange={(e) => setResume(e.target.files[0])}
+        />
+        <button
+          type="submit"
+          className="bg-[#177245] text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition"
+        >
+          Submit Application
+        </button>
+      </form>
+    </section>
   );
 }

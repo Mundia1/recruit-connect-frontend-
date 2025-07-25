@@ -1,7 +1,24 @@
 import React from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth'; // ✅ Cleaner access to AuthContext
 
-export default function ProtectedRoute() {
-  const token = localStorage.getItem('token');
-  return token ? <Outlet /> : <Navigate to="/signin" replace />;
-}
+const ProtectedRoute = ({ allowedRoles }) => {
+  const { user, loading } = useAuth();
+  const location = useLocation();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!user) {
+    return <Navigate to="/signin" state={{ from: location }} replace />;
+  }
+
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <Outlet />;
+};
+
+export default ProtectedRoute;
