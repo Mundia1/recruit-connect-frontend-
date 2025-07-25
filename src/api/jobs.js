@@ -90,3 +90,22 @@ export const jobs = [
     location: "Nairobi, Kenya",
   },
 ];
+
+export async function fetchJobs() {
+  const response = await fetch('http://localhost:5000/api/v1/jobs/');
+  if (!response.ok) throw new Error('Failed to fetch jobs');
+  return response.json();
+}
+
+export async function applyForJob(jobId, token) {
+  const response = await fetch('http://localhost:5000/api/v1/applications', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({ job_id: jobId }),
+  });
+  if (!response.ok) throw new Error('Application failed');
+  return response.json();
+}
