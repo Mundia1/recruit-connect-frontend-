@@ -37,13 +37,10 @@ export default function AdminDashboard() {
 
   // Logout handler
   const handleLogout = () => {
-    // Clear any authentication state here if needed
-    // For now, just redirect to sign-in
     navigate("/signin", { replace: true });
   };
 
 
-  // Mock applicants data
   const [applicants, setApplicants] = useState([
     {
       id: 1,

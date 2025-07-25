@@ -1,30 +1,27 @@
 import React, { useState } from 'react';
-import DashboardLayout from '../components/layout/DashboardLayout';
+import Navbar from '../components/layout/Navbar';
 import { Button } from '../components/ui/Button';
-import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
+const ratings = [1, 2, 3, 4, 5];
 
 
-const faces = [
-  { label: "Very Dissatisfied", emoji: "😠", value: 1 },
-  { label: "Dissatisfied", emoji: "😞", value: 2 },
-  { label: "Neutral", emoji: "😐", value: 3 },
-  { label: "Satisfied", emoji: "😊", value: 4 },
-  { label: "Very Satisfied", emoji: "😍", value: 5 }
-];
-
-const Feedback = () => {
-  const navigate = useNavigate();
+const ApplicationFeedback = () => {
   const [rating, setRating] = useState(null);
   const [comment, setComment] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({ rating, comment });   
-    setRating(null);
-    setComment("");
-  };
-  
+    if (!rating) {
+      alert("Please select a rating.");
+      return;
+    }
+
+    console.log({ rating, comment });
+    alert("Feedback submitted successfully!");
+    navigate("/");
+    };
 
 return (
     <DashboardLayout>
@@ -99,3 +96,4 @@ return (
 
 
 export default Feedback;
+
