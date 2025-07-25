@@ -56,8 +56,7 @@ return (
               </button>
             ))}
           </div>
-
-          {/* Styled: Text area to match the figma design */}
+          
           <div>
             <textarea
               className="w-full border border-[#D1E5D9] rounded-xl p-4 min-h-[140px] focus:outline-none focus:ring-2 focus:ring-[#21C259] bg-white"
@@ -67,11 +66,10 @@ return (
             />
           </div>
 
-          {/* Styled: Submit button to match the figma design */}
           <div className="flex justify-center pt-2">
             <button
               type="submit"
-              className="bg-[#12783D] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#05823B] transition-colors"
+              className="bg-[#12783D] text-white px-8 py-3 rounded-full font-semibold hover:bg-[#05823B] transition-colors"
             >
               Submit Feedback
             </button>
