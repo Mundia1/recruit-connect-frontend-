@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { jobs } from "../api/jobs";
+import React, { useEffect, useState } from "react";
+import { fetchJobs } from "../api/jobs";
 import { Search } from "lucide-react";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
@@ -8,14 +8,19 @@ import { motion } from "framer-motion";
 
 const PAGE_SIZE = 6;
 
-// Featured Jobs (Pick first 3 from jobs for now)
-const featuredJobs = jobs.slice(0, 3);
-
 export default function JobBoard() {
+  const [jobs, setJobs] = useState([]);
   const [search, setSearch] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
   const [jobTypeFilter, setJobTypeFilter] = useState("");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  useEffect(() => {
+    fetchJobs().then(setJobs).catch(console.error);
+  }, []);
+
+  // Featured Jobs (Pick first 3 from jobs for now)
+  const featuredJobs = jobs.slice(0, 3);
 
   const getJobType = (title) => {
     const lower = title.toLowerCase();
