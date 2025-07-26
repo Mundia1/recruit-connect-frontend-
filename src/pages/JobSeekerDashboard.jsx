@@ -93,9 +93,6 @@ const SettingsSection = ({ settings }) => {
     setOpenSetting(null);
   };
 
-
-
-
   const handleLogout = () => {
     navigate("/");
   };
@@ -111,7 +108,7 @@ const SettingsSection = ({ settings }) => {
               <p className="text-[#4e976d] text-sm font-normal leading-normal line-clamp-2">{setting.description}</p>
             </div>
             <div className="shrink-0">
-              <button
+              <button 
                 className="text-base font-medium leading-normal"
                 onClick={() => handleEdit(setting.id)}
               >
@@ -230,7 +227,7 @@ const SettingsSection = ({ settings }) => {
         </div>
       ))}
       <div className="flex px-4 py-3 justify-start">
-        <button
+        <button 
           className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#e7f3ec] text-[#0e1b13] text-sm font-bold leading-normal tracking-[0.015em]"
           onClick={handleLogout}
         >
@@ -250,7 +247,7 @@ const SidebarNav = () => {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-[#e7f3ec] rounded-full" onClick={() => handleNavigation("/profile")}>
+      <div className="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-[#e7f3ec] rounded-full" onClick={() => handleNavigation("/dashboard")}>
         <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
           <path d="M230.93,220a8,8,0,0,1-6.93,4H32a8,8,0,0,1-6.92-12c15.23-26.33,38.7-45.21,66.09-54.16a72,72,0,1,1,73.66,0c27.39,8.95,50.86,27.83,66.09,54.16A8,8,0,0,1,230.93,220Z"></path>
         </svg>
@@ -306,31 +303,31 @@ const ProfileHeader = () => {
       </div>
       <div className="flex items-center gap-4">
         <div className="flex gap-4">
-          <div
+          <div 
             className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-[#e7f3ec] rounded-full"
-            onClick={() => handleNavigation("/profile")}
+            onClick={() => handleNavigation("/dashboard")}
           >
             <p className="text-[#0e1b13] text-sm font-medium leading-normal">Profile</p>
           </div>
-          <div
+          <div 
             className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-[#e7f3ec] rounded-full"
             onClick={() => handleNavigation("/")}
           >
             <p className="text-[#0e1b13] text-sm font-medium leading-normal">Home</p>
           </div>
-          <div
+          <div 
             className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-[#e7f3ec] rounded-full"
             onClick={() => handleNavigation("/job-applications")}
           >
             <p className="text-[#0e1b13] text-sm font-medium leading-normal">My Applications</p>
           </div>
-          <div
+          <div 
             className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-[#e7f3ec] rounded-full"
             onClick={() => handleNavigation("/saved-jobs")}
           >
             <p className="text-[#0e1b13] text-sm font-medium leading-normal">Saved Jobs</p>
           </div>
-          <div
+          <div 
             className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-[#e7f3ec] rounded-full"
             onClick={() => handleNavigation("/settings")}
           >
@@ -379,23 +376,23 @@ const ApplicationHistory = ({ applications }) => {
   const filteredApplications = applications.map(app => ({
     ...app,
     isActive: app.status !== 'Rejected'
-  })).filter(app =>
+  })).filter(app => 
     activeTab === 'Active' ? app.isActive : !app.isActive
   );
 
   return (
     <div className="px-4 py-3">
       <h2 className="text-[#0d1c13] text-[32px] font-bold leading-tight px-4 pb-3">My applications</h2>
-
+      
       <div className="pb-3">
         <div className="flex border-b border-[#cee8d9] px-4 gap-8">
-          <button
+          <button 
             className={`flex flex-col items-center justify-center border-b-[3px] ${activeTab === 'Active' ? 'border-b-[#06823a] text-[#0d1c13]' : 'border-b-transparent text-[#499c6c]'} pb-[13px] pt-4`}
             onClick={() => setActiveTab('Active')}
           >
             <p className="text-sm font-bold leading-normal tracking-[0.015em]">Active</p>
           </button>
-          <button
+          <button 
             className={`flex flex-col items-center justify-center border-b-[3px] ${activeTab === 'Archived' ? 'border-b-[#06823a] text-[#0d1c13]' : 'border-b-transparent text-[#499c6c]'} pb-[13px] pt-4`}
             onClick={() => setActiveTab('Archived')}
           >
@@ -403,7 +400,7 @@ const ApplicationHistory = ({ applications }) => {
           </button>
         </div>
       </div>
-
+      
       <div className="flex overflow-hidden rounded-xl border border-[#cee8d9] bg-[#f8fcfa]">
         <table className="flex-1">
           <thead>
@@ -424,8 +421,8 @@ const ApplicationHistory = ({ applications }) => {
                   <td className="h-[72px] px-4 py-2 w-[400px] text-[#499c6c] text-sm font-normal leading-normal">{app.date}</td>
                   <td className="h-[72px] px-4 py-2 w-60 text-sm font-normal leading-normal">
                     <button className={`flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-8 px-4 ${
-                      app.status === 'Accepted' ? 'bg-[#e7f4ec] text-[#06823a]' :
-                      app.status === 'Rejected' ? 'bg-[#fce8e8] text-[#d33]' :
+                      app.status === 'Accepted' ? 'bg-[#e7f4ec] text-[#06823a]' : 
+                      app.status === 'Rejected' ? 'bg-[#fce8e8] text-[#d33]' : 
                       'bg-[#e7f4ec] text-[#0d1c13]'
                     } text-sm font-medium leading-normal w-full`}>
                       <span className="truncate">{app.status}</span>
@@ -511,7 +508,7 @@ const SavedJobsSection = ({ jobs }) => {
   return (
     <div className="px-4 py-3">
       <h2 className="text-[#0d1c13] text-[32px] font-bold leading-tight px-4 pb-3">Saved jobs</h2>
-
+      
       {enhancedJobs.map((job) => (
         <div key={job.id} className="flex flex-col bg-[#f8fcfa] px-4 py-2 border-b border-[#cee8d9]">
           <div className="flex items-center justify-between">
@@ -528,7 +525,7 @@ const SavedJobsSection = ({ jobs }) => {
               </button>
             </div>
           </div>
-
+          
           {openDropdown === job.id && (
             <div className="mt-3 p-4 bg-white rounded-lg border border-[#cee8d9]">
               <div className="grid grid-cols-2 gap-4">
@@ -550,7 +547,7 @@ const SavedJobsSection = ({ jobs }) => {
                 </div>
               </div>
               <div className="flex justify-center mt-4">
-                <button
+                <button 
                   className="px-6 py-2 bg-[#06823a] text-white rounded-full text-sm font-medium hover:bg-[#056830] transition-colors w-40"
                   onClick={() => handleApply(job.id)}
                 >
@@ -587,6 +584,7 @@ export default function JobSeekerDashboard() {
   return (
     <div className="relative flex size-full min-h-screen flex-col bg-[#f8fcfa] group/design-root overflow-x-hidden" style={{ fontFamily: 'Inter, "Noto Sans", sans-serif' }}>
       <ProfileHeader />
+      
       <div className="gap-1 px-6 flex flex-1 justify-center py-5">
         <div className="layout-content-container flex flex-col w-80">
           <div className="flex h-full min-h-[700px] flex-col justify-between bg-[#f8fcfa] p-4">
@@ -604,6 +602,7 @@ export default function JobSeekerDashboard() {
             </div>
           </div>
         </div>
+        
         <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
           <div className="flex flex-wrap justify-between gap-3 p-4">
             <div className="flex min-w-72 flex-col gap-3">
@@ -611,24 +610,13 @@ export default function JobSeekerDashboard() {
               <p className="text-[#4e976d] text-sm font-normal leading-normal">Manage your profile information and settings.</p>
             </div>
           </div>
+          
           <UserProfile profile={profileData} />
           <SavedJobsSection jobs={savedJobs} />
           <ApplicationHistory applications={applications} />
           <SettingsSection settings={settings} />
         </div>
       </div>
-      <footer className="w-full py-6 bg-white border-t border-gray-200">
-        <nav className="flex flex-wrap justify-center gap-8 mb-2 text-xs text-[#499c6c]">
-          <a href="/about" className="hover:underline">About</a>
-          <a href="/contact" className="hover:underline">Contact</a>
-          <a href="/privacy-policy" className="hover:underline">Privacy Policy</a>
-          <a href="/terms-of-service" className="hover:underline">Terms of Service</a>
-          <a href="/faq" className="hover:underline">FAQ</a>
-        </nav>
-        <div className="text-center text-xs text-[#499c6c]">
-          &copy; {new Date().getFullYear()} Recruit Connect. All rights reserved.
-        </div>
-      </footer>
     </div>
   );
 }
