@@ -12,6 +12,11 @@ import ApplyRedirect from './pages/ApplyRedirect';
 import SavedJobs from './pages/SavedJobs'; 
 import MyApplication from './pages/MyApplication';
 import Settings from './pages/Settings';
+import Feedback from './pages/Feedback';
+import Contact from './pages/Contact';
+import About from './pages/About';
+
+
 
 function App() {
   return (
@@ -36,6 +41,9 @@ function App() {
         <Route path="/saved-jobs" element={<SavedJobs />} />
         <Route path="/job-applications" element={<MyApplication />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/feedback" element={<Feedback />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/about" element={<About />} />
       </Route>
     </Routes>
   );
