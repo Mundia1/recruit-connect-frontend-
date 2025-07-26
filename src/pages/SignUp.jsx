@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
-import { registerUser } from "../api/api";
+import { authService } from "../api/index";
 
 export default function SignUp() {
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [form, setForm] = useState({ name: "", email: "", password: "", confirmPassword: "", first_name: "", last_name: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -19,7 +19,19 @@ export default function SignUp() {
     setLoading(true);
 
     try {
-      await registerUser(form);
+      if (form.password !== form.confirmPassword) {
+        setError("Passwords do not match");
+        setLoading(false);
+        return;
+      }
+      const userData = {
+        email: form.email,
+        password: form.password,
+        first_name: form.first_name,
+        last_name: form.last_name,
+        password_confirmation: form.confirmPassword, // Or password_confirm depending on backend
+      };
+      await authService.register(userData);
       navigate("/signin");
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
@@ -42,9 +54,18 @@ export default function SignUp() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <input
               type="text"
-              name="name"
-              placeholder="Full Name"
-              value={form.name}
+              name="first_name"
+              placeholder="First Name"
+              value={form.first_name}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-300 rounded-lg px-4 py-2"
+            />
+            <input
+              type="text"
+              name="last_name"
+              placeholder="Last Name"
+              value={form.last_name}
               onChange={handleChange}
               required
               className="w-full border border-gray-300 rounded-lg px-4 py-2"
@@ -57,6 +78,7 @@ export default function SignUp() {
               onChange={handleChange}
               required
               className="w-full border border-gray-300 rounded-lg px-4 py-2"
+              autoComplete="email"
             />
             <input
               type="password"
@@ -66,6 +88,17 @@ export default function SignUp() {
               onChange={handleChange}
               required
               className="w-full border border-gray-300 rounded-lg px-4 py-2"
+              autoComplete="new-password"
+            />
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              value={form.confirmPassword}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-300 rounded-lg px-4 py-2"
+              autoComplete="new-password"
             />
             <button
               type="submit"

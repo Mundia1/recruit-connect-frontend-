@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import api from "../../../api/api"; // ✅ Use centralized API instance
+import { jobsService } from "../../../api/index"; // ✅ Use centralized API instance
 
 export default function FeaturedJobs() {
   const [jobs, setJobs] = useState([]);

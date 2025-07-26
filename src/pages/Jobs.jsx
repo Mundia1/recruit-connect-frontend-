@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getJobs } from "../api/api"; 
+import { jobsService } from "../api/index"; 
 import JobCard from "../components/features/jobs/JobCard";
 
 export default function Jobs() {
@@ -11,7 +11,7 @@ export default function Jobs() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await getJobs();
+        const response = await jobsService.getJobs();
         setJobs(response.data || []);
       } catch (err) {
         setError("Failed to load jobs. Please try again later.");

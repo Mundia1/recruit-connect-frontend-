@@ -17,6 +17,10 @@ import JobDetails from "./pages/JobDetails";
 import ApplyJob from "./components/features/jobs/ApplyJob";
 import ApplicationHistory from "./pages/ApplicationHistory"; 
 import Jobs from "./pages/Jobs"; 
+import Feedback from "./pages/Feedback";
+import Contact from "./pages/Contact";
+import About from "./pages/About";
+import Messages from "./pages/Messages";
 
 function App() {
   return (
@@ -25,11 +29,15 @@ function App() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/jobs" element={<JobBoard />} />
       <Route path="/jobs/:id" element={<JobDetails />} />
-      <Route path="/jobs/:id" element={<JobDetails />} />
       <Route path="/jobs/:id/apply" element={<ApplyJob />} />
       <Route path="/signin" element={<SignIn />} />
+      <Route path="/login" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/apply/:id" element={<ApplyJob />} /> {/*  Apply Page */}
+      <Route path="/feedback" element={<Feedback />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/messages" element={<Messages />} />
 
       {/*  Admin Routes */}
       <Route path="/admin/dashboard" element={<AdminDashboard />} />

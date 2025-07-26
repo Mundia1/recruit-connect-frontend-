@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
-import { loginUser } from "../api/api";
+import { authService } from "../api/index";
 import { useAuthContext } from "../context/AuthContext";
 
 export default function SignIn() {
@@ -21,12 +21,13 @@ export default function SignIn() {
     setLoading(true);
 
     try {
-      const response = await loginUser(form);
-      const { accessToken, refreshToken, user } = response.data;
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
-      login({ accessToken, refreshToken }, user);
-      navigate("/"); 
+      const { user, access_token, refresh_token } = await authService.login(form.email, form.password);
+      login({ accessToken: access_token, refreshToken: refresh_token }, user);
+      if (user && user.email.includes("admin")) {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (err) {
       setError(err.response?.data?.message || "Invalid credentials");
     } finally {
@@ -54,6 +55,7 @@ export default function SignIn() {
               onChange={handleChange}
               required
               className="w-full border border-gray-300 rounded-lg px-4 py-2"
+              autoComplete="email"
             />
             <input
               type="password"
@@ -63,6 +65,7 @@ export default function SignIn() {
               onChange={handleChange}
               required
               className="w-full border border-gray-300 rounded-lg px-4 py-2"
+              autoComplete="current-password"
             />
             <button
               type="submit"
