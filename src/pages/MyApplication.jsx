@@ -3,16 +3,53 @@ import { useNavigate } from 'react-router-dom';
 
 const JobApplications = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('Active');
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [savedJobs, setSavedJobs] = useState([]);
+  const [applicationForm, setApplicationForm] = useState({
+    fullName: '',
+    email: '',
+    phone: '',
+    resume: null,
+    coverLetter: null,
+    portfolioUrl: '',
+    linkedInUrl: '',
+    salaryExpectations: '',
+    noticePeriod: ''
+  });
 
   const toggleDropdown = (id) => {
     setOpenDropdown(openDropdown === id ? null : id);
   };
 
-  // Redirects the user to the dashboard page when the "Back" button is clicked
   const handleBack = () => {
     window.location.href = "http://localhost:5173/dashboard";
+  };
+
+  const toggleSaveJob = (jobId) => {
+    if (savedJobs.includes(jobId)) {
+      setSavedJobs(savedJobs.filter(id => id !== jobId));
+    } else {
+      setSavedJobs([...savedJobs, jobId]);
+    }
+  };
+
+  const handleFileChange = (e) => {
+    setApplicationForm({
+      ...applicationForm,
+      [e.target.name]: e.target.files[0]
+    });
+  };
+
+  const handleInputChange = (e) => {
+    setApplicationForm({
+      ...applicationForm,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmitApplication = (jobId) => {
+    console.log('Submitting application for job:', jobId, applicationForm);
+    alert(`Application submitted for job ${jobId}!`);
   };
 
   const applications = [
@@ -20,67 +57,63 @@ const JobApplications = () => {
       id: 1,
       title: "Software Engineer",
       company: "Tech Innovators Inc.",
-      date: "May 15, 2024",
-      status: "Submitted",
-      isActive: true,
       description: "We are looking for a passionate Software Engineer to design, develop and install software solutions.",
       requirements: "Bachelor's Degree in Computer Science, 2+ years of experience in software development.",
       salary: "KES 150,000 - KES 200,000",
-      location: "Nairobi, Kenya"
+      location: "Nairobi, Kenya",
+      type: "Full-time",
+      experience: "Mid-level",
+      skills: ["JavaScript", "React", "Node.js"]
     },
     {
       id: 2,
       title: "Product Manager",
       company: "Global Solutions Co.",
-      date: "June 2, 2024",
-      status: "Under Review",
-      isActive: true,
       description: "Lead cross-functional teams to deliver products that align with our company's vision.",
       requirements: "Bachelor's Degree, 3+ years experience as a Product Manager.",
       salary: "KES 180,000 - KES 250,000",
-      location: "Nairobi, Kenya"
+      location: "Nairobi, Kenya",
+      type: "Full-time",
+      experience: "Senior",
+      skills: ["Product Strategy", "Agile", "Market Research"]
     },
     {
       id: 3,
       title: "Data Analyst",
       company: "Data Insights Ltd.",
-      date: "June 10, 2024",
-      status: "Rejected",
-      isActive: false,
       description: "Analyze data and provide actionable insights to improve business performance.",
       requirements: "Degree in Statistics, strong SQL and Python skills.",
       salary: "KES 100,000 - KES 140,000",
-      location: "Mombasa, Kenya"
+      location: "Mombasa, Kenya",
+      type: "Contract",
+      experience: "Entry-level",
+      skills: ["SQL", "Python", "Data Visualization"]
     },
     {
       id: 4,
       title: "UX Designer",
       company: "Creative Minds Studio",
-      date: "June 18, 2024",
-      status: "Submitted",
-      isActive: true,
       description: "Design user-centered solutions for our web and mobile applications.",
       requirements: "Proven experience in UX Design, portfolio of design projects.",
       salary: "KES 120,000 - KES 160,000",
-      location: "Nairobi, Kenya"
+      location: "Nairobi, Kenya",
+      type: "Full-time",
+      experience: "Mid-level",
+      skills: ["Figma", "User Research", "Prototyping"]
     },
     {
       id: 5,
       title: "Marketing Specialist",
       company: "Marketing Masters Agency",
-      date: "June 25, 2024",
-      status: "Accepted",
-      isActive: true,
       description: "Develop marketing strategies and campaigns for local and international markets.",
       requirements: "Degree in Marketing or related field, 2+ years experience.",
       salary: "KES 90,000 - KES 130,000",
-      location: "Kisumu, Kenya"
+      location: "Kisumu, Kenya",
+      type: "Part-time",
+      experience: "Mid-level",
+      skills: ["Digital Marketing", "Content Creation", "SEO"]
     }
   ];
-
-  const filteredApplications = applications.filter(app => 
-    activeTab === 'Active' ? app.isActive : !app.isActive
-  );
 
   return (
     <div className="relative flex size-full min-h-screen flex-col bg-[#f8fcfa] group/design-root overflow-x-hidden" style={{ fontFamily: 'Inter, "Noto Sans", sans-serif' }}>
@@ -152,23 +185,7 @@ const JobApplications = () => {
               </div>
             </div>
             <div className="flex flex-wrap justify-between gap-3 p-4">
-              <p className="text-[#0d1c13] tracking-light text-[32px] font-bold leading-tight min-w-72">My applications</p>
-            </div>
-            <div className="pb-3">
-              <div className="flex border-b border-[#cee8d9] px-4 gap-8">
-                <button 
-                  className={`flex flex-col items-center justify-center border-b-[3px] ${activeTab === 'Active' ? 'border-b-[#06823a] text-[#0d1c13]' : 'border-b-transparent text-[#499c6c]'} pb-[13px] pt-4`}
-                  onClick={() => setActiveTab('Active')}
-                >
-                  <p className="text-sm font-bold leading-normal tracking-[0.015em]">Active</p>
-                </button>
-                <button 
-                  className={`flex flex-col items-center justify-center border-b-[3px] ${activeTab === 'Archived' ? 'border-b-[#06823a] text-[#0d1c13]' : 'border-b-transparent text-[#499c6c]'} pb-[13px] pt-4`}
-                  onClick={() => setActiveTab('Archived')}
-                >
-                  <p className="text-sm font-bold leading-normal tracking-[0.015em]">Archived</p>
-                </button>
-              </div>
+              <p className="text-[#0d1c13] tracking-light text-[32px] font-bold leading-tight min-w-72">Jobs</p>
             </div>
             <div className="px-4 py-3 @container">
               <div className="flex overflow-hidden rounded-xl border border-[#cee8d9] bg-[#f8fcfa]">
@@ -177,41 +194,183 @@ const JobApplications = () => {
                     <tr className="bg-[#f8fcfa]">
                       <th className="px-4 py-3 text-left text-[#0d1c13] w-[400px] text-sm font-medium leading-normal">Job title</th>
                       <th className="px-4 py-3 text-left text-[#0d1c13] w-[400px] text-sm font-medium leading-normal">Company</th>
-                      <th className="px-4 py-3 text-left text-[#0d1c13] w-[400px] text-sm font-medium leading-normal">Date applied</th>
-                      <th className="px-4 py-3 text-left text-[#0d1c13] w-60 text-sm font-medium leading-normal">Status</th>
                       <th className="px-4 py-3 text-left text-[#0d1c13] w-60 text-[#499c6c] text-sm font-medium leading-normal">View application</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredApplications.map((app) => (
+                    {applications.map((app) => (
                       <React.Fragment key={app.id}>
                         <tr className="border-t border-t-[#cee8d9]">
-                          <td className="h-[72px] px-4 py-2 w-[400px] text-[#0d1c13] text-sm font-normal leading-normal">{app.title}</td>
-                          <td className="h-[72px] px-4 py-2 w-[400px] text-[#499c6c] text-sm font-normal leading-normal">{app.company}</td>
-                          <td className="h-[72px] px-4 py-2 w-[400px] text-[#499c6c] text-sm font-normal leading-normal">{app.date}</td>
-                          <td className="h-[72px] px-4 py-2 w-60 text-sm font-normal leading-normal">
-                            <button className={`flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-8 px-4 ${
-                              app.status === 'Accepted' ? 'bg-[#e7f4ec] text-[#06823a]' : 
-                              app.status === 'Rejected' ? 'bg-[#fce8e8] text-[#d33]' : 
-                              'bg-[#e7f4ec] text-[#0d1c13]'
-                            } text-sm font-medium leading-normal w-full`}>
-                              <span className="truncate">{app.status}</span>
-                            </button>
+                          <td className="h-[72px] px-4 py-2 w-[400px] text-[#0d1c13] text-sm font-normal leading-normal">
+                            {app.title}
                           </td>
+                          <td className="h-[72px] px-4 py-2 w-[400px] text-[#499c6c] text-sm font-normal leading-normal">{app.company}</td>
                           <td className="h-[72px] px-4 py-2 w-60 relative">
-                            <button className="text-[#499c6c] text-sm font-bold leading-normal tracking-[0.015em]" onClick={() => toggleDropdown(app.id)}>
-                              View
+                            <button 
+                              className="text-[#499c6c] text-sm font-bold leading-normal tracking-[0.015em]" 
+                              onClick={() => toggleDropdown(app.id)}
+                            >
+                              {openDropdown === app.id ? 'Hide details' : 'View details'}
                             </button>
                           </td>
                         </tr>
                         {openDropdown === app.id && (
                           <tr>
-                            <td colSpan="5" className="p-4 bg-white border-t border-[#cee8d9]">
-                              <div className="space-y-2">
-                                <p className="text-[#0d1c13] text-sm"><strong>Job Description:</strong> {app.description}</p>
-                                <p className="text-[#0d1c13] text-sm"><strong>Requirements:</strong> {app.requirements}</p>
-                                <p className="text-[#0d1c13] text-sm"><strong>Salary Range:</strong> {app.salary}</p>
-                                <p className="text-[#0d1c13] text-sm"><strong>Location:</strong> {app.location}</p>
+                            <td colSpan="3" className="p-4 bg-white border-t border-[#cee8d9]">
+                              <div className="space-y-4">
+                                <div className="flex justify-between items-start">
+                                  <h3 className="text-xl font-bold text-[#0d1c13]">{app.title}</h3>
+                                  <button 
+                                    onClick={() => toggleSaveJob(app.id)}
+                                    className={`flex items-center gap-1 px-3 py-1 rounded-md ${savedJobs.includes(app.id) ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600'}`}
+                                  >
+                                    <svg 
+                                      xmlns="http://www.w3.org/2000/svg" 
+                                      width="16" 
+                                      height="16" 
+                                      viewBox="0 0 24 24" 
+                                      fill={savedJobs.includes(app.id) ? "currentColor" : "none"} 
+                                      stroke="currentColor" 
+                                      strokeWidth="2" 
+                                      strokeLinecap="round" 
+                                      strokeLinejoin="round"
+                                    >
+                                      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                                    </svg>
+                                    {savedJobs.includes(app.id) ? 'Saved' : 'Save'}
+                                  </button>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                  <div>
+                                    <p className="text-[#0d1c13] text-sm"><strong>Job Description:</strong> {app.description}</p>
+                                    <p className="text-[#0d1c13] text-sm mt-2"><strong>Requirements:</strong> {app.requirements}</p>
+                                    <p className="text-[#0d1c13] text-sm mt-2"><strong>Job Type:</strong> {app.type}</p>
+                                    <p className="text-[#0d1c13] text-sm mt-2"><strong>Experience Level:</strong> {app.experience}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-[#0d1c13] text-sm"><strong>Salary Range:</strong> {app.salary}</p>
+                                    <p className="text-[#0d1c13] text-sm mt-2"><strong>Location:</strong> {app.location}</p>
+                                    <p className="text-[#0d1c13] text-sm mt-2"><strong>Key Skills:</strong> {app.skills.join(', ')}</p>
+                                  </div>
+                                </div>
+                                
+                                <div className="mt-6 border-t pt-4">
+                                  <h3 className="text-lg font-bold text-[#0d1c13] mb-4">Apply for this Position</h3>
+                                  <form className="grid grid-cols-2 gap-4">
+                                    <div>
+                                      <label className="block text-sm font-medium text-[#0d1c13] mb-1">Full Name</label>
+                                      <input 
+                                        type="text" 
+                                        name="fullName"
+                                        value={applicationForm.fullName}
+                                        onChange={handleInputChange}
+                                        className="w-full px-3 py-2 border border-[#cee8d9] rounded-md"
+                                        required
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="block text-sm font-medium text-[#0d1c13] mb-1">Email</label>
+                                      <input 
+                                        type="email" 
+                                        name="email"
+                                        value={applicationForm.email}
+                                        onChange={handleInputChange}
+                                        className="w-full px-3 py-2 border border-[#cee8d9] rounded-md"
+                                        required
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="block text-sm font-medium text-[#0d1c13] mb-1">Phone Number</label>
+                                      <input 
+                                        type="tel" 
+                                        name="phone"
+                                        value={applicationForm.phone}
+                                        onChange={handleInputChange}
+                                        className="w-full px-3 py-2 border border-[#cee8d9] rounded-md"
+                                        required
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="block text-sm font-medium text-[#0d1c13] mb-1">Salary Expectations</label>
+                                      <input 
+                                        type="text" 
+                                        name="salaryExpectations"
+                                        value={applicationForm.salaryExpectations}
+                                        onChange={handleInputChange}
+                                        className="w-full px-3 py-2 border border-[#cee8d9] rounded-md"
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="block text-sm font-medium text-[#0d1c13] mb-1">Resume (PDF, DOC, DOCX, TXT)</label>
+                                      <input 
+                                        type="file" 
+                                        name="resume"
+                                        onChange={handleFileChange}
+                                        className="w-full px-3 py-2 border border-[#cee8d9] rounded-md"
+                                        accept=".pdf,.doc,.docx,.txt"
+                                        required
+                                      />
+                                      <p className="text-xs text-gray-500 mt-1">Accepted formats: PDF, DOC, DOCX, TXT</p>
+                                    </div>
+                                    <div>
+                                      <label className="block text-sm font-medium text-[#0d1c13] mb-1">Cover Letter (PDF, DOC, DOCX, TXT)</label>
+                                      <input 
+                                        type="file" 
+                                        name="coverLetter"
+                                        onChange={handleFileChange}
+                                        className="w-full px-3 py-2 border border-[#cee8d9] rounded-md"
+                                        accept=".pdf,.doc,.docx,.txt"
+                                      />
+                                      <p className="text-xs text-gray-500 mt-1">Accepted formats: PDF, DOC, DOCX, TXT</p>
+                                    </div>
+                                    <div>
+                                      <label className="block text-sm font-medium text-[#0d1c13] mb-1">Portfolio URL</label>
+                                      <input 
+                                        type="url" 
+                                        name="portfolioUrl"
+                                        value={applicationForm.portfolioUrl}
+                                        onChange={handleInputChange}
+                                        className="w-full px-3 py-2 border border-[#cee8d9] rounded-md"
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="block text-sm font-medium text-[#0d1c13] mb-1">LinkedIn Profile</label>
+                                      <input 
+                                        type="url" 
+                                        name="linkedInUrl"
+                                        value={applicationForm.linkedInUrl}
+                                        onChange={handleInputChange}
+                                        className="w-full px-3 py-2 border border-[#cee8d9] rounded-md"
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="block text-sm font-medium text-[#0d1c13] mb-1">Notice Period</label>
+                                      <select 
+                                        name="noticePeriod"
+                                        value={applicationForm.noticePeriod}
+                                        onChange={handleInputChange}
+                                        className="w-full px-3 py-2 border border-[#cee8d9] rounded-md"
+                                      >
+                                        <option value="">Select</option>
+                                        <option value="Immediately">Immediately</option>
+                                        <option value="1 week">1 week</option>
+                                        <option value="2 weeks">2 weeks</option>
+                                        <option value="1 month">1 month</option>
+                                        <option value="2 months">2 months</option>
+                                        <option value="3 months">3 months</option>
+                                      </select>
+                                    </div>
+                                    <div className="col-span-2">
+                                      <button 
+                                        type="button"
+                                        onClick={() => handleSubmitApplication(app.id)}
+                                        className="w-full bg-[#06823a] text-white py-2 px-4 rounded-md hover:bg-[#056530] transition-colors"
+                                      >
+                                        Submit Application
+                                      </button>
+                                    </div>
+                                  </form>
+                                </div>
                               </div>
                             </td>
                           </tr>

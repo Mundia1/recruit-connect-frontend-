@@ -18,7 +18,15 @@ export default function SignIn() {
       const result = await signIn(form.email, form.password);
       localStorage.setItem("token", result.access_token);
       localStorage.setItem("user", JSON.stringify(result.user));
-      navigate("/dashboard");
+      
+      // Redirect based on role
+      if (result.user.role === "admin") {
+        navigate("/admin/dashboard");
+      } else if (result.user.role === "user") {
+        navigate("/dashboard");
+      } else {
+        navigate("/jobs"); // fallback
+      }
     } catch (err) {
       setError("Invalid credentials.");
     }
