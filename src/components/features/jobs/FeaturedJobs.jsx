@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import api from "../../../api/api";
-import JobCard from "./JobCard"; 
+import { Link } from "react-router-dom";
+import JobCard from "./JobCard";
+import { jobsService } from "../../../api/jobs";
 
 export default function FeaturedJobs() {
   const [jobs, setJobs] = useState([]);
@@ -10,15 +11,15 @@ export default function FeaturedJobs() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const res = await api.get("/jobs");
-        
-        const normalizedJobs = (res.data || []).map((job) => ({
+        const response = await jobsService.getJobs();
+        const normalizedJobs = (response.data || []).map((job) => ({
           ...job,
           id: job.id || job._id,
         }));
         setJobs(normalizedJobs);
       } catch (err) {
-        setError(err.response?.data?.message || "Failed to load jobs");
+        console.error("Error fetching jobs:", err);
+        setError(err.response?.data?.message || "Failed to load jobs. Please try again later.");
       } finally {
         setLoading(false);
       }

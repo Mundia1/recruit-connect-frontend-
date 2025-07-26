@@ -3,7 +3,7 @@ import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import JobCard from "../components/features/jobs/JobCard";
 import { Search } from "lucide-react";
-import { getJobs } from "../api/api"; // ✅ use API helper
+import { getJobs } from "../api/jobs"; // Using the new jobs API module
 
 export default function JobBoard() {
   const [jobs, setJobs] = useState([]);
@@ -14,10 +14,11 @@ export default function JobBoard() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const res = await getJobs(); // ✅ this uses api.js with VITE_API_URL
-        setJobs(res.data);
+        const response = await getJobs();
+        setJobs(response.data || []);
       } catch (err) {
-        setError("Failed to load jobs");
+        console.error("Error fetching jobs:", err);
+        setError("Failed to load jobs. Please try again later.");
       } finally {
         setLoading(false);
       }

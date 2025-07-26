@@ -2,6 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 
+// Pages
 import LandingPage from "./pages/LandingPage";
 import JobBoard from "./pages/JobBoard";
 import SignIn from "./pages/SignIn";
@@ -14,21 +15,30 @@ import SavedJobs from "./pages/SavedJobs";
 import MyApplication from "./pages/MyApplication";
 import Settings from "./pages/Settings";
 import JobDetails from "./pages/JobDetails";
-import ApplicationHistory from "./pages/ApplicationHistory"; 
+import ApplicationHistory from "./pages/ApplicationHistory";
 import Jobs from "./pages/Jobs";
+import Feedback from "./pages/Feedback";
+import Contact from "./pages/Contact";
+import About from "./pages/About";
+import Messages from "./pages/Messages";
 
 function App() {
   return (
     <AuthProvider>
       <Routes>
-        {/* ✅ Public Routes */}
+        {/* Public Routes */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/jobs" element={<JobBoard />} />
         <Route path="/jobs/:id" element={<JobDetails />} />
         <Route path="/jobs/:id/apply" element={<ApplyJob />} />
         <Route path="/signin" element={<SignIn />} />
+        <Route path="/login" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/apply/:id" element={<ApplyJob />} />
+        <Route path="/feedback" element={<Feedback />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/messages" element={<Messages />} />
 
         {/* ✅ Unauthorized Page */}
         <Route path="/unauthorized" element={<div>Not Authorized</div>} />

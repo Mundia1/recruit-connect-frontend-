@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { profileService } from "../api";
 
 const AuthContext = createContext();
 
@@ -7,16 +8,30 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      setUser({ loggedIn: true });
-    }
-    setLoading(false);
+    const loadUser = async () => {
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        try {
+          const response = await profileService.getProfile();
+          const userData = response.data;
+          setUser({ ...userData, loggedIn: true });
+        } catch (error) {
+          console.error("Failed to load user profile:", error);
+          clearTokens();
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+      setLoading(false);
+    };
+
+    loadUser();
   }, []);
 
   const login = (tokens, userData) => {
     setTokens(tokens.accessToken, tokens.refreshToken);
-    setUser(userData || { loggedIn: true });
+    setUser(userData);
   };
 
   const logoutUser = () => {

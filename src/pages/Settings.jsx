@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const SettingsPage = () => {
-  const navigate = useNavigate();
   const [openSetting, setOpenSetting] = useState(null);
   const [formData, setFormData] = useState({
     email: 'fredrick@example.com',
@@ -42,11 +40,11 @@ const SettingsPage = () => {
   };
 
 const handleBack = () => {
-  navigate("/dashboard"); 
+  window.location.href = "/dashboard";
 };
 
   const handleLogout = () => {
-    navigate("/");
+    window.location.href = "/";
   };
 
   const settings = [
@@ -86,31 +84,31 @@ const handleBack = () => {
           <div className="flex gap-4">
             <div 
               className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-[#e7f3ec] rounded-full"
-              onClick={() => navigate("/profile")}
+              onClick={() => window.location.href = "/profile"}
             >
               <p className="text-[#0e1b13] text-sm font-medium leading-normal">Profile</p>
             </div>
             <div 
               className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-[#e7f3ec] rounded-full"
-              onClick={() => navigate("/")}
+              onClick={() => window.location.href = "/"}
             >
               <p className="text-[#0e1b13] text-sm font-medium leading-normal">Home</p>
             </div>
             <div 
               className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-[#e7f3ec] rounded-full"
-              onClick={() => navigate("/job-applications")}
+              onClick={() => window.location.href = "/job-applications"}
             >
               <p className="text-[#0e1b13] text-sm font-medium leading-normal">My Applications</p>
             </div>
             <div 
               className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-[#e7f3ec] rounded-full"
-              onClick={() => navigate("/saved-jobs")}
+              onClick={() => window.location.href = "/saved-jobs"}
             >
               <p className="text-[#0e1b13] text-sm font-medium leading-normal">Saved Jobs</p>
             </div>
             <div 
               className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-[#e7f3ec] rounded-full bg-[#e7f3ec]"
-              onClick={() => navigate("/settings")}
+              onClick={() => window.location.href = "/settings"}
             >
               <p className="text-[#0e1b13] text-sm font-medium leading-normal">Settings</p>
             </div>
