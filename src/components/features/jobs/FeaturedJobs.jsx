@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import api from "../../../api/api"; // ✅ Use centralized API instance
+import api from "../../../api/api";
+import JobCard from "./JobCard"; 
 
 export default function FeaturedJobs() {
   const [jobs, setJobs] = useState([]);
@@ -10,10 +10,15 @@ export default function FeaturedJobs() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const res = await api.get("/jobs"); // ✅ Backend endpoint
-        setJobs(res.data || []); // ✅ Assuming response is an array
+        const res = await api.get("/jobs");
+        
+        const normalizedJobs = (res.data || []).map((job) => ({
+          ...job,
+          id: job.id || job._id,
+        }));
+        setJobs(normalizedJobs);
       } catch (err) {
-        setError("Failed to load jobs");
+        setError(err.response?.data?.message || "Failed to load jobs");
       } finally {
         setLoading(false);
       }
@@ -31,37 +36,19 @@ export default function FeaturedJobs() {
         Featured Jobs
       </h2>
 
-      {/* Job Cards */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-h-[600px] overflow-y-auto pr-2">
         {jobs.slice(0, 6).map((job) => (
-          <div
-            key={job.id}
-            className="bg-white shadow-md rounded-lg p-6 hover:shadow-xl transition-shadow duration-300"
-          >
-            <h3 className="text-xl font-semibold text-gray-800">{job.title}</h3>
-            <p className="text-gray-600">{job.company}</p>
-            <p className="text-gray-500 text-sm">{job.location}</p>
-
-            {/* Apply Now Button with Dynamic Job ID */}
-            <Link
-              to={`/apply/${job.id}`}
-              aria-label={`Apply for ${job.title}`}
-              className="mt-4 inline-block bg-[#177245] text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition"
-            >
-              Apply Now
-            </Link>
-          </div>
+          <JobCard key={job.id} job={job} />
         ))}
       </div>
 
-      {/* View All Jobs */}
       <div className="mt-8 text-center">
-        <Link
-          to="/jobs"
+        <a
+          href="/jobs"
           className="bg-[#177245] text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition"
         >
           View All Jobs
-        </Link>
+        </a>
       </div>
     </section>
   );

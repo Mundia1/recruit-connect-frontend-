@@ -23,9 +23,8 @@ export default function SignIn() {
     try {
       const response = await loginUser(form);
       const { accessToken, refreshToken, user } = response.data;
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
       login({ accessToken, refreshToken }, user);
+
       navigate("/"); 
     } catch (err) {
       setError(err.response?.data?.message || "Invalid credentials");

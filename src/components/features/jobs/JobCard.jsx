@@ -1,29 +1,21 @@
-// src/components/features/jobs/JobCard.jsx
+// src/components/JobCard.jsx
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function JobCard({ job }) {
-  const navigate = useNavigate();
-
-  const handleViewDetails = () => navigate(`/jobs/${job._id}`);
-
   return (
-    <div className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition">
-      <h3
-        className="text-xl font-semibold text-gray-800 cursor-pointer hover:underline"
-        onClick={handleViewDetails}
+    <div className="bg-white shadow-md rounded-lg p-6 hover:shadow-xl transition-shadow duration-300">
+      <h3 className="text-xl font-semibold text-gray-800">{job.title}</h3>
+      <p className="text-gray-600">{job.company}</p>
+      <p className="text-gray-500 text-sm">{job.location}</p>
+
+      <Link
+        to={`/apply/${job._id || job.id}`}
+        aria-label={`Apply for ${job.title}`}
+        className="mt-4 inline-block bg-[#177245] text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition"
       >
-        {job.title}
-      </h3>
-      <p className="text-gray-600 mt-2">{job.company}</p>
-      <p className="text-gray-500 text-sm mt-1">{job.location}</p>
-      <p className="text-gray-700 mt-3 line-clamp-2">{job.description}</p>
-      <button
-        onClick={handleViewDetails}
-        className="mt-4 inline-block bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
-      >
-        View Details
-      </button>
+        Apply Now
+      </Link>
     </div>
   );
 }
