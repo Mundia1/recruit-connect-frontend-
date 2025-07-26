@@ -40,7 +40,6 @@ export default function FeaturedJobs({ jobs }) {
         Featured Jobs
       </h2>
 
-      {/* Job Cards */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-h-[600px] overflow-y-auto pr-2">
         {featuredJobs.map((job) => (
           <div

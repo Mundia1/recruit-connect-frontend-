@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     if (token) {
-      setUser({ loggedIn: true }); 
+      setUser({ loggedIn: true });
     }
     setLoading(false);
   }, []);
@@ -46,7 +46,7 @@ export const clearTokens = () => {
   localStorage.removeItem("refreshToken");
 };
 
-
+// ✅ Re-add this so api.js import works
 export const logout = () => {
   clearTokens();
 };
