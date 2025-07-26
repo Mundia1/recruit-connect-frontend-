@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import JobCard from "../components/features/jobs/JobCard";
 import { Search } from "lucide-react";
-
-const API_BASE = "https://recruitconnectbackend-jnuk.onrender.com/api";
+import { getJobs } from "../api/api"; // ✅ use API helper
 
 export default function JobBoard() {
   const [jobs, setJobs] = useState([]);
@@ -16,7 +14,7 @@ export default function JobBoard() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const res = await axios.get(`${API_BASE}/jobs`);
+        const res = await getJobs(); // ✅ this uses api.js with VITE_API_URL
         setJobs(res.data);
       } catch (err) {
         setError("Failed to load jobs");

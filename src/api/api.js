@@ -24,7 +24,7 @@ const processQueue = (error, token = null) => {
 
 api.interceptors.request.use(
   (config) => {
-    const token = getAccessToken();
+    const token = localStorage.getItem("accessToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -99,7 +99,10 @@ export const deleteJob = (id) => api.delete(`/jobs/${id}`);
 
 
 export const applyForJob = (jobId, applicationData) =>
-  api.post(`/jobs/${jobId}/apply`, applicationData);
+  api.post(`/jobs/${jobId}/apply`, applicationData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
 
 export const getApplications = () => api.get("/applications");
 export const getApplicationById = (id) => api.get(`/applications/${id}`);
