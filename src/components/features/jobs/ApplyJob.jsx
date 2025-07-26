@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getJobById, applyForJob } from "../../../api/api";
+import { jobsService } from "../../../api/index";
 
 export default function ApplyJob() {
   const { id } = useParams(); // jobId from URL
@@ -57,7 +57,7 @@ export default function ApplyJob() {
       data.append("coverLetter", formData.coverLetter);
       if (formData.resume) data.append("resume", formData.resume);
 
-      await applyForJob(id, data);
+      await jobsService.applyForJob(id, data);
       setMessage("✅ Application submitted successfully!");
       setTimeout(() => navigate("/applications"), 2000); // Redirect after success
     } catch (err) {

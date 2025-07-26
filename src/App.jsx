@@ -14,7 +14,7 @@ import SavedJobs from "./pages/SavedJobs";
 import MyApplication from "./pages/MyApplication";
 import Settings from "./pages/Settings";
 import JobDetails from "./pages/JobDetails";
-import ApplicationHistory from "./pages/ApplicationHistory"; 
+import ApplicationHistory from "./pages/ApplicationHistory";
 import Jobs from "./pages/Jobs";
 
 function App() {

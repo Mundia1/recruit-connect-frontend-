@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import api from "../api/api";
+import { jobsService } from "../api/index";
 
 export default function ApplyRedirect() {
   const { id } = useParams(); 
@@ -32,7 +32,7 @@ export default function ApplyRedirect() {
       formData.append("coverLetter", coverLetter);
       if (resume) formData.append("resume", resume);
 
-      await api.post(`/jobs/${id}/apply`, formData, {
+      await jobsService.applyForJob(id, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

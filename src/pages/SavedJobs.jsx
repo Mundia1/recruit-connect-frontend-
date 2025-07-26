@@ -1,65 +1,32 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { jobsService } from '../api';
 
 const SavedJobs = () => {
-  const navigate = useNavigate();
   const [openDropdown, setOpenDropdown] = useState(null);
-  const [savedJobs, setSavedJobs] = useState([
-    { 
-      id: 1,
-      title: 'Senior Product Manager', 
-      company: 'Tech Innovations Africa',
-      location: 'Nairobi County',
-      type: 'Remote · Full-time',
-      salary: 'KSH 250,000 - 350,000',
-      description: 'Lead product development from conception to launch, working with cross-functional teams to deliver innovative solutions for the African market.',
-      requirements: '5+ years product management experience, strong analytical skills, technical background preferred'
-    },
-    { 
-      id: 2,
-      title: 'Senior Software Engineer', 
-      company: 'Safari Developers Ltd',
-      location: 'Mombasa County',
-      type: 'Hybrid · Full-time',
-      salary: 'KSH 300,000 - 400,000',
-      description: 'Design and implement scalable software solutions for East African clients, mentor junior engineers, and collaborate on system architecture.',
-      requirements: '7+ years software development, expertise in JavaScript/TypeScript, experience with cloud platforms'
-    },
-    { 
-      id: 3,
-      title: 'Data Scientist', 
-      company: 'Savanna Insights',
-      location: 'Kiambu County',
-      type: 'Remote · Full-time',
-      salary: 'KSH 280,000 - 380,000',
-      description: 'Develop machine learning models for African datasets, analyze complex business data, and communicate insights to stakeholders.',
-      requirements: 'Degree in quantitative field, 3+ years experience, Python/R expertise, machine learning knowledge'
-    },
-    { 
-      id: 4,
-      title: 'UX Designer', 
-      company: 'Maasai Creative Studio',
-      location: 'Nakuru County',
-      type: 'On-site · Full-time',
-      salary: 'KSH 220,000 - 300,000',
-      description: 'Lead user research for African users, create wireframes and prototypes, and define product UX strategy for local markets.',
-      requirements: '5+ years UX design, portfolio required, experience with Figma/Sketch, user research skills'
-    },
-    { 
-      id: 5,
-      title: 'DevOps Engineer', 
-      company: 'Kilimanjaro Cloud',
-      location: 'Kisumu County',
-      type: 'Remote · Full-time',
-      salary: 'KSH 270,000 - 370,000',
-      description: 'Build and maintain CI/CD pipelines for African clients, optimize cloud infrastructure, and implement monitoring solutions.',
-      requirements: '3+ years DevOps, AWS/GCP expertise, Kubernetes experience, infrastructure-as-code'
-    }
-  ]);
+  const [savedJobs, setSavedJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchSavedJobs = async () => {
+      try {
+        setLoading(true);
+        const response = await jobsService.getSavedJobs();
+        setSavedJobs(response.data || []);
+      } catch (err) {
+        setError('Failed to fetch saved jobs.');
+        console.error('Error fetching saved jobs:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSavedJobs();
+  }, []);
 
   // Redirects the user to the dashboard page when the "Back" button is clicked
   const handleBack = () => {
-    window.location.href = "http://localhost:5173/dashboard";
+    window.location.href = "/dashboard";
   };
 
   const toggleDropdown = (id) => {
@@ -89,31 +56,31 @@ const SavedJobs = () => {
             <div className="flex gap-4">
               <div 
                 className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-[#e7f3ec] rounded-full"
-                onClick={() => window.location.href = "http://localhost:5173/dashboard"}
+                onClick={() => window.location.href = "/dashboard"}
               >
                 <p className="text-[#0e1b13] text-sm font-medium leading-normal">Profile</p>
               </div>
               <div 
                 className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-[#e7f3ec] rounded-full"
-                onClick={() => window.location.href = "http://localhost:5173/"}
+                onClick={() => window.location.href = "/"}
               >
                 <p className="text-[#0e1b13] text-sm font-medium leading-normal">Home</p>
               </div>
               <div 
                 className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-[#e7f3ec] rounded-full"
-                onClick={() => window.location.href = "http://localhost:5173/job-applications"}
+                onClick={() => window.location.href = "/job-applications"}
               >
                 <p className="text-[#0e1b13] text-sm font-medium leading-normal">My Applications</p>
               </div>
               <div 
                 className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-[#e7f3ec] rounded-full"
-                onClick={() => window.location.href = "http://localhost:5173/saved-jobs"}
+                onClick={() => window.location.href = "/saved-jobs"}
               >
                 <p className="text-[#0e1b13] text-sm font-medium leading-normal">Saved Jobs</p>
               </div>
               <div 
                 className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-[#e7f3ec] rounded-full"
-                onClick={() => window.location.href = "http://localhost:5173/settings"}
+                onClick={() => window.location.href = "/settings"}
               >
                 <p className="text-[#0e1b13] text-sm font-medium leading-normal">Settings</p>
               </div>

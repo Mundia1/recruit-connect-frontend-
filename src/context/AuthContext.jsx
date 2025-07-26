@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { profileService } from "../api";
 
 const AuthContext = createContext();
 
@@ -16,7 +17,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = (tokens, userData) => {
     setTokens(tokens.accessToken, tokens.refreshToken);
-    setUser(userData || { loggedIn: true });
+    setUser(userData);
   };
 
   const logoutUser = () => {

@@ -79,6 +79,7 @@ export default function SignIn() {
               onChange={handleChange}
               required
               className="w-full border border-gray-300 rounded-lg px-4 py-2"
+              autoComplete="email"
             />
             <input
               type="password"
@@ -88,6 +89,7 @@ export default function SignIn() {
               onChange={handleChange}
               required
               className="w-full border border-gray-300 rounded-lg px-4 py-2"
+              autoComplete="current-password"
             />
             <button
               type="submit"

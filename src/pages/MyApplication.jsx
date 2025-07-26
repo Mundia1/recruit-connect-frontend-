@@ -4,7 +4,6 @@ import { getMyApplications } from '../api/application';
 //import JobCard from '../components/features/jobs/JobCard';
 
 const JobApplications = () => {
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('Active');
   const [openDropdown, setOpenDropdown] = useState(null);
   const [applications, setApplications] = useState([]);
@@ -250,7 +249,7 @@ const JobApplications = () => {
                 </table>
               </div>
             </div>
-            
+
           </div>
         </div>
       </div>

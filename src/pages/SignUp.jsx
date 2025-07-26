@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
-import { registerUser } from "../api/api";
+import { authService } from "../api/index";
 
 export default function SignUp() {
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [form, setForm] = useState({ name: "", email: "", password: "", confirmPassword: "", first_name: "", last_name: "" });
   const [error, setError] = useState("");
   const [selectedRole, setSelectedRole] = useState(null);
 
@@ -25,7 +25,19 @@ export default function SignUp() {
     };
 
     try {
-      await registerUser(form);
+      if (form.password !== form.confirmPassword) {
+        setError("Passwords do not match");
+        setLoading(false);
+        return;
+      }
+      const userData = {
+        email: form.email,
+        password: form.password,
+        first_name: form.first_name,
+        last_name: form.last_name,
+        password_confirmation: form.confirmPassword, // Or password_confirm depending on backend
+      };
+      await authService.register(userData);
       navigate("/signin");
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
