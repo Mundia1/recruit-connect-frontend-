@@ -1,48 +1,52 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
-export const AuthContext = createContext();
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // New loading state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      const storedUser = JSON.parse(localStorage.getItem("user"));
-      if (storedUser && storedUser.role) {
-        setUser(storedUser);
-      } else {
-        localStorage.removeItem("user"); // Clear invalid session
-      }
-    } catch (error) {
-      // Silently handle error
-    } finally {
-      setLoading(false);
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      setUser({ loggedIn: true }); 
     }
+    setLoading(false);
   }, []);
 
-  const login = async ({ email, password }) => {
-    try {
-      let role = email.includes("admin") ? "admin" : "user";
-      const newUser = { email, role, token: "fake-jwt" };
-
-      localStorage.setItem("user", JSON.stringify(newUser));
-      setUser(newUser);
-      
-      return newUser;
-    } catch (error) {
-      throw error;
-    }
+  const login = (tokens, userData) => {
+    setTokens(tokens.accessToken, tokens.refreshToken);
+    setUser(userData || { loggedIn: true });
   };
 
-  const logout = () => {
-    localStorage.removeItem("user");
+  const logoutUser = () => {
+    clearTokens();
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout: logoutUser, loading }}>
       {children}
     </AuthContext.Provider>
   );
+};
+
+export const useAuthContext = () => useContext(AuthContext);
+
+export const getAccessToken = () => localStorage.getItem("accessToken");
+export const getRefreshToken = () => localStorage.getItem("refreshToken");
+
+export const setTokens = (access, refresh) => {
+  if (access) localStorage.setItem("accessToken", access);
+  if (refresh) localStorage.setItem("refreshToken", refresh);
+};
+
+export const clearTokens = () => {
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
+};
+
+
+export const logout = () => {
+  clearTokens();
 };
