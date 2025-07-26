@@ -103,7 +103,23 @@ const authService = {
     try {
       const response = await api.post('/login', { email, password });
       const { user, access_token, refresh_token } = response.data.data;
-      return { user, access_token, refresh_token };
+      
+      if (!user) {
+        throw new Error('No user data returned from server');
+      }
+      
+      // Ensure user has required fields
+      const userWithDefaults = {
+        ...user,
+        email: user.email || email, // Use email from response or fallback to input
+        role: user.role?.toLowerCase() || 'job_seeker' // Ensure role is lowercase
+      };
+      
+      return { 
+        user: userWithDefaults, 
+        access_token, 
+        refresh_token 
+      };
     } catch (error) {
       console.error('Login error:', error);
       throw error;
