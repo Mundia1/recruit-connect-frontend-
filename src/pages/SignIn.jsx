@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
 import { authService } from "../api/index";
 import { useAuthContext } from "../context/AuthContext";
@@ -10,6 +10,8 @@ export default function SignIn() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/dashboard';
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -19,19 +21,53 @@ export default function SignIn() {
     e.preventDefault();
     setError("");
     setLoading(true);
+    
+    
 
     try {
-      const { user, access_token, refresh_token } = await authService.login(form.email, form.password);
-      login({ accessToken: access_token, refreshToken: refresh_token }, user);
       
-      // Redirect based on user role
-      if (user && user.role === 'admin') {
-        navigate("/admin/dashboard");
-      } else if (user && user.role === 'job_seeker') {
-        navigate("/dashboard");
-      } else {
-        navigate("/");
+      const { user, access_token, refresh_token } = await authService.login(form.email, form.password);
+      
+      
+      
+      if (!user) {
+        const error = new Error('Login failed - no user data');
+        
+        throw error;
       }
+      
+      // Check if email contains 'admin' for admin access
+      const isAdmin = form.email.toLowerCase().includes('admin');
+      const userRole = isAdmin ? 'admin' : 'job_seeker';
+      
+      
+      
+      // Store tokens first
+      
+      localStorage.setItem('accessToken', access_token);
+      localStorage.setItem('refreshToken', refresh_token);
+      
+      // Create user data with the determined role
+      const userData = {
+        ...user,
+        role: userRole,
+        loggedIn: true,
+        email: form.email
+      };
+      
+      
+      
+      // Update auth context
+      login(
+        { 
+          accessToken: access_token, 
+          refreshToken: refresh_token 
+        }, 
+        userData
+      );
+      
+      const redirectPath = userRole === 'admin' ? '/admin/dashboard' : from;
+      navigate(redirectPath);
     } catch (err) {
       setError(err.response?.data?.message || "Invalid credentials");
     } finally {

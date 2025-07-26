@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import JobCard from "./JobCard";
-import { jobsService } from "../../../api/jobs";
+import jobsService from "../../../api/jobs";
 
 export default function FeaturedJobs() {
   const [jobs, setJobs] = useState([]);

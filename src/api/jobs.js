@@ -22,7 +22,7 @@ const jobsService = {
       const response = await api.get('/', { params: filters });
       return response.data;
     } catch (error) {
-      console.error('Error fetching jobs:', error);
+      console.error('Error fetching jobs:', error.message);
       throw error;
     }
   },

@@ -3,7 +3,7 @@ import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import JobCard from "../components/features/jobs/JobCard";
 import { Search } from "lucide-react";
-import { getJobs } from "../api/jobs"; // Using the new jobs API module
+import jobsService from "../api/jobs"; // Import the default export
 
 export default function JobBoard() {
   const [jobs, setJobs] = useState([]);
@@ -12,19 +12,31 @@ export default function JobBoard() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
+    let isMounted = true;
+    
     const fetchJobs = async () => {
       try {
-        const response = await getJobs();
-        setJobs(response.data || []);
+        const response = await jobsService.getJobs();
+        if (isMounted) {
+          setJobs(response.data || []);
+        }
       } catch (err) {
-        console.error("Error fetching jobs:", err);
-        setError("Failed to load jobs. Please try again later.");
+        if (isMounted) {
+          setError("Failed to load jobs. Please try again later.");
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchJobs();
+    
+    // Cleanup function to prevent state updates after unmount
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const filteredJobs = jobs.filter((job) =>
@@ -53,7 +65,11 @@ export default function JobBoard() {
         {!loading && !error && (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filteredJobs.length > 0 ? (
-              filteredJobs.map((job) => <JobCard key={job._id} job={job} />)
+              filteredJobs.map((job) => (
+                <div key={job._id || job.id}>
+                  <JobCard job={job} />
+                </div>
+              ))
             ) : (
               <p>No jobs found</p>
             )}
