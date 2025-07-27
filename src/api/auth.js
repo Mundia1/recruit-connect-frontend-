@@ -40,3 +40,5 @@ export async function signIn(email, password) {
   localStorage.setItem(USER_KEY, JSON.stringify(result.user));
   return result;
 }
+
+

@@ -4,6 +4,7 @@ import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import JobCard from "../components/features/jobs/JobCard";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const PAGE_SIZE = 6;
 
@@ -14,6 +15,7 @@ export default function JobBoard() {
   const [jobTypeFilter, setJobTypeFilter] = useState("");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch("http://localhost:5000/api/v1/jobs/")
@@ -151,16 +153,16 @@ export default function JobBoard() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
 
           {jobsToShow.map((job, index) => (
-          <motion.div
-              key={job.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <JobCard job={job} />
-            </motion.div>
+  <motion.div
+    key={job.id}
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5, delay: index * 0.1 }}
+  >
+    <JobCard job={job} />
+  </motion.div>
+))}
 
-          ))}
         </div>
         )}
       </section>

@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { signIn } from "../api/auth";
+import { signIn, getCurrentUser } from "../api/auth";
 
 export default function SignIn() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [selectedRole, setSelectedRole] = useState(null); // "admin" or "jobseeker"
+
+  const user = getCurrentUser();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
