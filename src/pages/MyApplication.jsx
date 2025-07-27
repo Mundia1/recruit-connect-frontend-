@@ -1,82 +1,38 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { applicationsService } from '../api';
 
 const JobApplications = () => {
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('Active');
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [applications, setApplications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchApplications = async () => {
+      try {
+        setLoading(true);
+        const response = await applicationsService.getUserApplications();
+        setApplications(response.data || []);
+      } catch (err) {
+        setError('Failed to fetch applications.');
+        console.error('Error fetching applications:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchApplications();
+  }, []);
 
   const toggleDropdown = (id) => {
     setOpenDropdown(openDropdown === id ? null : id);
   };
 
-  // Redirects the user to the dashboard page when the "Back" button is clicked
-  const handleBack = () => {
-    window.location.href = "http://localhost:5173/dashboard";
-  };
 
-  const applications = [
-    {
-      id: 1,
-      title: "Software Engineer",
-      company: "Tech Innovators Inc.",
-      date: "May 15, 2024",
-      status: "Submitted",
-      isActive: true,
-      description: "We are looking for a passionate Software Engineer to design, develop and install software solutions.",
-      requirements: "Bachelor's Degree in Computer Science, 2+ years of experience in software development.",
-      salary: "KES 150,000 - KES 200,000",
-      location: "Nairobi, Kenya"
-    },
-    {
-      id: 2,
-      title: "Product Manager",
-      company: "Global Solutions Co.",
-      date: "June 2, 2024",
-      status: "Under Review",
-      isActive: true,
-      description: "Lead cross-functional teams to deliver products that align with our company's vision.",
-      requirements: "Bachelor's Degree, 3+ years experience as a Product Manager.",
-      salary: "KES 180,000 - KES 250,000",
-      location: "Nairobi, Kenya"
-    },
-    {
-      id: 3,
-      title: "Data Analyst",
-      company: "Data Insights Ltd.",
-      date: "June 10, 2024",
-      status: "Rejected",
-      isActive: false,
-      description: "Analyze data and provide actionable insights to improve business performance.",
-      requirements: "Degree in Statistics, strong SQL and Python skills.",
-      salary: "KES 100,000 - KES 140,000",
-      location: "Mombasa, Kenya"
-    },
-    {
-      id: 4,
-      title: "UX Designer",
-      company: "Creative Minds Studio",
-      date: "June 18, 2024",
-      status: "Submitted",
-      isActive: true,
-      description: "Design user-centered solutions for our web and mobile applications.",
-      requirements: "Proven experience in UX Design, portfolio of design projects.",
-      salary: "KES 120,000 - KES 160,000",
-      location: "Nairobi, Kenya"
-    },
-    {
-      id: 5,
-      title: "Marketing Specialist",
-      company: "Marketing Masters Agency",
-      date: "June 25, 2024",
-      status: "Accepted",
-      isActive: true,
-      description: "Develop marketing strategies and campaigns for local and international markets.",
-      requirements: "Degree in Marketing or related field, 2+ years experience.",
-      salary: "KES 90,000 - KES 130,000",
-      location: "Kisumu, Kenya"
-    }
-  ];
+  const handleBack = () => {
+    window.location.href = "/dashboard";
+  };
 
   const filteredApplications = applications.filter(app => 
     activeTab === 'Active' ? app.isActive : !app.isActive
@@ -101,31 +57,31 @@ const JobApplications = () => {
             <div className="flex gap-4">
               <div 
                 className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-[#e7f3ec] rounded-full"
-                onClick={() => window.location.href = "http://localhost:5173/dashboard"}
+                onClick={() => window.location.href = "/dashboard"}
               >
                 <p className="text-[#0e1b13] text-sm font-medium leading-normal">Profile</p>
               </div>
               <div 
                 className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-[#e7f3ec] rounded-full"
-                onClick={() => window.location.href = "http://localhost:5173/"}
+                onClick={() => window.location.href = "/"}
               >
                 <p className="text-[#0e1b13] text-sm font-medium leading-normal">Home</p>
               </div>
               <div 
                 className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-[#e7f3ec] rounded-full"
-                onClick={() => window.location.href = "http://localhost:5173/job-applications"}
+                onClick={() => window.location.href = "/job-applications"}
               >
                 <p className="text-[#0e1b13] text-sm font-medium leading-normal">My Applications</p>
               </div>
               <div 
                 className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-[#e7f3ec] rounded-full"
-                onClick={() => window.location.href = "http://localhost:5173/saved-jobs"}
+                onClick={() => window.location.href = "/saved-jobs"}
               >
                 <p className="text-[#0e1b13] text-sm font-medium leading-normal">Saved Jobs</p>
               </div>
               <div 
                 className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-[#e7f3ec] rounded-full"
-                onClick={() => window.location.href = "http://localhost:5173/settings"}
+                onClick={() => window.location.href = "/settings"}
               >
                 <p className="text-[#0e1b13] text-sm font-medium leading-normal">Settings</p>
               </div>
