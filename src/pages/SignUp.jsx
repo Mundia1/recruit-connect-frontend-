@@ -8,15 +8,22 @@ import { signUp } from "../api/auth"; // <-- Import the real API function
 export default function SignUp() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const [selectedRole, setSelectedRole] = useState(null);
+
+  const handleRoleClick = (role) => {
+    setSelectedRole(role);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     const formData = new FormData(e.target);
     const userData = {
-      name: formData.get("name"),
       email: formData.get("email"),
       password: formData.get("password"),
+      first_name: formData.get("name").split(" ")[0],
+      last_name: formData.get("name").split(" ")[1],
+      role: selectedRole || "job_seeker"
     };
 
     try {
@@ -63,6 +70,33 @@ export default function SignUp() {
                 label="Password"
                 required
               />
+            </div>
+
+            <div className="flex space-x-4">
+              <button
+                type="button"
+                onClick={() => handleRoleClick("job_seeker")}
+                className={`flex-1 px-4 py-2 rounded-lg font-semibold transition-all flex items-center justify-center space-x-2 ${
+                  selectedRole === "job_seeker"
+                    ? "bg-[#177245] text-white shadow-md"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                <span>👤</span>
+                <span>I'm a Job Seeker</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleRoleClick("employer")}
+                className={`flex-1 px-4 py-2 rounded-lg font-semibold transition-all flex items-center justify-center space-x-2 ${
+                  selectedRole === "employer"
+                    ? "bg-[#177245] text-white shadow-md"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                <span>🏢</span>
+                <span>I'm an Employer</span>
+              </button>
             </div>
 
             <button
