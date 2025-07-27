@@ -4,7 +4,14 @@ import Navbar from "../components/layout/Navbar";
 import { authService } from "../api/index";
 
 export default function SignUp() {
-  const [form, setForm] = useState({ name: "", email: "", password: "", confirmPassword: "", first_name: "", last_name: "" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    first_name: "",
+    last_name: ""
+  });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -18,19 +25,21 @@ export default function SignUp() {
     setError("");
     setLoading(true);
 
+    if (form.password !== form.confirmPassword) {
+      setError("Passwords do not match");
+      setLoading(false);
+      return;
+    }
+
+    const userData = {
+      email: form.email,
+      password: form.password,
+      first_name: form.first_name,
+      last_name: form.last_name,
+      password_confirmation: form.confirmPassword
+    };
+
     try {
-      if (form.password !== form.confirmPassword) {
-        setError("Passwords do not match");
-        setLoading(false);
-        return;
-      }
-      const userData = {
-        email: form.email,
-        password: form.password,
-        first_name: form.first_name,
-        last_name: form.last_name,
-        password_confirmation: form.confirmPassword, // Or password_confirm depending on backend
-      };
       await authService.register(userData);
       navigate("/signin");
     } catch (err) {

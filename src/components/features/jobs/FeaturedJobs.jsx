@@ -1,7 +1,9 @@
+// src/components/FeaturedJobs.jsx
+
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import JobCard from "./JobCard";
 import jobsService from "../../../api/jobs";
+import { Link } from "react-router-dom";
 
 export default function FeaturedJobs() {
   const [jobs, setJobs] = useState([]);
@@ -44,12 +46,12 @@ export default function FeaturedJobs() {
       </div>
 
       <div className="mt-8 text-center">
-        <a
-          href="/jobs"
+        <Link
+          to="/jobs"
           className="bg-[#177245] text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition"
         >
           View All Jobs
-        </a>
+        </Link>
       </div>
     </section>
   );

@@ -9,64 +9,55 @@ export default function SignIn() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [selectedRole, setSelectedRole] = useState(null); // admin or jobseeker
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || '/dashboard';
+  const from = location.state?.from?.pathname || "/dashboard";
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleRoleClick = (role) => {
+    setSelectedRole(role);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
-    
-    
 
     try {
-      
-      const { user, access_token, refresh_token } = await authService.login(form.email, form.password);
-      
-      
-      
+      const { user, access_token, refresh_token } = await authService.login(
+        form.email,
+        form.password
+      );
+
       if (!user) {
-        const error = new Error('Login failed - no user data');
-        
-        throw error;
+        throw new Error("Login failed - no user data");
       }
-      
-      // Check if email contains 'admin' for admin access
-      const isAdmin = form.email.toLowerCase().includes('admin');
-      const userRole = isAdmin ? 'admin' : 'job_seeker';
-      
-      
-      
-      // Store tokens first
-      
-      localStorage.setItem('accessToken', access_token);
-      localStorage.setItem('refreshToken', refresh_token);
-      
-      // Create user data with the determined role
+
+      const role = selectedRole || (form.email.toLowerCase().includes("admin") ? "admin" : "jobseeker");
+
+      localStorage.setItem("accessToken", access_token);
+      localStorage.setItem("refreshToken", refresh_token);
+
       const userData = {
         ...user,
-        role: userRole,
+        role,
         loggedIn: true,
-        email: form.email
+        email: form.email,
       };
-      
-      
-      
-      // Update auth context
+
       login(
-        { 
-          accessToken: access_token, 
-          refreshToken: refresh_token 
-        }, 
+        {
+          accessToken: access_token,
+          refreshToken: refresh_token,
+        },
         userData
       );
-      
-      const redirectPath = userRole === 'admin' ? '/admin/dashboard' : from;
+
+      const redirectPath = role === "admin" ? "/admin/dashboard" : from;
       navigate(redirectPath);
     } catch (err) {
       setError(err.response?.data?.message || "Invalid credentials");
@@ -76,54 +67,78 @@ export default function SignIn() {
   };
 
   return (
-    <>
-      <Navbar />
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-        <div className="bg-white shadow-lg rounded-lg w-full max-w-md p-8 mt-10">
-          <h2 className="text-3xl font-bold text-center text-[#177245] mb-6">
-            Sign In
-          </h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+      <div className="bg-white shadow-lg rounded-lg w-full max-w-md p-8 mt-10">
+        <h2 className="text-3xl font-bold text-center text-[#177245] mb-6">
+          Sign In
+        </h2>
 
-          {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+        {error && (
+          <p className="text-red-500 text-center mb-4 font-medium">{error}</p>
+        )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={form.email}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-300 rounded-lg px-4 py-2"
-              autoComplete="email"
-            />
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={form.password}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-300 rounded-lg px-4 py-2"
-              autoComplete="current-password"
-            />
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-[#177245] text-white py-2 rounded-lg"
-            >
-              {loading ? "Signing In..." : "Sign In"}
-            </button>
-          </form>
-
-          <p className="text-center mt-4">
-            Don't have an account?{" "}
-            <Link to="/signup" className="text-[#177245] font-semibold">
-              Sign Up
-            </Link>
-          </p>
+        <div className="flex gap-4 mb-4 justify-center">
+          <button
+            type="button"
+            className={`px-4 py-2 rounded ${
+              selectedRole === "admin"
+                ? "bg-green-600 text-white"
+                : "bg-gray-200"
+            }`}
+            onClick={() => handleRoleClick("admin")}
+          >
+            I'm Admin
+          </button>
+          <button
+            type="button"
+            className={`px-4 py-2 rounded ${
+              selectedRole === "jobseeker"
+                ? "bg-green-600 text-white"
+                : "bg-gray-200"
+            }`}
+            onClick={() => handleRoleClick("jobseeker")}
+          >
+            I'm a Jobseeker
+          </button>
         </div>
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+            required
+            className="w-full border border-gray-300 rounded-lg px-4 py-2"
+            autoComplete="email"
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+            required
+            className="w-full border border-gray-300 rounded-lg px-4 py-2"
+            autoComplete="current-password"
+          />
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-[#177245] text-white py-2 rounded-lg"
+          >
+            {loading ? "Signing In..." : "Sign In"}
+          </button>
+        </form>
+
+        <p className="text-center mt-4">
+          Don't have an account?{" "}
+          <Link to="/signup" className="text-[#177245] font-semibold">
+            Sign Up
+          </Link>
+        </p>
       </div>
-    </>
+    </div>
   );
 }

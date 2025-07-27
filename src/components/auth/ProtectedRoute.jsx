@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import useAuth from '../../hooks/useAuth'; // ✅ Cleaner access to AuthContext
+import useAuth from '../../hooks/useAuth';
 
 const ProtectedRoute = ({ allowedRoles }) => {
   const { user, loading } = useAuth();
