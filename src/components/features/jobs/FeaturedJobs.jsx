@@ -1,8 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { jobs } from "../../../api/jobs";
 
-export default function FeaturedJobs() {
+export default function FeaturedJobs({ jobs }) {
+  if (!jobs || jobs.length === 0) return null;
+
+  // Pick first 3 jobs as featured
+  const featuredJobs = jobs.slice(0, 3);
+
   return (
     <section className="max-w-7xl mx-auto px-4 py-12">
       <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
@@ -11,7 +15,7 @@ export default function FeaturedJobs() {
 
       {/* Job Cards */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-h-[600px] overflow-y-auto pr-2">
-        {jobs.map((job) => (
+        {featuredJobs.map((job) => (
           <div
             key={job.id}
             className="bg-white shadow-md rounded-lg p-6 hover:shadow-xl transition-shadow duration-300"
@@ -22,11 +26,10 @@ export default function FeaturedJobs() {
 
             {/* Apply Now Button with Dynamic Job ID */}
             <Link
-              to={`/apply/${job.id}`}
-              aria-label={`Apply for ${job.title}`}
-              className="mt-4 inline-block bg-[#177245] text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition"
+              to={`/jobs/${job.id}`}
+              className="mt-4 bg-[#177245] text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition block text-center"
             >
-              Apply Now
+              View Details
             </Link>
           </div>
         ))}
