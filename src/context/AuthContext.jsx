@@ -1,48 +1,62 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { profileService } from "../api";
 
-export const AuthContext = createContext();
+const AuthContext = createContext();
+
+export const useAuthContext = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // New loading state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      const storedUser = JSON.parse(localStorage.getItem("user"));
-      if (storedUser && storedUser.role) {
-        setUser(storedUser);
+    const loadUser = async () => {
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        try {
+          const response = await profileService.getProfile();
+          const userData = response.data;
+          setUser({ ...userData, loggedIn: true });
+        } catch (error) {
+          console.error("Failed to load user profile:", error);
+          clearTokens();
+          setUser(null);
+        }
       } else {
-        localStorage.removeItem("user"); // Clear invalid session
+        setUser(null);
       }
-    } catch (error) {
-      // Silently handle error
-    } finally {
       setLoading(false);
-    }
+    };
+    loadUser();
   }, []);
 
-  const login = async ({ email, password }) => {
-    try {
-      let role = email.includes("admin") ? "admin" : "user";
-      const newUser = { email, role, token: "fake-jwt" };
-
-      localStorage.setItem("user", JSON.stringify(newUser));
-      setUser(newUser);
-      
-      return newUser;
-    } catch (error) {
-      throw error;
-    }
+  const login = (tokens, userData) => {
+    setTokens(tokens.accessToken, tokens.refreshToken);
+    setUser(userData);
   };
 
-  const logout = () => {
-    localStorage.removeItem("user");
+  const logoutUser = () => {
+    clearTokens();
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
-      {children}
+    <AuthContext.Provider value={{ user, login, logout: logoutUser, loading }}>
+      {!loading && children}
     </AuthContext.Provider>
   );
+};
+
+export const getAccessToken = () => localStorage.getItem("accessToken");
+export const getRefreshToken = () => localStorage.getItem("refreshToken");
+export const setTokens = (access, refresh) => {
+  if (access) localStorage.setItem("accessToken", access);
+  if (refresh) localStorage.setItem("refreshToken", refresh);
+};
+export const clearTokens = () => {
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
+};
+export const logout = () => {
+  clearTokens();
 };

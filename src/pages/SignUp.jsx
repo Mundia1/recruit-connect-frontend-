@@ -2,30 +2,48 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
 import PasswordInput from '../components/ui/PasswordInput';
-import { signUp } from "../api/auth"; // <-- Import the real API function
-
+import { authService } from "../api/index.js";
 
 export default function SignUp() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    const formData = new FormData(e.target);
+    setLoading(true);
 
+    const formData = new FormData(e.target);
+    const password = formData.get("password");
+    const confirmPassword = formData.get("confirmPassword");
+
+    // 1. Add password confirmation check
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      setLoading(false);
+      return;
+    }
+
+    // 2. Structure userData to match the backend API
     const userData = {
-      name: formData.get("name"),
+      first_name: formData.get("first_name"),
+      last_name: formData.get("last_name"),
       email: formData.get("email"),
-      password: formData.get("password"),
+      password: password,
     };
 
     try {
-      await signUp(userData); // <-- Call the API
+      // 3. Call the correct API function: authService.register
+      await authService.register(userData);
       
+      // Navigate to sign in on success
       navigate("/signin");
     } catch (err) {
-      setError("Registration failed. Please try again.");
+      // 4. Show a more specific error message from the backend
+      setError(err.response?.data?.message || "Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -42,14 +60,25 @@ export default function SignUp() {
           </h2>
           {error && <p className="text-red-500 text-center mb-4 font-medium">{error}</p>}
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label className="block text-gray-700 font-medium mb-1">Full Name</label>
-              <input
-                type="text"
-                name="name"
-                required
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#177245]"
-              />
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <label className="block text-gray-700 font-medium mb-1">First Name</label>
+                <input
+                  type="text"
+                  name="first_name" // Changed from 'name'
+                  required
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#177245]"
+                />
+              </div>
+              <div className="flex-1">
+                <label className="block text-gray-700 font-medium mb-1">Last Name</label>
+                <input
+                  type="text"
+                  name="last_name" // Added last name field
+                  required
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#177245]"
+                />
+              </div>
             </div>
             <div>
               <label className="block text-gray-700 font-medium mb-1">Email</label>
@@ -59,19 +88,28 @@ export default function SignUp() {
                 required
                 className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#177245]"
               />
-            </div>            <div>
+            </div>
+            <div>
               <PasswordInput
                 name="password"
                 label="Password"
                 required
               />
             </div>
+            <div>
+              <PasswordInput
+                name="confirmPassword" // Added confirm password field
+                label="Confirm Password"
+                required
+              />
+            </div>
 
             <button
               type="submit"
-              className="w-full bg-[#177245] text-white py-2 rounded-lg font-semibold hover:bg-green-700 transition"
+              disabled={loading} // Disable button while loading
+              className="w-full bg-[#177245] text-white py-2 rounded-lg font-semibold hover:bg-green-700 transition disabled:bg-gray-400"
             >
-              Sign Up
+              {loading ? "Registering..." : "Sign Up"}
             </button>
           </form>
 
