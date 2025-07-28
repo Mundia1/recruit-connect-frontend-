@@ -1,20 +1,24 @@
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
 
-export default function ProtectedRoute() {
-  const token = localStorage.getItem('token');
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+const ProtectedRoute = ({ allowedRoles }) => {
+  const { user, loading } = useAuth();
   const location = useLocation();
 
-  // If route is admin, check for admin role
-  if (location.pathname.startsWith('/admin')) {
-    if (!token || user.role !== 'admin') {
-      return <Navigate to="/signin" replace />;
-    }
-  } else {
-    if (!token) {
-      return <Navigate to="/signin" replace />;
-    }
+  if (loading) {
+    return <div>Loading...</div>;
   }
+
+  if (!user) {
+    return <Navigate to="/signin" state={{ from: location }} replace />;
+  }
+
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    return <Navigate to="/" replace />;
+  }
+
   return <Outlet />;
-}
+};
+
+export default ProtectedRoute;
