@@ -1,7 +1,7 @@
 import axios from 'axios';
+import api from '../axiosInstance.js';
 import { getApiUrl, getAuthHeader } from './config';
 
-// Create axios instance with base URL
 const api = axios.create({
   baseURL: getApiUrl('/jobs'),
   timeout: 10000, // 10 seconds

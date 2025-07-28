@@ -15,6 +15,7 @@ import Settings from './pages/Settings';
 import Feedback from "./pages/Feedback"; // <-- Import your Feedback page
 import Messages from "./pages/Messages";
 import Applications from "./pages/Applications";
+import api from '../utils/axiosInstance.js';
 
 function App() {
   return (
