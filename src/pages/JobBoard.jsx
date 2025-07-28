@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { fetchJobs } from "../api/jobs";
 import { Search } from "lucide-react";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import JobCard from "../components/features/jobs/JobCard";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const PAGE_SIZE = 6;
 
@@ -14,9 +14,17 @@ export default function JobBoard() {
   const [locationFilter, setLocationFilter] = useState("");
   const [jobTypeFilter, setJobTypeFilter] = useState("");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchJobs().then(setJobs).catch(console.error);
+    fetch("http://localhost:5000/api/v1/jobs/")
+      .then((res) => res.json())
+      .then((data) => {
+        setJobs(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, []);
 
   // Featured Jobs (Pick first 3 from jobs for now)
@@ -137,35 +145,25 @@ export default function JobBoard() {
 
       {/* Jobs Grid */}
       <section className="max-w-7xl mx-auto px-4 pb-12">
-        {jobsToShow.length > 0 ? (
-          <>
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {loading ? (
+        <div className="text-center py-12">Loading jobs...</div>
+      ) : jobs.length === 0 ? (
+        <div className="text-center py-12">No jobs found.</div>
+      ) : (
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
 
-              {jobsToShow.map((job, index) => (
-              <motion.div
-                  key={job.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                  <JobCard job={job} />
-                </motion.div>
+          {jobsToShow.map((job, index) => (
+  <motion.div
+    key={job.id}
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5, delay: index * 0.1 }}
+  >
+    <JobCard job={job} />
+  </motion.div>
+))}
 
-              ))}
-            </div>
-            {visibleCount < filteredJobs.length && (
-              <div className="flex justify-center mt-8">
-                <button
-                  className="bg-[#177245] text-white px-6 py-3 rounded-full font-semibold hover:bg-green-700 transition"
-                  onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
-                >
-                  Load More
-                </button>
-              </div>
-            )}
-          </>
-        ) : (
-          <p className="text-gray-600 mt-6 text-center">No jobs match your search.</p>
+        </div>
         )}
       </section>
 

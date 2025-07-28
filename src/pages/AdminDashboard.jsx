@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import StatisticsCard from "../components/features/analytics/StatisticsCard";
@@ -205,7 +204,7 @@ export default function AdminDashboard() {
     if (location.pathname === "/admin/settings") {
       return (
         <div className="bg-white p-8 rounded-lg shadow max-w-lg mx-auto">
-          <h2 className="text-xl font-bold mb-6 text-gray-800">Admin Settings</h2>
+          <h2 className="text-xl font-bold mb-6 text-gray-800">Employer Settings</h2>
           <form>
             <div className="mb-4">
               <label className="block text-gray-700 font-medium mb-2">Admin Name</label>
@@ -238,7 +237,7 @@ export default function AdminDashboard() {
     if (location.pathname === "/admin/help") {
       return (
         <div className="bg-white p-8 rounded-lg shadow max-w-lg mx-auto">
-          <h2 className="text-xl font-bold mb-6 text-gray-800">Admin Help & Support</h2>
+          <h2 className="text-xl font-bold mb-6 text-gray-800">Employer Help & Support</h2>
           <div className="mb-6">
             <p className="text-gray-700 mb-2">
               Need assistance? Here are some resources:
@@ -316,6 +315,11 @@ export default function AdminDashboard() {
     );
   };
 
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const fullName = user.first_name && user.last_name
+    ? `${user.first_name} ${user.last_name}`
+    : user.name || user.email || "Employer";
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
       <header className="h-16 bg-white border-b flex items-center justify-between px-4 md:px-8 shadow-sm z-10">
@@ -329,7 +333,7 @@ export default function AdminDashboard() {
           >
             <path d="M12 17.75l-6.172 3.245 1.179-6.881-5-4.873 6.9-1.002L12 2.25l3.093 6.989 6.9 1.002-5 4.873 1.179 6.881z"/>
           </svg>
-          <span className="text-xl font-medium text-black tracking-tight">Recruit Connect</span>
+          <span className="text-lg font-bold text-[#177245] tracking-tight">Employer Panel</span>
         </div>
         <div className="flex items-center gap-4">
           <div className="relative">
@@ -391,12 +395,12 @@ export default function AdminDashboard() {
             )}
           </div>
           <div className="relative group">
-            <img src="https://ui-avatars.com/api/?name=Admin&background=177245&color=fff" alt="Admin Avatar" className="w-10 h-10 rounded-full border cursor-pointer" />
+            <img src="https://ui-avatars.com/api/?name=Employer&background=177245&color=fff" alt="Employer Avatar" className="w-10 h-10 rounded-full border cursor-pointer" />
             <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-20">
-              <div className="px-4 py-2 text-gray-700 font-semibold border-b">Admin</div>
+              <div className="px-4 py-2 text-gray-700 font-semibold border-b">Employer</div>
               <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700">Profile</button>
               <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700">Settings</button>
-            <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600 border-t" onClick={handleLogout}>Logout</button>
+              <button className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600 border-t" onClick={handleLogout}>Logout</button>
             </div>
           </div>
         </div>
@@ -413,7 +417,7 @@ export default function AdminDashboard() {
         >
           <div className={`flex items-center justify-center ${sidebarCollapsed && !sidebarHovered ? 'mb-2' : 'mb-6'} mt-2`}>
             {!(sidebarCollapsed && !sidebarHovered) && (
-              <span className="text-lg font-bold text-[#177245] tracking-tight">Admin Panel</span>
+              <span className="text-lg font-bold text-[#177245] tracking-tight">Employer Panel</span>
             )}
           </div>
           <nav className="flex-1 mt-2">
@@ -450,8 +454,8 @@ export default function AdminDashboard() {
               <UserCircleIcon className="h-8 w-8 text-gray-400" />
               {!(sidebarCollapsed && !sidebarHovered) && (
                 <div>
-                  <div className="font-semibold text-gray-800 leading-tight">Admin</div>
-                  <div className="text-xs text-gray-500">admin@email.com</div>
+                  <div className="font-semibold text-gray-800 leading-tight">Employer</div>
+                  <div className="text-xs text-gray-500">{user.email}</div>
                 </div>
               )}
             </div>

@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import HeroImage from "../assets/hero-image.png";
 import Navbar from "../components/layout/Navbar";
 import FeaturedJobs from "../components/features/jobs/FeaturedJobs";
-// import Footer from "../components/layout/Footer";
+import Footer from "../components/layout/Footer";
 
 // --- Testimonials Data ---
 const testimonials = [
@@ -46,13 +46,23 @@ const steps = [
 ];
 
 export default function LandingPage() {
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/api/v1/jobs/")
+      .then((res) => res.json())
+      .then((data) => {
+        setJobs(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
   return (
-
     <div className="bg-white dark:bg-black">
-
       {/* Navbar */}
       <Navbar />
-
 
       {/* Hero Section */}
       <section
@@ -62,23 +72,21 @@ export default function LandingPage() {
         {/* Overlay */}
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
         <div className="relative z-10 flex flex-col items-center justify-center h-full w-full px-4 text-center">
-
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-
             Find Jobs, Manage Jobs. All in One Place.
           </h1>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <NavLink
-              to="/jobs"
-              className="bg-[#177245] text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-green-700 transition"
-            >
-              I'm a Job Seeker
-            </NavLink>
             <NavLink
               to="/signin?role=admin"
               className="bg-white text-[#177245] border border-[#177245] px-6 py-3 rounded-lg text-lg font-semibold hover:bg-gray-100 transition"
             >
               I'm an Admin
+            </NavLink>
+            <NavLink
+              to="/signin?role=job_seeker"
+              className="bg-[#177245] text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-green-700 transition"
+            >
+              I'm a Job Seeker
             </NavLink>
           </div>
         </div>
@@ -97,7 +105,9 @@ export default function LandingPage() {
             >
               <div className="text-4xl mb-4">{step.icon}</div>
 
-              <h3 className="text-xl font-semibold mb-2 dark:text-white">{step.title}</h3>
+              <h3 className="text-xl font-semibold mb-2 dark:text-white">
+                {step.title}
+              </h3>
               <p className="text-gray-600 dark:text-gray-300">{step.desc}</p>
             </div>
           ))}
@@ -105,7 +115,11 @@ export default function LandingPage() {
       </section>
 
       {/* Featured Jobs Section */}
-      <FeaturedJobs />
+      {loading ? (
+        <div className="text-center py-12">Loading featured jobs...</div>
+      ) : (
+        <FeaturedJobs jobs={jobs} />
+      )}
 
       {/* Testimonials Section */}
       <section className="max-w-7xl mx-auto px-4 py-12">
@@ -116,43 +130,28 @@ export default function LandingPage() {
           {testimonials.map((t) => (
             <div
               key={t.name}
-
-
               className="bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 flex flex-col items-center text-center border border-gray-100 dark:border-gray-700"
-              >
-
-
+            >
               <img
                 src={t.avatar}
                 alt={t.name}
                 className="w-16 h-16 rounded-full mb-4 object-cover transition-all duration-300 hover:ring-2 hover:ring-[#0d3b23]"
               />
 
-
-              <p className="text-gray-700 dark:text-gray-300 italic mb-3">"{t.text}"</p>
+              <p className="text-gray-700 dark:text-gray-300 italic mb-3">
+                "{t.text}"
+              </p>
               <div className="font-semibold text-[#177245]">{t.name}</div>
-              <div className="text-gray-500 dark:text-gray-400 text-sm">{t.role}</div>
-
+              <div className="text-gray-500 dark:text-gray-400 text-sm">
+                {t.role}
+              </div>
             </div>
           ))}
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="w-full border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-black mt-10">
-        <div className="max-w-7xl mx-auto py-6 px-4 flex flex-col items-center gap-3">
-          <nav className="flex flex-wrap justify-center gap-6 text-sm text-gray-500 dark:text-gray-400 mb-2">
-            <NavLink to="/about" className="hover:underline">About</NavLink>
-            <NavLink to="/contact" className="hover:underline">Contact</NavLink>
-            <NavLink to="/privacy-policy" className="hover:underline">Privacy Policy</NavLink>
-            <NavLink to="/terms-of-service" className="hover:underline">Terms of Service</NavLink>
-            <NavLink to="/faq" className="hover:underline">FAQ</NavLink>
-          </nav>
-          <div className="text-xs text-gray-400 text-center">
-            © 2025 Recruit Connect. All rights reserved.
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
