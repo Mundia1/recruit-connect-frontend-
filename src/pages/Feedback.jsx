@@ -1,81 +1,114 @@
 import React, { useState } from 'react';
-import DashboardLayout from '../components/layout/DashboardLayout';
-import { Button } from '../components/ui/Button';
+import Navbar from '../components/layout/Navbar';
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+import { feedbackService } from '../api_service/feedback';
+import { useAuthContext } from '../context/AuthContext'; 
 
-const faces = [
-  { label: "Very Dissatisfied", emoji: "😠", value: 1 },
-  { label: "Dissatisfied", emoji: "😞", value: 2 },
-  { label: "Neutral", emoji: "😐", value: 3 },
-  { label: "Satisfied", emoji: "😊", value: 4 },
-  { label: "Very Satisfied", emoji: "😍", value: 5 }
-];
+const ratings = [1, 2, 3, 4, 5];
 
-const Feedback = () => {
+const ApplicationFeedback = () => {
   const [rating, setRating] = useState(null);
   const [comment, setComment] = useState("");
-
-  const handleSubmit = (e) => {
+  const [loading, setLoading] = useState(false);
+  const { user } = useAuthContext();
+  const navigate = useNavigate();
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({ rating, comment });   
-    setRating(null);
-    setComment("");
+    if (!rating) {
+      toast.error("Please select a rating.");
+      return;
+    }
+    if (!user) {
+      toast.error("You must be logged in to submit feedback."); 
+      setTimeout(() => navigate("/signin"), 3000);
+      return;
+    }
+
+    setLoading(true);
+    const feedbackData = {
+      rating: rating,
+      comment: comment,
+      user_id: user.id,
+      job_application_id: 1
+    };
+
+    try {
+      await feedbackService.submitFeedback(feedbackData);
+      
+      toast.success("Thank you! Your feedback has been submitted.");
+
+      setRating(null);
+      setComment("");
+
+      setTimeout(() => navigate("/dashboard"), 2000);
+
+    } catch (error) {
+      toast.error("Failed to submit feedback. Please try again.");
+      console.error("Feedback submission error:", error);
+    } finally {
+      setLoading(false);
+    }
   };
-  
-
-return (
-    <DashboardLayout>
-      <div className="flex justify-center items-center h-full py-8 bg-gray-100">
-        <div className="w-full max-w-md p-6 bg-white rounded-lg shadow">
-          <h2 className="text-green-600 text-xl font-bold mb-4">We want your opinion!</h2>
-          
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-gray-800 font-medium mb-2">
-                How satisfied are you with our platform?
-              </label>
-              <div className="flex justify-between">
-                {faces.map((face) => (
-                  <button
-                    key={face.value}
-                    type="button"
-                    onClick={() => setRating(face.value)}
-                    className={`text-3xl transition-transform ${
-                      rating === face.value ? 'scale-110' : 'opacity-70'
-                    } hover:scale-110`}
-                    aria-label={face.label}
-                  >
-                    {face.emoji}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-gray-800 font-medium mb-2">
-                What do you like or not like about our platform?
-              </label>
-              <textarea
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-                placeholder="Please fill in your answer"
-                rows={4}
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                required
-              />
-            </div>
-
-
-<div className="text-right">
-              <Button type="submit" variant="primary">
-                Submit Feedback
-              </Button>
-            </div>
-          </form>
+  return (
+    <div className="bg-[#F7FCFA] min-h-screen">
+      <ToastContainer position="top-center" autoClose={5000} hideProgressBar={false} />
+      <Navbar />
+      <div className="flex flex-col items-center justify-center pt-20">
+        <div className="max-w-2xl text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">
+            Rate your application experience
+          </h1>
+          <p className="text-gray-600 mt-2">
+            Your feedback helps us improve the application process for everyone.
+          </p>
         </div>
+        <form onSubmit={handleSubmit} className="w-full max-w-lg space-y-6">
+          <div className="flex justify-center space-x-3">
+            {ratings.map((num) => (
+              <button
+                key={num}
+                type="button"
+                onClick={() => setRating(num)}
+                className={`
+                  w-12 h-12 flex items-center justify-center rounded-lg text-lg font-medium transition-colors
+                  ${
+                    rating === num
+                      ? 'bg-[#21C259] text-white'
+                      : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-100'
+                  }
+                `}
+              >
+                {num}
+              </button>
+            ))}
+          </div>
+          
+          <div>
+            <textarea
+              className="w-full border border-[#D1E5D9] rounded-xl p-4 min-h-[140px] focus:outline-none focus:ring-2 focus:ring-[#21C259] bg-white"
+              placeholder="Tell us more about your experience..."
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="flex justify-center pt-2">
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-[#12783D] text-white px-8 py-3 rounded-full font-semibold hover:bg-[#05823B] transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+            >
+              {loading ? "Submitting..." : "Submit Feedback"}
+            </button>
+          </div>
+        </form>
       </div>
-    </DashboardLayout>
+    </div>
   );
 };
 
-export default Feedback;
+export default ApplicationFeedback;

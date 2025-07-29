@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getCurrentUser, getUserApplications, updateUserProfile } from '../../../api/profile';
+import { profileService } from '../../../api_service/profile';
 import { toast } from 'react-toastify';
 // Removed date-fns import - using native Date methods instead
 import { Avatar } from '../../ui/Avatar';

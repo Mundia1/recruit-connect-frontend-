@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { jobsService } from "../api/index"; 
+import { jobService } from "../api_service/jobs"; 
 import JobCard from "../components/features/jobs/JobCard";
 
 export default function Jobs() {

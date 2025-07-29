@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import JobCard from "../components/features/jobs/JobCard";
 import { Search } from "lucide-react";
-import { getApiUrl } from "../api/config";
+import { jobService } from "../api_service";
 
 export default function JobBoard() {
   const [jobs, setJobs] = useState([]);
@@ -15,8 +14,12 @@ export default function JobBoard() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const res = await axios.get(getApiUrl("jobs"));
-        setJobs(res.data.data);
+        const res = await jobService.getAllJobs();
+        const normalizedJobs = (res || []).map((job) => ({
+          ...job,
+          id: job.id || job._id,
+        }));
+        setJobs(normalizedJobs);
       } catch (err) {
         setError("Failed to load jobs");
       } finally {
@@ -53,7 +56,7 @@ export default function JobBoard() {
         {!loading && !error && (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filteredJobs.length > 0 ? (
-              filteredJobs.map((job) => <JobCard key={job._id} job={job} />)
+              filteredJobs.map((job) => <JobCard key={job.id} job={job} />)
             ) : (
               <p>No jobs found</p>
             )}

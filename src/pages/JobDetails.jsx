@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useAuthContext } from "../context/AuthContext";
+import { jobService } from "../api_service";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 
@@ -15,12 +16,15 @@ export default function JobDetails() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    console.log('JobDetails useEffect triggered for ID:', id);
     const fetchJob = async () => {
       try {
-        const res = await axios.get(`${API_BASE}/jobs/${id}`);
-        setJob(res.data);
+        const res = await jobService.getJobById(id);
+        console.log('Job Details API response:', res);
+        setJob(res);
       } catch (err) {
         setError("Failed to load job details.");
+        console.error('Job Details API error:', err);
       } finally {
         setLoading(false);
       }
@@ -49,6 +53,7 @@ export default function JobDetails() {
   }
 
   if (!job) {
+    console.log('Job not found for ID:', id);
     return (
       <>
         <Navbar />
@@ -57,6 +62,16 @@ export default function JobDetails() {
       </>
     );
   }
+
+  const { user } = useAuthContext();
+
+  const handleApplyNow = () => {
+    if (!user) {
+      navigate(`/signin?redirect=/jobs/${job.id}/apply`);
+    } else {
+      navigate(`/jobs/${job.id}/apply`);
+    }
+  };
 
   return (
     <>
@@ -73,7 +88,7 @@ export default function JobDetails() {
 
         <div className="mt-8">
           <button
-            onClick={() => navigate(`/jobs/${job._id}/apply`)}
+            onClick={handleApplyNow}
             className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition"
           >
             Apply Now

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../components/layout/Navbar";
-import { authService } from "../api/index";
+import { authService } from "../api_service/auth";
 import { useAuthContext } from "../context/AuthContext";
 
 export default function SignIn() {
@@ -10,6 +10,8 @@ export default function SignIn() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/dashboard";
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -23,7 +25,13 @@ export default function SignIn() {
     try {
       const { user, access_token, refresh_token } = await authService.login(form.email, form.password);
       login({ accessToken: access_token, refreshToken: refresh_token }, user);
-      if (user && user.email.includes("admin")) {
+
+      const params = new URLSearchParams(location.search);
+      const redirectTo = params.get('redirect');
+
+      if (redirectTo) {
+        navigate(redirectTo);
+      } else if (user && user.email.includes("admin")) {
         navigate("/admin/dashboard");
       } else {
         navigate("/dashboard");

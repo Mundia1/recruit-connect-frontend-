@@ -1,94 +1,58 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { jobService } from "../../../api_service";
+import JobCard from "../jobs/JobCard";
 
-const FeaturedJobs = () => {
-  const navigate = useNavigate();
-  
-  const featuredJobs = [
-    {
-      id: 1,
-      title: "Frontend Developer",
-      company: "TechCorp",
-      logo: "https://logo.clearbit.com/techcorp.com",
-      location: "San Francisco, CA",
-      type: "Full-time",
-      salary: "$90,000 - $120,000",
-      posted: "2 days ago",
-      description: "We're looking for a skilled Frontend Developer with React experience to join our growing team."
-    },
-    {
-      id: 2,
-      title: "UX Designer",
-      company: "DesignHub",
-      logo: "https://logo.clearbit.com/designhub.com",
-      location: "Remote",
-      type: "Contract",
-      salary: "$70 - $90/hr",
-      posted: "1 week ago",
-      description: "Join our design team to create beautiful, user-friendly interfaces for our clients."
-    },
-    {
-      id: 3,
-      title: "Backend Engineer",
-      company: "DataSystems",
-      logo: "https://logo.clearbit.com/datasystems.com",
-      location: "New York, NY",
-      type: "Full-time",
-      salary: "$110,000 - $140,000",
-      posted: "3 days ago",
-      description: "Looking for a backend engineer with Python and Django experience to help scale our platform."
-    }
-  ];
+export default function FeaturedJobs() {
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const res = await jobService.getAllJobs();
+        
+        // Assuming jobService.getAllJobs() returns the array directly, 
+        // and normalizing id as per your sample
+        const normalizedJobs = (res || []).map((job) => ({
+          ...job,
+          id: job.id || job._id,
+        }));
+        setJobs(normalizedJobs);
+      } catch (err) {
+        setError(err.message || "Failed to load jobs"); // Use err.message for consistency
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJobs();
+  }, []);
+
+  if (loading) return <div className="text-center py-10">Loading jobs...</div>;
+  if (error) return <div className="text-center text-red-500 py-10">{error}</div>;
 
   return (
-    <section className="featured-jobs-section">
-      <div className="section-header">
-        <h2 className="section-title">Featured Jobs</h2>
-        <button 
-          className="view-all-button"
-          onClick={() => navigate('/jobs')}
+    <section className="max-w-7xl mx-auto px-4 py-12">
+      <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+        Featured Jobs
+      </h2>
+
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-h-[600px] overflow-y-auto pr-2">
+        {jobs.slice(0, 6).map((job) => (
+          <JobCard key={job.id} job={job} />
+        ))}
+      </div>
+
+      <div className="mt-8 text-center">
+        <a
+          href="/jobs"
+          className="bg-[#177245] text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition"
         >
           View All Jobs
-        </button>
-      </div>
-      <div className="jobs-grid">
-        {featuredJobs.map((job) => (
-          <div 
-            className="job-card"
-            key={job.id}
-            onClick={() => navigate(`/jobs/${job.id}`)}
-          >
-            <div className="job-header">
-              <img 
-                src={job.logo} 
-                alt={job.company} 
-                className="company-logo"
-              />
-              <div className="job-info">
-                <h3 className="job-title">{job.title}</h3>
-                <p className="company-name">{job.company}</p>
-                <div className="job-meta">
-                  <span className="meta-item">{job.location}</span>
-                  <span className="meta-item">{job.type}</span>
-                  <span className="meta-item">{job.salary}</span>
-                </div>
-              </div>
-            </div>
-            <p className="job-description">{job.description}</p>
-            <button 
-              className="apply-button"
-              onClick={(e) => {
-                e.stopPropagation();
-                navigate(`/jobs/${job.id}/apply`);
-              }}
-            >
-              Apply Now
-            </button>
-          </div>
-        ))}
+        </a>
       </div>
     </section>
   );
-};
+}
 
-export default FeaturedJobs;

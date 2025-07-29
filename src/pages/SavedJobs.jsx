@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { jobsService } from '../api';
+import { jobService } from '../api_service/jobs';
 
 const SavedJobs = () => {
   const [openDropdown, setOpenDropdown] = useState(null);

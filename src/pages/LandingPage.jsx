@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import HeroImage from "../assets/hero-image.png";
 import Navbar from "../components/layout/Navbar";
-import FeaturedJobs from "../components/features/jobs/FeaturedJobs";
+import FeaturedJobs from "../components/features/home/featuredjobs";
 // import Footer from "../components/layout/Footer";
 
 // --- Testimonials Data ---

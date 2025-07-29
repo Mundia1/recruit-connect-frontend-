@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { jobsService } from "../api/index";
+import { jobService } from "../api_service/jobs";
 
 export default function ApplyRedirect() {
   const { id } = useParams(); 
@@ -10,36 +10,62 @@ export default function ApplyRedirect() {
   const [coverLetter, setCoverLetter] = useState("");
   const [resume, setResume] = useState(null);
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchJob = async () => {
       try {
-        const res = await api.get(`/jobs/${id}`);
-        setJob(res.data);
+        const jobData = await jobService.getJobById(id);
+        setJob(jobData);
       } catch (err) {
-        setError("Failed to load job details.");
+        console.error("Error fetching job:", err);
+        setError("Failed to load job details. Please try again later.");
       } finally {
         setLoading(false);
       }
     };
-    fetchJob();
+    
+    if (id) {
+      fetchJob();
+    } else {
+      setError("Invalid job ID");
+      setLoading(false);
+    }
   }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
+    setError("");
+    
     try {
+      if (!coverLetter.trim()) {
+        throw new Error("Cover letter is required");
+      }
+      
       const formData = new FormData();
       formData.append("coverLetter", coverLetter);
       if (resume) formData.append("resume", resume);
 
-      await jobsService.applyForJob(id, formData, {
+      await jobService.applyForJob(id, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
       alert("Application submitted successfully!");
       navigate("/applications"); 
     } catch (err) {
-      alert("Failed to submit application.");
+      console.error("Error submitting application:", err);
+      setError(err.message || "Failed to submit application. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+  
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Optional: Add file validation here (size, type, etc.)
+      setResume(file);
     }
   };
 

@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { jobsService } from "../../../api/index";
+import { applicationService } from "../../../api_service/applications";
+import { jobService } from "../../../api_service/jobs";
+import { useAuthContext } from "../../../context/AuthContext";
 
 export default function ApplyJob() {
   const { id } = useParams(); // jobId from URL
   const navigate = useNavigate();
+  const { user } = useAuthContext();
 
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
     coverLetter: "",
     resume: null,
   });
@@ -22,10 +23,11 @@ export default function ApplyJob() {
   useEffect(() => {
     const fetchJob = async () => {
       try {
-        const res = await getJobById(id);
+        const res = await jobService.getJobById(id);
         setJob(res.data);
       } catch (err) {
         setError("Failed to load job details.");
+        console.error('ApplyJob fetchJob error:', err);
       } finally {
         setLoading(false);
       }
@@ -50,14 +52,28 @@ export default function ApplyJob() {
     setSubmitting(true);
     setMessage("");
 
+    console.log('Submitting application with:', {
+      ...formData,
+      userId: user?.id,
+      jobId: id,
+    });
+
+    if (!user) {
+      setMessage("❌ You must be logged in to apply.");
+      setSubmitting(false);
+      return;
+    }
+
     try {
       const data = new FormData();
-      data.append("name", formData.name);
-      data.append("email", formData.email);
-      data.append("coverLetter", formData.coverLetter);
-      if (formData.resume) data.append("resume", formData.resume);
+      data.append("job_posting_id", id);
+      data.append("user_id", user.id);
+      data.append("cover_letter", formData.coverLetter);
+      if (formData.resume) {
+        data.append("resume", formData.resume);
+      }
 
-      await jobsService.applyForJob(id, data);
+      await applicationService.createApplication(data);
       setMessage("✅ Application submitted successfully!");
       setTimeout(() => navigate("/applications"), 2000); // Redirect after success
     } catch (err) {
@@ -84,30 +100,6 @@ export default function ApplyJob() {
       )}
 
       <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-6 space-y-4">
-        <div>
-          <label className="block text-gray-700 font-semibold mb-1">Full Name</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            className="w-full border px-4 py-2 rounded-lg focus:ring focus:ring-green-200"
-          />
-        </div>
-
-        <div>
-          <label className="block text-gray-700 font-semibold mb-1">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            className="w-full border px-4 py-2 rounded-lg focus:ring focus:ring-green-200"
-          />
-        </div>
-
         <div>
           <label className="block text-gray-700 font-semibold mb-1">Cover Letter</label>
           <textarea
@@ -141,5 +133,3 @@ export default function ApplyJob() {
     </div>
   );
 }
-
-
