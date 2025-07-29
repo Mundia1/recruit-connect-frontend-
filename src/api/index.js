@@ -271,33 +271,8 @@ const admin = {
 };
 
 
-
 // Export all API methods
-export default {
-  auth,
-  jobs,
-  applications,
-  messages,
-  feedback,
-  faqs,
-  admin,
-  jobViews,
-  
-  // Helper function to set auth token manually if needed
-  setAuthToken(token) {
-    localStorage.setItem('token', token);
-  },
-  
-  // Helper function to check if user is authenticated
-  isAuthenticated() {
-    return !!localStorage.getItem('token');
-  },
-  
-  // Helper function to get current token
-  getAuthToken() {
-    return localStorage.getItem('token');
-  }
-};
+export * as jobs from './jobs';
 
 // Add request interceptor for token refresh
 // This is a simplified version - you might want to implement a more robust solution

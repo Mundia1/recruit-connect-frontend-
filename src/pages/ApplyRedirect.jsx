@@ -1,13 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { jobs } from "../api/jobs";
+import { jobs as jobsApi } from "../api/index";
 import Navbar from "../components/layout/Navbar";
 
 export default function ApplyRedirect() {
   const navigate = useNavigate();
   const { jobId } = useParams();
+  const [job, setJob] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const job = jobs.find((j) => j.id === parseInt(jobId));
+  useEffect(() => {
+    jobsApi
+      .getById(jobId)
+      .then((data) => setJob(data.data || data))
+      .catch(() => setJob(null))
+      .finally(() => setLoading(false));
+  }, [jobId]);
 
   return (
     <>
@@ -23,21 +31,25 @@ export default function ApplyRedirect() {
         </div>
 
         <div className="bg-white shadow-lg rounded-2xl p-10 max-w-lg w-full text-center">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">
-            {job
-              ? `You're applying for ${job.title}`
-              : "Create an account or sign in to apply"}
-          </h1>
-
-          {job && (
-            <p className="text-lg text-gray-600 mb-6">
-              at <span className="font-semibold">{job.company}</span>
-            </p>
+          {loading ? (
+            <div>Loading...</div>
+          ) : job ? (
+            <>
+              <h1 className="text-3xl font-bold text-gray-800 mb-4">
+                You're applying for {job.title}
+              </h1>
+              <p className="text-lg text-gray-600 mb-6">
+                at <span className="font-semibold">{job.company}</span>
+              </p>
+              <p className="text-gray-500 mb-8">
+                You need an account to apply for this job.
+              </p>
+            </>
+          ) : (
+            <h1 className="text-3xl font-bold text-gray-800 mb-4">
+              Job not found
+            </h1>
           )}
-
-          <p className="text-gray-500 mb-8">
-            You need an account to apply for this job.
-          </p>
 
           <div className="flex flex-col gap-4">
             <button

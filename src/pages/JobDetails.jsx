@@ -1,121 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchJobDetails } from '../../api/jobsApi';
-import { setLoading } from '../../features/jobs/jobsSlice';
-import './JobDetails.css';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { jobs as jobsApi } from "../api/index";
 
-const JobDetails = () => {
+export default function JobDetails() {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [job, setJob] = useState(null);
-  const [error, setError] = useState(null);
-  const { user } = useSelector(state => state.auth);
-  const [isApplying, setIsApplying] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const getJobDetails = async () => {
-      try {
-        dispatch(setLoading(true));
-        const jobData = await fetchJobDetails(id);
-        setJob(jobData);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        dispatch(setLoading(false));
-      }
-    };
+    jobsApi
+      .getById(id)
+      .then((data) => setJob(data.data || data))
+      .catch(() => setJob(null))
+      .finally(() => setLoading(false));
+  }, [id]);
 
-    getJobDetails();
-  }, [id, dispatch]);
-
-  const handleApply = () => {
-    if (!user) {
-      navigate('/login', { state: { from: `/jobs/${id}` } });
-      return;
-    }
-    setIsApplying(true);
-    navigate(`/jobs/${id}/apply`);
-  };
-
-  if (error) return <div className="error-message">Error: {error}</div>;
-  if (!job) return <div className="loading">Loading...</div>;
+  if (loading) return <div>Loading...</div>;
+  if (!job) return <div>Job not found.</div>;
 
   return (
-    <div className="job-details-container">
-      <div className="job-details-header">
-        <button 
-          className="back-button"
-          onClick={() => navigate(-1)}
-        >
-          &larr; Back to Job Board
-        </button>
-        <h1 className="job-title">{job.title}</h1>
-        <div className="company-info">
-          <img 
-            src={job.company.logo || '/default-company-logo.png'} 
-            alt={job.company.name} 
-            className="company-logo"
-          />
-          <div>
-            <h2 className="company-name">{job.company.name}</h2>
-            <p className="job-location">{job.location}</p>
-          </div>
-        </div>
+    <div className="max-w-3xl mx-auto px-4 py-12">
+      <h1 className="text-3xl font-bold mb-2">{job.title}</h1>
+      <p className="text-gray-600 mb-2">{job.company}</p>
+      <p className="text-gray-500 mb-2">{job.location}</p>
+      <div className="mb-4">
+        <h2 className="text-xl font-semibold mb-1">Description</h2>
+        <p>{job.description}</p>
       </div>
-
-      <div className="job-details-content">
-        <div className="job-meta">
-          <div className="meta-item">
-            <span className="meta-label">Salary:</span>
-            <span className="meta-value">{job.salary || 'Not specified'}</span>
-          </div>
-          <div className="meta-item">
-            <span className="meta-label">Type:</span>
-            <span className="meta-value">{job.type}</span>
-          </div>
-          <div className="meta-item">
-            <span className="meta-label">Posted:</span>
-            <span className="meta-value">{new Date(job.postedAt).toLocaleDateString()}</span>
-          </div>
-        </div>
-
-        <div className="job-section">
-          <h3 className="section-title">Job Description</h3>
-          <p className="job-description">{job.description}</p>
-        </div>
-
-        <div className="job-section">
-          <h3 className="section-title">Requirements</h3>
-          <ul className="requirements-list">
-            {job.requirements.map((req, index) => (
-              <li key={index}>{req}</li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="job-section">
-          <h3 className="section-title">Benefits</h3>
-          <ul className="benefits-list">
-            {job.benefits.map((benefit, index) => (
-              <li key={index}>{benefit}</li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="apply-section">
-          <button 
-            className="apply-button"
-            onClick={handleApply}
-            disabled={isApplying}
-          >
-            {isApplying ? 'Processing...' : 'Apply Now'}
-          </button>
-        </div>
+      <div className="mb-4">
+        <h2 className="text-xl font-semibold mb-1">Requirements</h2>
+        <p>{job.requirements}</p>
       </div>
+      {job.benefits && (
+        <div className="mb-4">
+          <h2 className="text-xl font-semibold mb-1">Benefits</h2>
+          <p>{job.benefits}</p>
+        </div>
+      )}
+      <button
+        className="bg-[#177245] text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition"
+        onClick={() => navigate(`/apply/${job.id}`)}
+      >
+        Apply Now
+      </button>
     </div>
   );
-};
-
-export default JobDetails;
+}

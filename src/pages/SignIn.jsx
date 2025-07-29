@@ -113,6 +113,14 @@ export default function SignIn() {
               Sign Up
             </Link>
           </p>
+          <p className="text-center mt-2">
+            <Link
+              to="/reset-password"
+              className="text-[#177245] font-semibold hover:underline"
+            >
+              Forgot Password?
+            </Link>
+          </p>
         </div>
       </div>
     </>

@@ -91,8 +91,103 @@ export function ProfileCard() {
   return (
     <>
       <div className="w-full max-w-5xl mx-auto p-4">
-        {/* ...existing profile and application history code... */}
-        {/* (Paste the previous return content here, unchanged) */}
+        {/* Profile information form */}
+        <Card className="mb-4">
+          <h2 className="text-lg font-semibold mb-4">Profile Information</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                  Name
+                </label>
+                <Input
+                  id="name"
+                  name="name"
+                  type="text"
+                  defaultValue={user.name}
+                  required
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                  Email
+                </label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  defaultValue={user.email}
+                  required
+                  className="mt-1"
+                  readOnly
+                />
+              </div>
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                  Phone
+                </label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  defaultValue={user.phone}
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <label htmlFor="location" className="block text-sm font-medium text-gray-700">
+                  Location
+                </label>
+                <Input
+                  id="location"
+                  name="location"
+                  type="text"
+                  defaultValue={user.location}
+                  className="mt-1"
+                />
+              </div>
+            </div>
+            <div className="mt-4">
+              <Button type="submit" isLoading={updateProfileMutation.isLoading}>
+                Update Profile
+              </Button>
+            </div>
+          </form>
+        </Card>
+
+        {/* Application history */}
+        <Card>
+          <h2 className="text-lg font-semibold mb-4">Application History</h2>
+          {isLoadingApplications ? (
+            <div>Loading applications...</div>
+          ) : (
+            <div className="space-y-4">
+              {applications.length === 0 ? (
+                <div>No applications found</div>
+              ) : (
+                applications.map((application) => (
+                  <div
+                    key={application.id}
+                    className="p-4 border rounded-md shadow-sm flex justify-between items-center"
+                  >
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">
+                        {application.jobTitle}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        {formatDate(application.appliedAt)}
+                      </div>
+                    </div>
+                    <Badge variant={getStatusBadgeVariant(application.status)} className="ml-4">
+                      {application.status}
+                    </Badge>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+        </Card>
       </div>
       <Footer />
     </>

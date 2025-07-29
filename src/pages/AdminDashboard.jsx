@@ -1,10 +1,161 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { jobs } from "../api/index";
 import StatisticsCard from "../components/features/analytics/StatisticsCard";
 import BarChart from "../components/features/analytics/BarChart";
 import LineChart from "../components/features/analytics/LineChart";
 import { BriefcaseIcon, UserGroupIcon, EyeIcon, HomeIcon, Cog6ToothIcon, QuestionMarkCircleIcon, ArrowLeftOnRectangleIcon, UserCircleIcon, BellIcon } from "@heroicons/react/24/outline";
 
+
+function JobPostingForm({ onJobPosted }) {
+  const [title, setTitle] = useState("");
+  const [company, setCompany] = useState("");
+  const [location, setLocation] = useState("");
+  const [description, setDescription] = useState("");
+  const [type, setType] = useState("");
+  const [salary, setSalary] = useState("");
+  const [requirements, setRequirements] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "title") setTitle(value); 
+    if (name === "company") setCompany(value);
+    if (name === "location") setLocation(value);
+    if (name === "description") setDescription(value);
+    if (name === "type") setType(value);
+    if (name === "salary") setSalary(value);
+    if (name === "requirements") setRequirements(value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    setSuccess("");
+    try {
+      await jobs.create({
+        title,
+        description,
+        location,
+        requirements,
+      });
+      setSuccess("Job posted successfully!");
+      setTitle("");
+      setDescription("");
+      setLocation("");
+      setRequirements("");
+      if (onJobPosted) onJobPosted(); // <-- Refresh jobs list
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="bg-white p-8 rounded-lg shadow max-w-lg mx-auto">
+      <h2 className="text-xl font-bold mb-6 text-gray-800">Post a New Job</h2>
+      {success && <div className="text-green-600 mb-2">{success}</div>}
+      {error && <div className="text-red-600 mb-2">{error}</div>}
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-2">Job Title</label>
+          <input
+            className="w-full border rounded px-3 py-2"
+            type="text"
+            name="title"
+            value={title}
+            onChange={handleChange}
+            placeholder="Job Title"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-2">Company</label>
+          <input
+            className="w-full border rounded px-3 py-2"
+            type="text"
+            name="company"
+            value={company}
+            onChange={handleChange}
+            placeholder="Company Name"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-2">Location</label>
+          <input
+            className="w-full border rounded px-3 py-2"
+            type="text"
+            name="location"
+            value={location}
+            onChange={handleChange}
+            placeholder="Location"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-2">Description</label>
+          <textarea
+            className="w-full border rounded px-3 py-2"
+            name="description"
+            value={description}
+            onChange={handleChange}
+            rows={4}
+            placeholder="Job Description"
+            required
+          ></textarea>
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-2">Job Type</label>
+          <input
+            className="w-full border rounded px-3 py-2"
+            type="text"
+            name="type"
+            value={type}
+            onChange={handleChange}
+            placeholder="Full-time, Part-time, Contract, etc."
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-2">Salary</label>
+          <input
+            className="w-full border rounded px-3 py-2"
+            type="text"
+            name="salary"
+            value={salary}
+            onChange={handleChange}
+            placeholder="Salary range or amount"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-2">Requirements</label>
+          <textarea
+            className="w-full border rounded px-3 py-2"
+            name="requirements"
+            value={requirements}
+            onChange={handleChange}
+            rows={3}
+            placeholder="Job requirements or qualifications"
+            required
+          ></textarea>
+        </div>
+        <button
+          type="submit"
+          className="bg-[#177245] text-white px-6 py-2 rounded font-semibold hover:bg-green-700 transition"
+          disabled={loading}
+        >
+          {loading ? "Posting..." : "Post Job"}
+        </button>
+      </form>
+    </div>
+  );
+}
 
 export default function AdminDashboard() {
   const [sidebarCollapsed] = useState(true);
@@ -16,6 +167,9 @@ export default function AdminDashboard() {
     { id: 2, text: "Job post approved", read: false },
     { id: 3, text: "Password changed successfully", read: false },
   ]);
+
+  const [jobList, setJobList] = useState([]);
+  const [loadingJobs, setLoadingJobs] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -58,6 +212,26 @@ export default function AdminDashboard() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
+  const fetchJobs = async () => {
+    setLoadingJobs(true);
+    try {
+      const jobsData = await jobs.getAll();
+      setJobList(Array.isArray(jobsData) ? jobsData : jobsData.data); // adjust if your API returns {data: [...]}
+    } catch (err) {
+      setJobList([]);
+    } finally {
+      setLoadingJobs(false);
+    }
+  };
+
+  const handleJobPosted = async () => {
+    await fetchJobs();
+  };
+
   const markAsRead = (id) => {
     setNotifications((prev) =>
       prev.map((n) => (n.id === id ? { ...n, read: true } : n))
@@ -72,6 +246,7 @@ export default function AdminDashboard() {
     { name: "Applications", path: "/admin/applicants", icon: UserGroupIcon },
     { name: "Settings", path: "/admin/settings", icon: Cog6ToothIcon },
     { name: "Help", path: "/admin/help", icon: QuestionMarkCircleIcon },
+    { name: "Home", path: "/", icon: HomeIcon },
   ];
   const navigate = useNavigate();
   const location = useLocation();
@@ -88,57 +263,27 @@ export default function AdminDashboard() {
     navigate("/signin", { replace: true });
   };
 
-  const [applicants, setApplicants] = useState([
-    {
-      id: 1,
-      jobTitle: "Frontend Developer",
-      name: "Jane Doe",
-      email: "jane@example.com",
-      status: "pending",
-    },
-    {
-      id: 2,
-      jobTitle: "Backend Developer",
-      name: "John Smith",
-      email: "john@example.com",
-      status: "reviewed",
-    },
-  ]);
+  const [applicants, setApplicants] = useState([]);
+  useEffect(() => {
+    async function fetchApplicants() {
+      try {
+        const data = await jobs.getApplications(); // Implement this in your API
+        setApplicants(Array.isArray(data) ? data : data.data);
+      } catch {
+        setApplicants([]);
+      }
+    }
+    fetchApplicants();
+  }, []);
 
-  const handleStatusChange = (id, newStatus) => {
+  const handleStatusChange = async (id, newStatus) => {
     setApplicants((prev) =>
       prev.map((app) =>
         app.id === id ? { ...app, status: newStatus } : app
       )
     );
+    await jobs.updateApplicationStatus(id, newStatus); // Implement this in your API
   };
-
-  const JobPostingForm = () => (
-    <div className="bg-white p-8 rounded-lg shadow max-w-lg mx-auto">
-      <h2 className="text-xl font-bold mb-6 text-gray-800">Post a New Job</h2>
-      <form>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Job Title</label>
-          <input className="w-full border rounded px-3 py-2" type="text" placeholder="Job Title" />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Company</label>
-          <input className="w-full border rounded px-3 py-2" type="text" placeholder="Company Name" />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Location</label>
-          <input className="w-full border rounded px-3 py-2" type="text" placeholder="Location" />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Description</label>
-          <textarea className="w-full border rounded px-3 py-2" rows={4} placeholder="Job Description"></textarea>
-        </div>
-        <button type="submit" className="bg-[#177245] text-white px-6 py-2 rounded font-semibold hover:bg-green-700 transition">
-          Post Job
-        </button>
-      </form>
-    </div>
-  );
 
   const barChartData = [
     { name: 'Mon', applications: 30 },
@@ -161,7 +306,35 @@ export default function AdminDashboard() {
 
   const renderMainContent = () => {
     if (location.pathname === "/admin/jobs") {
-      return <JobPostingForm />;
+      return (
+        <div>
+          <JobPostingForm onJobPosted={handleJobPosted} />
+          <section className="mt-8">
+            <h2 className="text-xl font-bold mb-4">All Jobs</h2>
+            {loadingJobs ? (
+              <div>Loading jobs...</div>
+            ) : (
+              <ul>
+                {jobList.length === 0 ? (
+                  <li>No jobs found.</li>
+                ) : (
+                  jobList.map((job) => (
+                    <li key={job.id} className="mb-4 p-4 border rounded">
+                      <h3 className="font-bold text-lg">{job.title}</h3>
+                      <p className="text-gray-700">{job.location}</p>
+                      <p className="text-gray-600">{job.description}</p>
+                      <p className="text-gray-500">Requirements: {job.requirements}</p>
+                      <p className="text-xs text-gray-400">
+                        Posted at: {new Date(job.posted_at).toLocaleString()}
+                      </p>
+                    </li>
+                  ))
+                )}
+              </ul>
+            )}
+          </section>
+        </div>
+      );
     }
     if (location.pathname === "/admin/applicants") {
       return (
@@ -435,15 +608,7 @@ export default function AdminDashboard() {
                     aria-label={item.name}
                   >
                     <Icon className="h-5 w-5 flex-shrink-0" />
-                    {!(sidebarCollapsed && !sidebarHovered) && <span>{item.name}</span>}
-                    {location.pathname === item.path && (
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 rounded bg-[#177245]" />
-                    )}
-                    {sidebarCollapsed && !sidebarHovered && (
-                      <span className="absolute left-full ml-2 px-2 py-1 rounded bg-gray-900 text-white text-xs opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-20 whitespace-nowrap">
-                        {item.name}
-                      </span>
-                    )}
+                    <span>{item.name}</span>
                   </li>
                 );
               })}

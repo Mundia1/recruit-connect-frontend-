@@ -5,6 +5,7 @@ import Footer from "../components/layout/Footer";
 import JobCard from "../components/features/jobs/JobCard";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { jobs as jobsApi } from "../api/index"; // Use your backend API
 
 const PAGE_SIZE = 6;
 
@@ -18,13 +19,12 @@ export default function JobBoard() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/v1/jobs/")
-      .then((res) => res.json())
-      .then((data) => {
-        setJobs(data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
+    setLoading(true);
+    jobsApi
+      .getAll()
+      .then((data) => setJobs(Array.isArray(data) ? data : data.data))
+      .catch(() => setJobs([]))
+      .finally(() => setLoading(false));
   }, []);
 
   // Featured Jobs (Pick first 3 from jobs for now)
@@ -40,15 +40,23 @@ export default function JobBoard() {
   };
 
   const filteredJobs = jobs.filter((job) => {
+    const searchTerm = search.toLowerCase();
+
     const matchesSearch =
-      job.title.toLowerCase().includes(search.toLowerCase()) ||
-      job.company.toLowerCase().includes(search.toLowerCase());
+      (job.title?.toLowerCase() || "").includes(searchTerm) ||
+      (job.company?.toLowerCase() || "").includes(searchTerm) ||
+      (job.description?.toLowerCase() || "").includes(searchTerm) ||
+      (job.requirements?.toLowerCase() || "").includes(searchTerm) ||
+      (job.location?.toLowerCase() || "").includes(searchTerm);
+
     const matchesLocation = locationFilter
-      ? job.location.toLowerCase().includes(locationFilter)
+      ? (job.location?.toLowerCase() || "").includes(locationFilter.toLowerCase())
       : true;
+
     const matchesType = jobTypeFilter
-      ? getJobType(job.title) === jobTypeFilter
+      ? getJobType(job.title || "") === jobTypeFilter
       : true;
+
     return matchesSearch && matchesLocation && matchesType;
   });
 
@@ -93,7 +101,9 @@ export default function JobBoard() {
               className="bg-white shadow-lg rounded-xl p-6 hover:shadow-xl transition"
             >
               <h3 className="text-lg font-semibold mb-2">{job.title}</h3>
-              <p className="text-gray-600 mb-2">{job.company}</p>
+              {job.company ? (
+  <p className="text-gray-600 mb-2">{job.company}</p>
+) : null}
               <p className="text-gray-500 text-sm mb-4">{job.location}</p>
               <span className="inline-block bg-[#177245] text-white px-3 py-1 rounded-full text-sm">
                 Featured
@@ -146,24 +156,37 @@ export default function JobBoard() {
       {/* Jobs Grid */}
       <section className="max-w-7xl mx-auto px-4 pb-12">
         {loading ? (
-        <div className="text-center py-12">Loading jobs...</div>
-      ) : jobs.length === 0 ? (
-        <div className="text-center py-12">No jobs found.</div>
-      ) : (
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-
-          {jobsToShow.map((job, index) => (
-  <motion.div
-    key={job.id}
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5, delay: index * 0.1 }}
-  >
-    <JobCard job={job} />
-  </motion.div>
-))}
-
-        </div>
+          <div className="text-center py-12">Loading jobs...</div>
+        ) : jobs.length === 0 ? (
+          <div className="text-center py-12">No jobs found.</div>
+        ) : (
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3"
+         style={{ maxHeight: "600px", overflowY: "auto" }}>
+            {jobsToShow.map((job, index) => (
+              <motion.div
+                key={job.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <div className="bg-white shadow-lg rounded-xl p-6 hover:shadow-xl transition">
+                  <h3 className="text-lg font-semibold mb-2">{job.title}</h3>
+                  {/* Only show company if it exists */}
+                  {job.company && <p className="text-gray-600 mb-2">{job.company}</p>}
+                  <p className="text-gray-500 text-sm mb-2">{job.location}</p>
+                  <p className="text-gray-700 text-sm mb-2">{job.description}</p>
+                  <p className="text-gray-500 text-xs mb-2">Requirements: {job.requirements}</p>
+                  
+                  <button
+                    className="mt-2 bg-[#177245] text-white px-4 py-2 rounded font-semibold hover:bg-green-700 transition"
+                    onClick={() => navigate(`/jobs/${job.id}`)}
+                  >
+                    View & Apply
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         )}
       </section>
 

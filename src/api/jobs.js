@@ -1,111 +1,44 @@
-export const jobs = [
-  {
-    id: 1,
-    title: "Frontend Developer",
-    company: "Safaricom PLC",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 2,
-    title: "Backend Engineer",
-    company: "M-Pesa Africa",
-    location: "Dar es Salaam, Tanzania",
-  },
-  {
-    id: 3,
-    title: "UI/UX Designer",
-    company: "BRCK",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 4,
-    title: "Data Scientist",
-    company: "Twiga Foods",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 5,
-    title: "Full Stack Developer",
-    company: "Cellulant",
-    location: "Lagos, Nigeria (Remote)",
-  },
-  {
-    id: 6,
-    title: "Mobile App Developer",
-    company: "iHub",
-    location: "Kigali, Rwanda",
-  },
-  {
-    id: 7,
-    title: "Digital Marketing Specialist",
-    company: "Andela",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 8,
-    title: "Cloud Engineer",
-    company: "Equity Bank",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 9,
-    title: "DevOps Engineer",
-    company: "KCB Bank Group",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 10,
-    title: "IT Support Specialist",
-    company: "Kenya Airways",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 11,
-    title: "Business Analyst",
-    company: "Co-operative Bank",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 12,
-    title: "Product Manager",
-    company: "M-KOPA",
-    location: "Kampala, Uganda",
-  },
-  {
-    id: 13,
-    title: "Software QA Engineer",
-    company: "Sendy",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 14,
-    title: "Data Engineer",
-    company: "PesaPal",
-    location: "Nairobi, Kenya",
-  },
-  {
-    id: 15,
-    title: "Cybersecurity Analyst",
-    company: "Safaricom PLC",
-    location: "Nairobi, Kenya",
-  },
-];
-
 export async function fetchJobs() {
   const response = await fetch('http://localhost:5000/api/v1/jobs/');
   if (!response.ok) throw new Error('Failed to fetch jobs');
   return response.json();
 }
 
+export async function getAll() {
+  const response = await fetch('http://localhost:5000/api/v1/jobs/');
+  if (!response.ok) throw new Error('Failed to fetch jobs');
+  return response.json();
+}
+
 export async function applyForJob(jobId, token) {
-  const response = await fetch('http://localhost:5000/api/v1/applications', {
+  const response = await fetch('http://localhost:5000/api/v1/applications/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
     },
-    body: JSON.stringify({ job_id: jobId }),
+    body: JSON.stringify({ job_posting_id: jobId }),
   });
   if (!response.ok) throw new Error('Application failed');
   return response.json();
 }
+
+export async function getById(id) {
+  const response = await fetch(`http://localhost:5000/api/v1/jobs/${id}`);
+  if (!response.ok) throw new Error('Failed to fetch job');
+  return response.json();
+}
+
+export async function create(jobData) {
+  const response = await fetch('http://localhost:5000/api/v1/jobs/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem("token")}`,
+    },
+    body: JSON.stringify(jobData),
+  });
+  if (!response.ok) throw new Error('Failed to create job');
+  return response.json();
+}
+
