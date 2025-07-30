@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { applicationService } from "../../../api_service/applications";
 import { jobService } from "../../../api_service/jobs";
 import { useAuthContext } from "../../../context/AuthContext";
+import { toast } from "react-hot-toast";
 
 export default function ApplyJob() {
   const { id } = useParams(); // jobId from URL
@@ -12,14 +13,8 @@ export default function ApplyJob() {
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [formData, setFormData] = useState({
-    coverLetter: "",
-    resume: null,
-  });
   const [submitting, setSubmitting] = useState(false);
-  const [message, setMessage] = useState("");
 
-  // ✅ Fetch Job Details for context
   useEffect(() => {
     const fetchJob = async () => {
       try {
@@ -35,49 +30,41 @@ export default function ApplyJob() {
     fetchJob();
   }, [id]);
 
-  // ✅ Handle input changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  // ✅ Handle resume file upload
-  const handleFileChange = (e) => {
-    setFormData((prev) => ({ ...prev, resume: e.target.files[0] }));
-  };
-
-  // ✅ Submit Application
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleApply = async () => {
     setSubmitting(true);
-    setMessage("");
-
-    console.log('Submitting application with:', {
-      ...formData,
-      userId: user?.id,
-      jobId: id,
-    });
-
     if (!user) {
-      setMessage("❌ You must be logged in to apply.");
+      toast.error("You must be logged in to apply.");
       setSubmitting(false);
       return;
     }
 
-    try {
-      const data = new FormData();
-      data.append("job_posting_id", id);
-      data.append("user_id", user.id);
-      data.append("cover_letter", formData.coverLetter);
-      if (formData.resume) {
-        data.append("resume", formData.resume);
-      }
+    // Open a new window immediately to bypass pop-up blockers
+    const newWindow = window.open('about:blank', '_blank');
+    if (!newWindow) {
+      toast.error('Pop-up blocked! Please allow pop-ups for this site.');
+      setSubmitting(false);
+      return;
+    }
 
-      await applicationService.createApplication(data);
-      setMessage("✅ Application submitted successfully!");
+    const jobPostingId = Number(id);
+    const userId = Number(user.id);
+    console.log('Submitting application with:', { job_posting_id: jobPostingId, user_id: userId });
+
+    try {
+      const response = await applicationService.submitApplication({ job_posting_id: jobPostingId, user_id: userId });
+      console.log('Backend response:', response);
+      if (response.google_form_url) {
+        newWindow.location.href = response.google_form_url;
+      } else {
+        console.error('Google Form URL not found in backend response.', response);
+        toast.error('Failed to get Google Form URL.');
+        newWindow.close(); // Close the blank window if no URL
+      }
+      toast.success("Application submitted successfully!");
       setTimeout(() => navigate("/applications"), 2000); // Redirect after success
     } catch (err) {
-      setMessage("❌ Failed to submit application. Please try again.");
+      toast.error("Failed to submit application. Please try again.");
+      newWindow.close(); // Close the blank window on error
     } finally {
       setSubmitting(false);
     }
@@ -93,43 +80,16 @@ export default function ApplyJob() {
         Apply for {job.title}
       </h1>
 
-      {message && (
-        <div className={`mb-4 p-3 rounded ${message.startsWith("✅") ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
-          {message}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-6 space-y-4">
-        <div>
-          <label className="block text-gray-700 font-semibold mb-1">Cover Letter</label>
-          <textarea
-            name="coverLetter"
-            value={formData.coverLetter}
-            onChange={handleChange}
-            rows="4"
-            placeholder="Write a short message..."
-            className="w-full border px-4 py-2 rounded-lg focus:ring focus:ring-green-200"
-          />
-        </div>
-
-        <div>
-          <label className="block text-gray-700 font-semibold mb-1">Resume (PDF)</label>
-          <input
-            type="file"
-            accept=".pdf"
-            onChange={handleFileChange}
-            className="w-full border px-4 py-2 rounded-lg"
-          />
-        </div>
-
+      <div className="bg-white shadow-md rounded-lg p-6 space-y-4">
+        <p className="text-gray-700">You are about to apply for the position of <strong>{job.title}</strong> at <strong>{job.company_name}</strong>. Click the button below to proceed to the application form.</p>
         <button
-          type="submit"
+          onClick={handleApply}
           disabled={submitting}
           className="bg-[#177245] text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition disabled:bg-gray-400 w-full"
         >
-          {submitting ? "Submitting..." : "Submit Application"}
+          {submitting ? "Submitting..." : "Proceed to Application Form"}
         </button>
-      </form>
+      </div>
     </div>
   );
 }

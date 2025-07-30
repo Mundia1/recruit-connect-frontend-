@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import StatisticsCard from "../components/features/analytics/StatisticsCard";
 import BarChart from "../components/features/analytics/BarChart";
@@ -12,8 +12,13 @@ import {
   QuestionMarkCircleIcon,
   BellIcon,
 } from "@heroicons/react/24/outline";
+import { applicationService } from "../api_service/applications";
+import { jobService } from "../api_service/jobs";
+import { jobViewService } from "../api_service/jobView";
+import { useAuthContext } from "../context/AuthContext";
 
 export default function AdminDashboard() {
+  const { user, loading: authLoading } = useAuthContext();
   const [sidebarCollapsed] = useState(true);
   const [sidebarHovered, setSidebarHovered] = useState(false);
 
@@ -47,83 +52,149 @@ export default function AdminDashboard() {
     navigate("/signin", { replace: true });
   };
 
-  const [applicants, setApplicants] = useState([
-    {
-      id: 1,
-      jobTitle: "Frontend Developer",
-      name: "Jane Doe",
-      email: "jane@example.com",
-      status: "pending",
-    },
-    {
-      id: 2,
-      jobTitle: "Backend Developer",
-      name: "John Smith",
-      email: "john@example.com",
-      status: "reviewed",
-    },
-  ]);
+  const [applicants, setApplicants] = useState([]);
+  const [jobs, setJobs] = useState([]);
+  const [jobViews, setJobViews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleStatusChange = (id, newStatus) => {
-    setApplicants((prev) =>
-      prev.map((app) => (app.id === id ? { ...app, status: newStatus } : app))
+  useEffect(() => {
+    const fetchData = async () => {
+      if (authLoading) return; // Wait for auth context to load
+
+      if (!user || user.role !== "admin") {
+        setError(new Error("Access Denied: You must be an administrator to view this page."));
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const currentYear = new Date().getFullYear();
+        const currentMonth = new Date().getMonth() + 1; // Month is 0-indexed
+
+        const [applicationsData, jobsData, jobViewsData] = await Promise.all([
+          applicationService.getAllApplications(),
+          jobService.getAllJobs(),
+          jobViewService.getMonthlyJobViews(currentYear, currentMonth),
+        ]);
+        console.log("Applications Data:", applicationsData);
+        console.log("Jobs Data:", jobsData);
+        console.log("Job Views Data (full object):", jobViewsData);
+        setApplicants(applicationsData || []);
+        setJobs(jobsData || []);
+        setJobViews(jobViewsData.views || []);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [user, authLoading]);
+
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      await applicationService.updateApplicationStatus(id, { status: newStatus });
+      setApplicants((prev) =>
+        prev.map((app) => (app.id === id ? { ...app, status: newStatus } : app))
+      );
+    } catch (err) {
+      console.error("Failed to update application status:", err);
+      setError(err);
+    }
+  };
+
+  const JobPostingForm = () => {
+    const [jobTitle, setJobTitle] = useState("");
+    const [company, setCompany] = useState("");
+    const [location, setLocation] = useState("");
+    const [description, setDescription] = useState("");
+
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      try {
+        await jobService.createJob({
+          title: jobTitle,
+          company,
+          location,
+          description,
+        });
+        alert("Job posted successfully!");
+        // Optionally, refresh job list or navigate
+        setJobTitle("");
+        setCompany("");
+        setLocation("");
+        setDescription("");
+      } catch (err) {
+        console.error("Failed to post job:", err);
+        alert("Failed to post job.");
+      }
+    };
+
+    return (
+      <div className="bg-white p-8 rounded-lg shadow max-w-lg mx-auto">
+        <h2 className="text-xl font-bold mb-6 text-gray-800">Post a New Job</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-gray-700 font-medium mb-2">
+              Job Title
+            </label>
+            <input
+              className="w-full border rounded px-3 py-2"
+              type="text"
+              placeholder="Job Title"
+              value={jobTitle}
+              onChange={(e) => setJobTitle(e.target.value)}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 font-medium mb-2">
+              Company
+            </label>
+            <input
+              className="w-full border rounded px-3 py-2"
+              type="text"
+              placeholder="Company Name"
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 font-medium mb-2">
+              Location
+            </label>
+            <input
+              className="w-full border rounded px-3 py-2"
+              type="text"
+              placeholder="Location"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 font-medium mb-2">
+              Description
+            </label>
+            <textarea
+              className="w-full border rounded px-3 py-2"
+              rows={4}
+              placeholder="Job Description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            ></textarea>
+          </div>
+          <button
+            type="submit"
+            className="bg-[#177245] text-white px-6 py-2 rounded font-semibold hover:bg-green-700 transition"
+          >
+            Post Job
+          </button>
+        </form>
+      </div>
     );
   };
 
-  const JobPostingForm = () => (
-    <div className="bg-white p-8 rounded-lg shadow max-w-lg mx-auto">
-      <h2 className="text-xl font-bold mb-6 text-gray-800">Post a New Job</h2>
-      <form>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">
-            Job Title
-          </label>
-          <input
-            className="w-full border rounded px-3 py-2"
-            type="text"
-            placeholder="Job Title"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">
-            Company
-          </label>
-          <input
-            className="w-full border rounded px-3 py-2"
-            type="text"
-            placeholder="Company Name"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">
-            Location
-          </label>
-          <input
-            className="w-full border rounded px-3 py-2"
-            type="text"
-            placeholder="Location"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">
-            Description
-          </label>
-          <textarea
-            className="w-full border rounded px-3 py-2"
-            rows={4}
-            placeholder="Job Description"
-          ></textarea>
-        </div>
-        <button
-          type="submit"
-          className="bg-[#177245] text-white px-6 py-2 rounded font-semibold hover:bg-green-700 transition"
-        >
-          Post Job
-        </button>
-      </form>
-    </div>
-  );
-
+  // Placeholder data for charts - no direct API for analytics yet
   const barChartData = [
     { name: "Mon", applications: 30 },
     { name: "Tue", applications: 45 },
@@ -133,17 +204,11 @@ export default function AdminDashboard() {
     { name: "Sat", applications: 20 },
     { name: "Sun", applications: 15 },
   ];
-  const lineChartData = [
-    { name: "Mon", views: 120 },
-    { name: "Tue", views: 200 },
-    { name: "Wed", views: 150 },
-    { name: "Thu", views: 180 },
-    { name: "Fri", views: 220 },
-    { name: "Sat", views: 90 },
-    { name: "Sun", views: 60 },
-  ];
 
   const renderMainContent = () => {
+    if (loading) return <div className="text-center py-8">Loading data...</div>;
+    if (error) return <div className="text-center py-8 text-red-500">Error: {error.message}</div>;
+
     if (location.pathname === "/admin/jobs") return <JobPostingForm />;
     if (location.pathname === "/admin/applicants")
       return (
@@ -165,7 +230,9 @@ export default function AdminDashboard() {
                 <tr key={app.id}>
                   <td className="py-2 px-4 border-b">{app.jobTitle}</td>
                   <td className="py-2 px-4 border-b">{app.name}</td>
-                  <td className="py-2 px-4 border-b">{app.email}</td>
+                  <td className="py-2 px-4 border-b">
+                    {app.email}
+                  </td>
                   <td className="py-2 px-4 border-b">
                     <select
                       className="border rounded px-2 py-1"
@@ -259,25 +326,25 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-3 gap-6 mb-8">
           <StatisticsCard
             title="Active Jobs"
-            value={90}
+            value={jobs.length}
             subtitle="Total jobs currently open"
-            trend={"+5%"}
+            trend={""}
             icon={BriefcaseIcon}
             iconBgColor="bg-green-50"
             iconColor="text-green-600"
           />
           <StatisticsCard
             title="Applications"
-            value={320}
+            value={applicants.length}
             subtitle="Total applications received"
-            trend={"+15%"}
+            trend={""}
             icon={UserGroupIcon}
             iconBgColor="bg-blue-50"
             iconColor="text-blue-600"
           />
           <StatisticsCard
             title="Views"
-            value={1200}
+            value={jobViews.reduce((sum, view) => sum + view.views, 0)}
             subtitle="Profile/job views"
             trend={"+8%"}
             icon={EyeIcon}
@@ -296,7 +363,7 @@ export default function AdminDashboard() {
           />
           <LineChart
             title="Views per Day"
-            data={lineChartData}
+            data={jobViews.map(view => ({ name: `Day ${view.day}`, views: view.views }))}
             dataKey="views"
             stroke="#16a34a"
             showTitle={true}

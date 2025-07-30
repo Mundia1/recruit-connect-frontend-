@@ -1,101 +1,92 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { useAuthContext } from "../context/AuthContext";
-import { jobService } from "../api_service";
-import Navbar from "../components/layout/Navbar";
-import Footer from "../components/layout/Footer";
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { jobService } from '../api_service/jobs';
+import { applicationService } from '../api_service/applications';
+import { toast } from 'react-hot-toast';
+import useAuth from '../hooks/useAuth';
 
-const API_BASE = import.meta.env.VITE_API_URL; 
-
-export default function JobDetails() {
-  const { id } = useParams(); 
-  const navigate = useNavigate();
-
+const JobDetails = () => {
+  const { jobId } = useParams();
   const [job, setJob] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
-    console.log('JobDetails useEffect triggered for ID:', id);
     const fetchJob = async () => {
       try {
-        const res = await jobService.getJobById(id);
-        console.log('Job Details API response:', res);
-        setJob(res);
-      } catch (err) {
-        setError("Failed to load job details.");
-        console.error('Job Details API error:', err);
-      } finally {
-        setLoading(false);
+        const response = await jobService.getJobById(jobId);
+        setJob(response.data);
+      } catch (error) {
+        toast.error('Failed to load job details');
+        navigate('/jobs');
       }
     };
+
     fetchJob();
-  }, [id]);
+  }, [jobId, navigate]);
 
-  if (loading) {
-    return (
-      <>
-        <Navbar />
-        <div className="text-center py-10 text-gray-600">Loading job details...</div>
-        <Footer />
-      </>
-    );
-  }
+  const handleApply = async () => {
+    // Open a new window immediately to bypass pop-up blockers
+    const newWindow = window.open('about:blank', '_blank');
+    if (!newWindow) {
+      toast.error('Pop-up blocked! Please allow pop-ups for this site.');
+      return;
+    }
 
-  if (error) {
-    return (
-      <>
-        <Navbar />
-        <div className="text-center py-10 text-red-500">{error}</div>
-        <Footer />
-      </>
-    );
-  }
+    const jobPostingId = Number(jobId);
+    const userId = Number(user.id);
+    console.log('Submitting application with:', { job_posting_id: jobPostingId, user_id: userId });
 
-  if (!job) {
-    console.log('Job not found for ID:', id);
-    return (
-      <>
-        <Navbar />
-        <div className="text-center py-10 text-gray-500">Job not found.</div>
-        <Footer />
-      </>
-    );
-  }
-
-  const { user } = useAuthContext();
-
-  const handleApplyNow = () => {
-    if (!user) {
-      navigate(`/signin?redirect=/jobs/${job.id}/apply`);
-    } else {
-      navigate(`/jobs/${job.id}/apply`);
+    try {
+      const response = await applicationService.submitApplication({ job_posting_id: jobPostingId, user_id: userId });  // save in DB
+      console.log('Backend response:', response);
+      if (response.google_form_url) {
+        newWindow.location.href = response.google_form_url;
+      } else {
+        console.error('Google Form URL not found in backend response.', response);
+        toast.error('Failed to get Google Form URL.');
+        newWindow.close(); // Close the blank window if no URL
+      }
+    } catch (err) {
+      toast.error('Application failed.');
+      newWindow.close(); // Close the blank window on error
     }
   };
 
-  return (
-    <>
-      <Navbar />
-      <div className="max-w-4xl mx-auto px-4 py-12">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">{job.title}</h1>
-        <p className="text-gray-600 mb-2">
-          <strong>Company:</strong> {job.company}
-        </p>
-        <p className="text-gray-600 mb-2">
-          <strong>Location:</strong> {job.location}
-        </p>
-        <p className="text-gray-700 mt-6 leading-relaxed">{job.description}</p>
-
-        <div className="mt-8">
-          <button
-            onClick={handleApplyNow}
-            className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition"
-          >
-            Apply Now
-          </button>
-        </div>
+  if (!job) {
+    return (
+      <div className="flex justify-center items-center h-96">
+        <p className="text-gray-600 text-lg">Loading job details...</p>
       </div>
-      <Footer />
-    </>
+    );
+  }
+
+  return (
+    <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md mt-6">
+      <h1 className="text-3xl font-bold mb-4">{job.title}</h1>
+      <p className="text-gray-700 mb-2"><strong>Company:</strong> {job.company_name}</p>
+      <p className="text-gray-700 mb-2"><strong>Location:</strong> {job.location}</p>
+      <p className="text-gray-700 mb-2"><strong>Job Type:</strong> {job.job_type}</p>
+      <p className="text-gray-700 mb-4"><strong>Description:</strong></p>
+      <div className="text-gray-800 whitespace-pre-line mb-4">{job.description}</div>
+
+      {/* Replace any old form with just this */}
+      <div className="flex justify-between mt-6">
+        <button
+          onClick={handleApply}
+          className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition"
+        >
+          Apply Now
+        </button>
+        <button
+          onClick={() => navigate(-1)}
+          className="bg-gray-300 text-gray-800 px-6 py-2 rounded hover:bg-gray-400 transition"
+        >
+          Back
+        </button>
+      </div>
+    </div>
   );
-}
+};
+
+export default JobDetails;

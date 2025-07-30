@@ -3,8 +3,6 @@ import Navbar from '../components/layout/Navbar';
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-import { feedbackService } from '../api_service/feedback';
 import { useAuthContext } from '../context/AuthContext'; 
 
 const ratings = [1, 2, 3, 4, 5];
@@ -15,12 +13,15 @@ const ApplicationFeedback = () => {
   const [loading, setLoading] = useState(false);
   const { user } = useAuthContext();
   const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!rating) {
       toast.error("Please select a rating.");
       return;
     }
+
     if (!user) {
       toast.error("You must be logged in to submit feedback."); 
       setTimeout(() => navigate("/signin"), 3000);
@@ -28,30 +29,36 @@ const ApplicationFeedback = () => {
     }
 
     setLoading(true);
-    const feedbackData = {
-      rating: rating,
-      comment: comment,
-      user_id: user.id,
-      job_application_id: 1
-    };
+
+    const form = e.target;
+    const formData = new FormData(form);
 
     try {
-      await feedbackService.submitFeedback(feedbackData);
-      
-      toast.success("Thank you! Your feedback has been submitted.");
+      const response = await fetch("https://formspree.io/f/xqalbwyq", {
+        method: "POST",
+        body: formData,
+        headers: {
+          Accept: "application/json",
+        },
+      });
 
-      setRating(null);
-      setComment("");
-
-      setTimeout(() => navigate("/dashboard"), 2000);
+      if (response.ok) {
+        toast.success("Thank you! Your feedback has been submitted.");
+        setRating(null);
+        setComment("");
+        setTimeout(() => navigate("/dashboard"), 2000);
+      } else {
+        toast.error("Failed to submit feedback. Please try again.");
+      }
 
     } catch (error) {
-      toast.error("Failed to submit feedback. Please try again.");
-      console.error("Feedback submission error:", error);
+      toast.error("An error occurred. Please try again.");
+      console.error(error);
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <div className="bg-[#F7FCFA] min-h-screen">
       <ToastContainer position="top-center" autoClose={5000} hideProgressBar={false} />
@@ -66,6 +73,10 @@ const ApplicationFeedback = () => {
           </p>
         </div>
         <form onSubmit={handleSubmit} className="w-full max-w-lg space-y-6">
+          <input type="hidden" name="user_email" value={user?.email || "guest"} />
+          <input type="hidden" name="user_id" value={user?.id || "guest"} />
+          <input type="hidden" name="job_application_id" value="1" />
+
           <div className="flex justify-center space-x-3">
             {ratings.map((num) => (
               <button
@@ -84,12 +95,14 @@ const ApplicationFeedback = () => {
                 {num}
               </button>
             ))}
+            <input type="hidden" name="rating" value={rating || ""} />
           </div>
           
           <div>
             <textarea
               className="w-full border border-[#D1E5D9] rounded-xl p-4 min-h-[140px] focus:outline-none focus:ring-2 focus:ring-[#21C259] bg-white"
               placeholder="Tell us more about your experience..."
+              name="comment"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               required

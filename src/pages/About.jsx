@@ -43,9 +43,9 @@ export default function About() {
     { name: "Anderson", title: "Team Member", img: "/images/andy.jpg" },
     { name: "Christine", title: "Team Member", img: "/images/Mworia.jpeg" },
     { name: "Eugene", title: "Team Member", img: "/images/wekesa.jpeg" },
-    { name: "Regina", title: "Team Member", img: "/images/Wanjiku.jpeg" },
+    { name: "Regina", title: "Team Member", img: "/images/wanjiru.jpeg" },
     { name: "Priscillah", title: "Team Member", img: "/images/pree.jpeg" },
-    { name: "Brian", title: "Team Member", img: "/images/brian.jpg" }
+    { name: "Brian", title: "Team Member", img: "/images/kaloki.jpeg" }
   ];
 
   return (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { applicationService } from '../api_service';
+import { applicationService } from '../api_service/applications';
 
 const JobApplications = () => {
   const [activeTab, setActiveTab] = useState('Active');
