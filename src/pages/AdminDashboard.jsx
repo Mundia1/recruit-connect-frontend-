@@ -78,8 +78,12 @@ export default function AdminDashboard() {
           jobService.getAllJobs(),
           jobViewService.getMonthlyJobViews(currentYear, currentMonth),
         ]);
-        console.log("Applications Data for Admin Dashboard:", JSON.stringify(applicationsData, null, 2));
-        setApplicants(applicationsData);
+        setApplicants(applicationsData.map(app => ({
+          ...app,
+          jobTitle: app.title, // Use app.title directly for job title
+          name: "N/A", // Applicant name not available in current API response
+          email: "N/A" // Applicant email not available in current API response
+        })));
         setJobs(jobsData);
         setJobViews(jobViewsData.data.map(view => ({
           name: `Job ID ${view.job_id}`,
