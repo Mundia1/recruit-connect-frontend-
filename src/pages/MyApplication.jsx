@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { applicationService } from '../api_service/applications';
+import { jobService } from '../api_service/jobs'; // Import jobService
+import { useAuthContext } from "../context/AuthContext";
+import { formatDate } from "../utils/formatDate";
 
 const JobApplications = () => {
+  const { user } = useAuthContext();
   const [activeTab, setActiveTab] = useState('Active');
   const [openDropdown, setOpenDropdown] = useState(null);
   const [applications, setApplications] = useState([]);
@@ -10,20 +14,33 @@ const JobApplications = () => {
 
   useEffect(() => {
     const fetchApplications = async () => {
+      if (!user) {
+        setLoading(false);
+        setError("Please sign in to view your applications.");
+        return;
+      }
       try {
         setLoading(true);
-        const response = await applicationsService.getUserApplications();
-        setApplications(response.data || []);
+        const applicationsResponse = await applicationService.getAllApplications({ userId: user.id });
+        
+        // Fetch job details for each application
+        const applicationsWithJobDetails = await Promise.all(
+          applicationsResponse.map(async (app) => {
+            const jobDetails = await jobService.getJobById(app.job_posting_id);
+            return { ...app, jobDetails };
+          })
+        );
+        setApplications(applicationsWithJobDetails || []);
       } catch (err) {
-        setError('Failed to fetch applications.');
-        console.error('Error fetching applications:', err);
+        console.error("Error fetching applications:", err);
+        setError("Failed to load applications. Please try again later.");
       } finally {
         setLoading(false);
       }
     };
 
     fetchApplications();
-  }, []);
+  }, [user]);
 
   const toggleDropdown = (id) => {
     setOpenDropdown(openDropdown === id ? null : id);
@@ -35,7 +52,7 @@ const JobApplications = () => {
   };
 
   const filteredApplications = applications.filter(app => 
-    activeTab === 'Active' ? app.isActive : !app.isActive
+    activeTab === 'Active' ? app.status !== 'Rejected' && app.status !== 'Approved' : app.status === 'Rejected' || app.status === 'Approved'
   );
 
   return (
@@ -142,9 +159,9 @@ const JobApplications = () => {
                     {filteredApplications.map((app) => (
                       <React.Fragment key={app.id}>
                         <tr className="border-t border-t-[#cee8d9]">
-                          <td className="h-[72px] px-4 py-2 w-[400px] text-[#0d1c13] text-sm font-normal leading-normal">{app.title}</td>
-                          <td className="h-[72px] px-4 py-2 w-[400px] text-[#499c6c] text-sm font-normal leading-normal">{app.company}</td>
-                          <td className="h-[72px] px-4 py-2 w-[400px] text-[#499c6c] text-sm font-normal leading-normal">{app.date}</td>
+                          <td className="h-[72px] px-4 py-2 w-[400px] text-[#0d1c13] text-sm font-normal leading-normal">{app.jobDetails?.data?.title}</td>
+                          <td className="h-[72px] px-4 py-2 w-[400px] text-[#499c6c] text-sm font-normal leading-normal">{app.jobDetails?.data?.company}</td>
+                          <td className="h-[72px] px-4 py-2 w-[400px] text-[#499c6c] text-sm font-normal leading-normal">{formatDate(app.applied_at)}</td>
                           <td className="h-[72px] px-4 py-2 w-60 text-sm font-normal leading-normal">
                             <button className={`flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-8 px-4 ${
                               app.status === 'Accepted' ? 'bg-[#e7f4ec] text-[#06823a]' : 

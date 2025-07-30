@@ -1,16 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { getApplications } from "../api/api";
+import { applicationService } from "../../api_service/applications";
+import { formatDate } from "../../utils/formatDate";
+import { useAuthContext } from "../../context/AuthContext";
 
 export default function ApplicationHistory() {
+  const { user } = useAuthContext();
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchApplications = async () => {
+      if (!user) {
+        setLoading(false);
+        setError("Please sign in to view your applications.");
+        return;
+      }
       try {
-        const response = await getApplications();
-        setApplications(response.data);
+        const response = await applicationService.getAllApplications({ userId: user.id });
+        setApplications(response);
       } catch (err) {
         console.error("Error fetching applications:", err);
         setError("Failed to load your applications. Please try again.");
@@ -20,7 +28,7 @@ export default function ApplicationHistory() {
     };
 
     fetchApplications();
-  }, []);
+  }, [user]);
 
   if (loading) {
     return <div className="text-center py-10">Loading your applications...</div>;
@@ -46,7 +54,7 @@ export default function ApplicationHistory() {
           >
             <h2 className="text-xl font-semibold text-gray-800">{app.jobTitle}</h2>
             <p className="text-gray-600">{app.company}</p>
-            <p className="text-gray-500 text-sm mt-2">Applied on: {new Date(app.appliedAt).toLocaleDateString()}</p>
+            <p className="text-gray-500 text-sm mt-2">Applied on: {formatDate(app.appliedAt)}</p>
             <p className="mt-4 text-gray-700">{app.status || "Pending"}</p>
           </div>
         ))}

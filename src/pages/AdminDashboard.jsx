@@ -55,6 +55,7 @@ export default function AdminDashboard() {
   const [applicants, setApplicants] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [jobViews, setJobViews] = useState([]);
+  const [applicationsPerDayData, setApplicationsPerDayData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -77,12 +78,27 @@ export default function AdminDashboard() {
           jobService.getAllJobs(),
           jobViewService.getMonthlyJobViews(currentYear, currentMonth),
         ]);
-        console.log("Applications Data:", applicationsData);
-        console.log("Jobs Data:", jobsData);
-        console.log("Job Views Data (full object):", jobViewsData);
-        setApplicants(applicationsData || []);
-        setJobs(jobsData || []);
-        setJobViews(jobViewsData.views || []);
+        console.log("Applications Data for Admin Dashboard:", JSON.stringify(applicationsData, null, 2));
+        setApplicants(applicationsData);
+        setJobs(jobsData);
+        setJobViews(jobViewsData.data.map(view => ({
+          name: `Job ID ${view.job_id}`,
+          views: view.total_views
+        })));
+
+        // Process applications data for BarChart
+        const dailyApplications = applicationsData.reduce((acc, app) => {
+          const date = new Date(app.applied_at).toLocaleDateString(); // Using 'applied_at' field
+          acc[date] = (acc[date] || 0) + 1;
+          return acc;
+        }, {});
+
+        const formattedDailyApplications = Object.keys(dailyApplications).map(date => ({
+          name: date,
+          applications: dailyApplications[date],
+        }));
+        setApplicationsPerDayData(formattedDailyApplications);
+
       } catch (err) {
         setError(err);
       } finally {
@@ -105,28 +121,45 @@ export default function AdminDashboard() {
   };
 
   const JobPostingForm = () => {
+    const { user } = useAuthContext();
     const [jobTitle, setJobTitle] = useState("");
     const [company, setCompany] = useState("");
     const [location, setLocation] = useState("");
     const [description, setDescription] = useState("");
+    const [salary, setSalary] = useState("");
+    const [jobType, setJobType] = useState("");
+    const [requirements, setRequirements] = useState("");
+    const [deadline, setDeadline] = useState("");
 
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {
-        await jobService.createJob({
+        const jobData = {
           title: jobTitle,
           company,
           location,
           description,
-        });
+          admin_id: user.id, // Assuming user.id is the admin_id
+          salary: salary ? parseInt(salary) : undefined,
+          job_type: jobType || undefined,
+          requirements: requirements || undefined,
+          deadline: deadline ? new Date(deadline).toISOString() : undefined,
+        };
+        console.log("Attempting to post job with data:", jobData);
+        await jobService.createJob(jobData);
         alert("Job posted successfully!");
         // Optionally, refresh job list or navigate
         setJobTitle("");
         setCompany("");
         setLocation("");
         setDescription("");
+        setSalary("");
+        setJobType("");
+        setRequirements("");
+        setDeadline("");
       } catch (err) {
         console.error("Failed to post job:", err);
+        console.error("Job posting error details:", err.response?.data || err.message);
         alert("Failed to post job.");
       }
     };
@@ -145,6 +178,7 @@ export default function AdminDashboard() {
               placeholder="Job Title"
               value={jobTitle}
               onChange={(e) => setJobTitle(e.target.value)}
+              required
             />
           </div>
           <div className="mb-4">
@@ -157,6 +191,7 @@ export default function AdminDashboard() {
               placeholder="Company Name"
               value={company}
               onChange={(e) => setCompany(e.target.value)}
+              required
             />
           </div>
           <div className="mb-4">
@@ -169,6 +204,7 @@ export default function AdminDashboard() {
               placeholder="Location"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
+              required
             />
           </div>
           <div className="mb-4">
@@ -181,7 +217,61 @@ export default function AdminDashboard() {
               placeholder="Job Description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              required
             ></textarea>
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 font-medium mb-2">
+              Salary (Optional)
+            </label>
+            <input
+              className="w-full border rounded px-3 py-2"
+              type="number"
+              placeholder="Salary"
+              value={salary}
+              onChange={(e) => setSalary(e.target.value)}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 font-medium mb-2">
+              Job Type (Optional)
+            </label>
+            <select
+              className="w-full border rounded px-3 py-2"
+              value={jobType}
+              onChange={(e) => setJobType(e.target.value)}
+            >
+              <option value="">Select Job Type</option>
+              <option value="Full-time">Full-time</option>
+              <option value="Part-time">Part-time</option>
+              <option value="Contract">Contract</option>
+              <option value="Temporary">Temporary</option>
+              <option value="Internship">Internship</option>
+              <option value="Volunteer">Volunteer</option>
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 font-medium mb-2">
+              Requirements (Optional)
+            </label>
+            <textarea
+              className="w-full border rounded px-3 py-2"
+              rows={3}
+              placeholder="Job Requirements"
+              value={requirements}
+              onChange={(e) => setRequirements(e.target.value)}
+            ></textarea>
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 font-medium mb-2">
+              Application Deadline (Optional)
+            </label>
+            <input
+              className="w-full border rounded px-3 py-2"
+              type="datetime-local"
+              value={deadline}
+              onChange={(e) => setDeadline(e.target.value)}
+            />
           </div>
           <button
             type="submit"
@@ -194,16 +284,7 @@ export default function AdminDashboard() {
     );
   };
 
-  // Placeholder data for charts - no direct API for analytics yet
-  const barChartData = [
-    { name: "Mon", applications: 30 },
-    { name: "Tue", applications: 45 },
-    { name: "Wed", applications: 38 },
-    { name: "Thu", applications: 52 },
-    { name: "Fri", applications: 41 },
-    { name: "Sat", applications: 20 },
-    { name: "Sun", applications: 15 },
-  ];
+  const barChartData = applicationsPerDayData;
 
   const renderMainContent = () => {
     if (loading) return <div className="text-center py-8">Loading data...</div>;
@@ -355,7 +436,7 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-2 gap-6">
           <BarChart
             title="Applications per Day"
-            data={barChartData}
+            data={applicationsPerDayData}
             dataKey="applications"
             fill="#3b82f6"
             showTitle={true}
@@ -363,7 +444,7 @@ export default function AdminDashboard() {
           />
           <LineChart
             title="Views per Day"
-            data={jobViews.map(view => ({ name: `Day ${view.day}`, views: view.views }))}
+            data={jobViews}
             dataKey="views"
             stroke="#16a34a"
             showTitle={true}

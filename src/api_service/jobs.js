@@ -22,7 +22,7 @@ export const jobService = {
 
     createJob: async (jobData, options = {}) => {
         try {
-            const response = await apiClient('/jobs', { body: jobData, method: 'POST', ...options });
+            const response = await apiClient('/jobs/', { body: jobData, method: 'POST', ...options });
             return response;
         } catch (error) {
             throw new ApiError(error.message, error.status, error.data);
