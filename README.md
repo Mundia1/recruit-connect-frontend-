@@ -2,6 +2,8 @@
 
 A modern and intuitive platform for connecting talented professionals with their dream jobs. This project provides a comprehensive user interface for both job seekers and employers, featuring a rich set of components for a seamless user experience.
 
+Backend Deployment Link - https://recruitconnectbackend-jnuk.onrender.com/
+
 ## Table of Contents
 
 - [Getting Started](#getting-started)
